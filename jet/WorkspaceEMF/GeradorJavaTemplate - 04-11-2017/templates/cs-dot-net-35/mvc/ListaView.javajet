@@ -1,0 +1,62 @@
+<%@ jet package="jet.csdn35.mvc" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="ListaView" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+@model IEnumerable<<%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>>
+
+<table width="100%">
+    <tr>
+    	<%
+    	Iterator<AtributoWrapper> it1 = classe.getListaAtributoEntidadeW().iterator();
+       	while (it1.hasNext()) {
+       		AtributoWrapper corrente = it1.next();
+       		if (!corrente.ehChave()) {
+    	%>
+        <th>
+            <%= corrente.getNomePropriedade() %>
+        </th>
+       	<%
+       		}
+       	}
+       	%>
+        <th width="12%"></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+    	<%
+    	Iterator<AtributoWrapper> it2 = classe.getListaAtributoEntidadeW().iterator();
+       	while (it2.hasNext()) {
+       		AtributoWrapper corrente = it2.next();
+       		if (!corrente.ehChave()) {
+    	%>
+       	<td>
+            @Html.DisplayFor(modelItem => item.<%= corrente.getNomePropriedade() %>)
+        </td>
+       	<%
+       		}
+       	}
+       	%>
+       	<td>
+     	@Html.ActionLink("Detalhe","DisplayPage", new { id = item.<%= classe.getChaveW().getNomePropriedade() %> } )
+        <span class="ButtonLink Edita<%= classe.getNomeParaClasse() %>" IdItem="@item.<%= classe.getChaveW().getNomePropriedade() %>">Editar</span>
+        </td>
+        
+    </tr>
+}
+
+</table>
+<script type="text/javascript" >
+   $(function() {
+         $(".Edita<%= classe.getNomeParaClasse() %>").click(function () {
+            var id = $(this).attr("IdItem");
+            $("#<%= classe.getNomeParaClasse() %>Dialog").html("")
+                .dialog("option", "title", "Altera")
+                .load("@Url.Action("Edita", "<%= classe.getNomeParaClasse() %>")/" + id, function () { $("#<%= classe.getNomeParaClasse() %>Dialog").dialog("open"); });
+        });
+    })
+</script>

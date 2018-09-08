@@ -1,0 +1,47 @@
+<%@ jet package="jet.java.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="Carregador" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo.agregado;
+
+
+import br.com.digicom.lib.dao.DaoConexao;
+import br.com.digicom.lib.dao.DaoException;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.regracolecao.FabricaRegra;
+import <%= conf.getNamespace() %>.regracolecao.*;
+
+public class <%= classe.getNomeParaClasse() %>Carregador {
+	
+	private DaoConexao conexao = null;
+
+	public void setConexao(DaoConexao conexao) {
+		this.conexao = conexao;
+	}
+	
+	
+	<%
+		Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador.hasNext()) {
+		RelacionamentoWrapper relac = iterador.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+	public void CarregaItem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classe.getNomeParaClasse() %> vo) throws DaoException
+    {
+       	<%= classeOposta.getNomeParaClasse() %>RegraColecao servico = FabricaRegra.getInstancia().get<%= classeOposta.getNomeParaClasse() %>RegraColecao();
+    	if (conexao!=null ) { 
+            vo.set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(servico.obtemPorChave(vo.get<%= relac.getNomePropriedade() %>(), conexao));
+	    } else {
+	    	vo.set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(servico.obtemPorChave(vo.get<%= relac.getNomePropriedade() %>()));
+    	}
+    }
+ 	<%
+	}
+    %>
+	
+	
+}

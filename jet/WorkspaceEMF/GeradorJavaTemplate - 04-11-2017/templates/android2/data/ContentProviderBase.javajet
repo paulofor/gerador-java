@@ -1,0 +1,601 @@
+<%@ jet package="jet.android.data" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ContentProviderBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.data.provider;
+
+
+import <%= conf.getNamespaceExtendido() %>.data.contract.*;
+import <%= conf.getNamespaceExtendido() %>.data.helper.AplicacaoDbHelper;
+import android.content.ContentValues;
+import android.content.UriMatcher;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.database.SQLException;
+import android.database.DatabaseUtils;
+import android.net.Uri;
+import <%= conf.getNamespaceExtendido() %>.framework.log.DCLog;
+import java.util.List;
+import android.content.ContentProvider;
+
+public abstract class <%= classe.getNomeParaClasse() %>Provider {
+
+	private int qtdeLinhas = 0;
+	
+	public static final int <%= classe.getNomeParaConstante() %> = <%= String.valueOf(classe.getId()) %>00;
+	public static final int <%= classe.getNomeParaConstante() %>_ID = <%= String.valueOf(classe.getId()) %>01;
+	public static final int <%= classe.getNomeParaConstante() %>_SINC = <%= String.valueOf(classe.getId()) %>03;
+	public static final int <%= classe.getNomeParaConstante() %>_E_COMPLEMENTO = <%= String.valueOf(classe.getId()) %>04;
+	public static final int <%= classe.getNomeParaConstante() %>_ID_E_COMPLEMENTO = <%= String.valueOf(classe.getId()) %>05;
+	//public static final int <%= classe.getNomeParaConstante() %>_OPERACAO = <%= String.valueOf(classe.getId()) %>02;
+	
+	// deletes
+	public static final int <%= classe.getNomeParaConstante() %>_DELETE_ALL_SINC = <%= String.valueOf(classe.getId()) %>06;
+	public static final int <%= classe.getNomeParaConstante() %>_DELETE_RECREATE = <%= String.valueOf(classe.getId()) %>07;
+	public static final int <%= classe.getNomeParaConstante() %>_DELETE_SINC = <%= String.valueOf(classe.getId()) %>08;
+	public static final int <%= classe.getNomeParaConstante() %>_E_RETIRADA = <%= String.valueOf(classe.getId()) %>09;
+	
+	private static final String sPorChaveSel = <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME + "." + <%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE + " = ? ";
+	
+	<% int contConstante = 20; %>
+	<%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper relCorrente = iterador.next();
+	%>
+	public static final int <%= relCorrente.getNomeParaConstante() %> = <%= String.valueOf(classe.getId()) %><%= String.format("%02d",contConstante++) %>;
+	public static final int COM_<%= relCorrente.getClasseOposta().getNomeParaConstante() %> = <%= String.valueOf(classe.getId()) %><%= String.format("%02d",contConstante++) %>;
+	private static final String sPor<%= relCorrente.getNomePropriedade() %>Selecao =
+            <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME + ".<%= relCorrente.getNomeCampoTabela() %> = ? ";
+	<%
+	}
+	%>
+
+<%
+ 	for (RegraColecao regra : classe.getListaRegraColecao()) {
+ 	if (regra.getAtivoFlex()) {
+ %>
+ 	public static final int <%= regra.getNomeParaConstante() %> = <%= String.valueOf(classe.getId()) %><%= String.format("%02d",contConstante++) %>;
+<%
+ 	}
+ 	}
+ %>
+
+	private ContentProvider mProvider = null;
+
+
+	public void setContentProvider(ContentProvider valor) {
+		mProvider = valor;
+	}
+
+	protected static final SQLiteQueryBuilder sQueryBuilder;
+	static {
+		sQueryBuilder = new SQLiteQueryBuilder();
+		String tabelas = <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME;
+		<%
+		iterador = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador.hasNext()) {
+			RelacionamentoWrapper relCorrente = iterador.next();
+			ClasseWrapper classeOposta = relCorrente.getClasseOposta();
+			AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		//tabelas += " inner join " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME + " ";
+		//tabelas += " on " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME + "." + <%= classeOposta.getNomeParaClasse() %>Contract.COLUNA_CHAVE + " = " + <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME + "." + <%= classe.getNomeParaClasse() %>Contract.COLUNA_<%= relCorrente.getNomeConstante() %>; 
+		<%
+		}
+		%>
+		sQueryBuilder.setTables(tabelas);
+	}
+	private static final SQLiteQueryBuilder sQueryBuilderSinc;
+	static {
+		sQueryBuilderSinc = new SQLiteQueryBuilder();
+		String tabelas = <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME_SINC;
+		sQueryBuilderSinc.setTables(tabelas);
+	}
+	
+	
+	protected AplicacaoDbHelper mOpenHelper = null;
+	
+	public int getLinhas() {
+		return qtdeLinhas;
+	}
+	
+	public static void buildUriMatcher(UriMatcher matcher) {
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH, <%= classe.getNomeParaConstante() %>);
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/Sinc" , <%= classe.getNomeParaConstante() %>_SINC);
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/#"    , <%= classe.getNomeParaConstante() %>_ID);
+	
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/#/" + <%= classe.getNomeParaClasse() %>Contract.COM_COMPLEMENTO + "/*" , <%= classe.getNomeParaConstante() %>_ID_E_COMPLEMENTO);
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/" + <%= classe.getNomeParaClasse() %>Contract.COM_COMPLEMENTO + "/*" , <%= classe.getNomeParaConstante() %>_E_COMPLEMENTO);
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/" + <%= classe.getNomeParaClasse() %>Contract.COM_RETIRADA + "/*" , <%= classe.getNomeParaConstante() %>_E_RETIRADA);
+		
+		
+		//matcher.addURI(AplicacaoContract.CONTENT_AUTHORITY, <%= classe.getNomeParaClasse() %>Contract.PATH + "/operacao/*" , <%= classe.getNomeParaConstante() %>_OPERACAO);
+		<%
+		iterador = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador.hasNext()) {
+			RelacionamentoWrapper relCorrente = iterador.next();
+		%>
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/#/" + <%= relCorrente.getClasseOposta().getNomeParaClasse() %>Contract.PATH, <%= relCorrente.getNomeParaConstante() %>);
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/Com<%= relCorrente.getClasseOposta().getNomeParaClasse() %><%= relCorrente.getNomeRelacionamento() %>/" , COM_<%= relCorrente.getClasseOposta().getNomeParaConstante() %>);
+		<%
+		}
+		%>
+		
+		<%
+	 	for (RegraColecao regra : classe.getListaRegraColecao()) {
+ 		if (regra.getAtivoFlex()) {
+		%>
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/<%= regra.getNome() %>/*", <%= regra.getNomeParaConstante() %>);
+		<%
+ 		}
+ 		}
+		%>
+		
+		// Deletes
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/DeleteAllSinc" , 	<%= classe.getNomeParaConstante() %>_DELETE_ALL_SINC);
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/DeleteAllRecreate" , <%= classe.getNomeParaConstante() %>_DELETE_RECREATE);
+		matcher.addURI(<%= classe.getNomeParaClasse() %>Contract.getContentAuthority(), <%= classe.getNomeParaClasse() %>Contract.PATH + "/DeleteSinc/#" , 		<%= classe.getNomeParaConstante() %>_DELETE_SINC);
+	}
+	
+	
+	
+	
+	public void setAplicacaoDbHelper(AplicacaoDbHelper db) {
+		mOpenHelper = db;
+	}
+	
+	public Cursor query(UriMatcher sUriMatcher, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+		DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Query Uri:" + uri.toString());
+		Cursor retCursor = null;
+		switch (sUriMatcher.match(uri)) {
+            case <%= classe.getNomeParaConstante() %>:
+            {
+            	DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Match Provider: <%= classe.getNomeParaConstante() %>");
+                retCursor = query(projection, selection, selectionArgs, sortOrder);
+                break;
+            }
+            case <%= classe.getNomeParaConstante() %>_SINC:
+            {
+            	DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Match Provider: <%= classe.getNomeParaConstante() %>_SINC");
+                retCursor = querySinc(projection, selection, selectionArgs, sortOrder);
+                break;
+            }
+            case <%= classe.getNomeParaConstante() %>_ID:
+            {
+            	DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Match Provider: <%= classe.getNomeParaConstante() %>_ID");
+            	String[] args = {uri.getPathSegments().get(1)};
+                retCursor = query(projection, sPorChaveSel, args, sortOrder);
+                break;
+            }
+            case <%= classe.getNomeParaConstante() %>_ID_E_COMPLEMENTO:
+			{
+				DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Match Provider: <%= classe.getNomeParaConstante() %>_ID_E_COMPLEMENTO");
+				String id = uri.getPathSegments().get(1);	
+				String sql = "select " + sqlSelect(uri) +
+						" from " + sqlFrom(uri) +
+						" where " + <%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE + " = " + id;
+				retCursor = queryRaw(sql);
+				break;
+			}
+			case <%= classe.getNomeParaConstante() %>_E_COMPLEMENTO:
+			{
+				DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Match Provider: <%= classe.getNomeParaConstante() %>_E_COMPLEMENTO");
+				String sql = "select " + sqlSelect(uri) +
+						" from " + sqlFrom(uri);
+						// colocar 
+				retCursor = queryRaw(sql);
+				break;
+			}
+			case <%= classe.getNomeParaConstante() %>_E_RETIRADA:
+			{
+				DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Match Provider: <%= classe.getNomeParaConstante() %>_E_RETIRADA");
+				String sql = "select " +  <%= classe.getNomeParaClasse() %>Contract.camposOrdenados() +
+						" from " + <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME +
+						sqlWhere(uri);
+						// colocar 
+				retCursor = queryRaw(sql);
+				break;
+			}
+        <%
+		iterador = classe.obtemListaComChaveEstrangeiraSemUsuario().iterator();
+		while (iterador.hasNext()) {
+			RelacionamentoWrapper relCorrente = iterador.next();
+		%>
+			case <%= relCorrente.getNomeParaConstante() %>:
+            {
+            	DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Match Provider: <%= relCorrente.getNomeParaConstante() %>");
+	            String[] args = {uri.getPathSegments().get(1)};
+                retCursor = query(projection, sPor<%= relCorrente.getNomePropriedade() %>Selecao, args, sortOrder);
+                break;
+            }
+            case COM_<%= relCorrente.getClasseOposta().getNomeParaConstante() %>:
+            {
+            	DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Match Provider: COM_<%= relCorrente.getClasseOposta().getNomeParaConstante() %>");
+            	String sql = "select " + <%= classe.getNomeParaClasse() %>Contract.camposOrdenados() + " , " +
+						<%= relCorrente.getClasseOposta().getNomeParaClasse() %>Contract.camposOrdenados() +
+						" from " + <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME +
+						<%= classe.getNomeParaClasse() %>Contract.innerJoin<%= relCorrente.getClasseOposta().getNomeParaClasse() %>_<%= relCorrente.getNomeRelacionamento()%>() +
+						getOrderBy();
+                retCursor = queryRaw(sql);
+				break;
+            }
+		<%
+		}
+		%>
+		<%
+	 	for (RegraColecao regra : classe.getListaRegraColecao()) {
+ 		if (regra.getAtivoFlex()) {
+		%>
+	 		case <%= regra.getNomeParaConstante() %>:
+			{
+				DCLog.d(DCLog.OPERACAO_DB_TELA,this,"Match Provider: <%= regra.getNomeParaConstante() %>");
+				retCursor = query<%= regra.getNome() %>(uri,projection,sortOrder);
+				break;
+			}
+		<%
+ 		}
+ 		}
+		%>
+		}	
+        return retCursor;
+	}
+	
+	private String sqlWhere(Uri uri) {
+		String sql = " where ";
+		// SemChaveEstrangeira - Sem Usuario (sempre vai ser o mesmo, redundante)
+  	<%
+	Iterator<RelacionamentoWrapper> iteradorRelRet = classe.obtemListaSemChaveEstrangeiraSemUsuario().iterator();
+	while (iteradorRelRet.hasNext()) {
+	RelacionamentoWrapper relac = iteradorRelRet.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+		if (existeItem("Sem<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>",uri.getPathSegments())) {
+			sql += <%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE + " not in (select " + 
+					<%= classeOposta.getNomeParaClasse() %>Contract.COLUNA_<%= relac.getNomeConstanteOposta() %> + " from " +
+					<%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME + ")";
+		}
+	<%
+	}
+	%>
+		
+		return sql;
+	}
+	
+	private String sqlSelect(Uri uri) {
+		String sql = <%= classe.getNomeParaClasse() %>Contract.camposOrdenados();
+		List<String> segmentos = uri.getPathSegments();
+		// ComChaveEstrangeira - Sem Usuario (sempre vai ser o mesmo, redundante)
+  	<%
+	Iterator<RelacionamentoWrapper> iteradorRel = classe.obtemListaComChaveEstrangeiraSemUsuario().iterator();
+	while (iteradorRel.hasNext()) {
+	RelacionamentoWrapper relac = iteradorRel.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+		if (existeItem("Com<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>",uri.getPathSegments())) {
+			sql += "," +  <%= classeOposta.getNomeParaClasse() %>Contract.camposOrdenados();
+		}
+	<%
+	}
+	%>
+	
+	// SemChaveEstrangeira - Sem Usuario (sempre vai ser o mesmo, redundante)
+  	<%
+	Iterator<RelacionamentoWrapper> iteradorRel2 = classe.obtemListaSemChaveEstrangeiraSemUsuario().iterator();
+	while (iteradorRel2.hasNext()) {
+	RelacionamentoWrapper relac = iteradorRel2.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+		if (existeItem("Com<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>",uri.getPathSegments())) {
+			sql += "," +  <%= classeOposta.getNomeParaClasse() %>Contract.camposOrdenados();
+		}
+	<%
+	}
+	%>
+		
+		
+		
+		return sql;
+	}
+	private String sqlFrom(Uri uri) {
+		String sql = <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME;
+		List<String> segmentos = uri.getPathSegments();
+		//if (existeItem("ComEpisodioReferenteA",uri.getPathSegments())) {
+		//	sql += " " +  EpisodioUsuarioContract.innerJoinEpisodio_ReferenteA();
+		//}
+		
+		
+				// ComChaveEstrangeira
+  	<%
+	Iterator<RelacionamentoWrapper> iteradorRel3 = classe.obtemListaComChaveEstrangeiraSemUsuario().iterator();
+	while (iteradorRel3.hasNext()) {
+	RelacionamentoWrapper relac = iteradorRel3.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+		if (existeItem("Com<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>",uri.getPathSegments())) {
+			sql += " " +  <%= classe.getNomeParaClasse() %>Contract.outerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		}
+	<%
+	}
+	%>
+	
+	// SemChaveEstrangeira
+  	<%
+	Iterator<RelacionamentoWrapper> iteradorRel4 = classe.obtemListaSemChaveEstrangeiraSemUsuario().iterator();
+	while (iteradorRel4.hasNext()) {
+	RelacionamentoWrapper relac = iteradorRel4.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+		if (existeItem("Com<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>",uri.getPathSegments())) {
+			sql += " " +  <%= classe.getNomeParaClasse() %>Contract.outerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		}
+	<%
+	}
+	%>
+		
+		return sql;
+	}
+
+	private boolean existeItem(String ref, List<String> lista) {
+		for (String item : lista) {
+			if (ref.compareToIgnoreCase(item)==0) return true;
+		}
+		return false;
+	}
+	
+	
+	
+	private String getOrderBy() {
+		String campoOrder = getCampoOrder();
+		if (campoOrder==null) return "";
+		return " order by " + campoOrder;
+	}
+	protected String getCampoOrder() {
+		return null;
+	}
+	
+	<%
+	for (RegraColecao regra : classe.getListaRegraColecao()) {
+ 	if (regra.getAtivoFlex()) {
+	%>
+	protected abstract Cursor query<%= regra.getNome() %>(Uri uri, String[] projection, String sortOrder);
+	<%
+ 	}
+ 	}
+	%>
+	
+	
+	protected Cursor query(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+		 return sQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+	                projection,
+	                selection,
+	                selectionArgs,
+	                null,
+	                null,
+	                sortOrder
+	        );
+	}
+	protected Cursor querySinc(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+		 return sQueryBuilderSinc.query(mOpenHelper.getReadableDatabase(),
+	                projection,
+	                selection,
+	                selectionArgs,
+	                null,
+	                null,
+	                sortOrder
+	        );
+	}
+	protected Cursor queryRaw(String sql) {
+		DCLog.d(DCLog.DATABASE_ADM,this,sql);
+		final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+		return db.rawQuery(sql,null);
+	}
+	
+	public String getType(UriMatcher sUriMatcher, Uri uri) {
+		switch (sUriMatcher.match(uri)) {
+            case <%= classe.getNomeParaConstante() %>:
+            {
+                return <%= classe.getNomeParaClasse() %>Contract.getContentType();
+            }
+            case <%= classe.getNomeParaConstante() %>_ID:
+            {
+            	return <%= classe.getNomeParaClasse() %>Contract.getContentItemType();
+            }
+        <%
+		for (RelacionamentoWrapper relCorrente : classe.obtemListaComChaveEstrangeira()) {
+		%>
+			case <%= relCorrente.getNomeParaConstante() %>:
+            {
+	            return <%= classe.getNomeParaClasse() %>Contract.getContentType();
+            }
+		<%
+		}
+		%>
+		}	
+		return null;
+	}
+	
+	public Uri insert(Uri uri, ContentValues values) {
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		Uri returnUri;
+		long idNovo = getMaxId(db)+1;
+		values.put(<%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE, idNovo);
+		long _id = db.insert(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME, null, values);
+		if (_id > 0) {
+			//DCLog.d(DCLog.DATABASE_CRUD,this,"insert " + <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME + "  " + values.toString() + " (id:" + _id + ")");
+			DCLog.d(DCLog.DATABASE_CRUD,this,"insert " + values.toString() + " (id:" + _id + ")");
+			returnUri = <%= classe.getNomeParaClasse() %>Contract.build<%= classe.getNomeParaClasse() %>Uri(idNovo);
+			values.put(<%= classe.getNomeParaClasse() %>Contract.COLUNA_OPERACAO_SINC,"I");
+			insereSinc(db,values);
+			notificaUriRelacionadas();
+		} else {
+			throw new android.database.SQLException("Falha no insert em " + uri);
+		}
+		return returnUri;
+	}
+	
+	
+	// considerando com o mesmo princípio do insert.
+	// delete na tabela atual e verific
+	public boolean delete(UriMatcher sUriMatcher, Uri uri, String selection, String[] selectionArgs) {
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		int linhaDelete =0;
+		switch (sUriMatcher.match(uri)) {
+			case <%= classe.getNomeParaConstante() %>_DELETE_SINC: {
+				String id = uri.getPathSegments().get(2);
+				Cursor cursor = db.query(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME,null,<%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE + " = ? ",new String[]{id},null,null,null);
+				if (cursor.moveToFirst()) {
+					ContentValues valores = new ContentValues();
+					DatabaseUtils.cursorRowToContentValues(cursor, valores);
+					linhaDelete = db.delete(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME, <%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE + " = ? ", new String[]{id});
+					DCLog.d(DCLog.DATABASE_CRUD,this,"delete " + <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME + "(id:" + id + ")");
+					valores.put(<%= classe.getNomeParaClasse() %>Contract.COLUNA_OPERACAO_SINC, "D");
+					insereSinc(db,valores);
+				}
+				notificaUriRelacionadas();
+				mProvider.getContext().getContentResolver().notifyChange(<%= classe.getNomeParaClasse() %>Contract.buildAll(), null);
+				break;
+			}
+			case <%= classe.getNomeParaConstante() %>_DELETE_ALL_SINC: {
+				linhaDelete = db.delete(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME_SINC, null, null);
+				break;
+			}
+			case <%= classe.getNomeParaConstante() %>_DELETE_RECREATE: {
+				linhaDelete = db.delete(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME, null, null);
+				break;
+			}
+		}
+		return true;
+	}
+	
+	
+	public boolean update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		int linhaUpdate =0;
+		linhaUpdate = db.update(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME, values, selection, selectionArgs);
+		return true;
+	}
+	public boolean update(Uri uri, ContentValues values) {
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		int linhaUpdate =0;
+		String selection = <%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE + " = ? ";
+		String dados[] = {values.get(<%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE).toString()};
+		linhaUpdate = db.update(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME, values, selection, dados);
+		values.put(<%= classe.getNomeParaClasse() %>Contract.COLUNA_OPERACAO_SINC,"A");
+		insereSinc(db,values);
+		return true;
+	}
+	
+	private void insereSinc(SQLiteDatabase db, ContentValues values) {
+		db.insert(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME_SINC, null, values);
+	}
+	
+	// Notificar todas as uris de entidades que possuem chave estrangeira dessa entidade.
+	private void notificaUriRelacionadas() {
+		// ComChaveEstrangeira
+  	<%
+	Iterator<RelacionamentoWrapper> iteradorRelUri = classe.obtemListaComChaveEstrangeiraSemUsuario().iterator();
+	while (iteradorRelUri.hasNext()) {
+	RelacionamentoWrapper relac = iteradorRelUri.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+		mProvider.getContext().getContentResolver().notifyChange(<%= classeOposta.getNomeParaClasse() %>Contract.buildAllCom<%= classe.getNomeParaClasse() %><%= relac.getNomeRelacionamentoOposto() %>(), null);
+		mProvider.getContext().getContentResolver().notifyChange(<%= classeOposta.getNomeParaClasse() %>Contract.buildAllSem<%= classe.getNomeParaClasse() %><%= relac.getNomeRelacionamentoOposto() %>(), null);
+	<%
+	}
+	%>
+	}
+	private void notificaUriOperacoes() {
+	<%
+ 	for (RegraColecao regra : classe.getListaRegraColecao()) {
+ 	if (regra.getAtivoFlex()) {
+	%>
+		mProvider.getContext().getContentResolver().notifyChange(<%= classe.getNomeParaClasse() %>Contract.build<%= regra.getNome() %>(), null);
+	<%
+	}
+	}
+	%>
+	}
+	private void notificaUriRaiz(){
+		
+	}
+	
+	
+	
+	public int bulkInsert(Uri uri, ContentValues[] values) {
+    	final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        db.beginTransaction();
+        int returnCount = 0;
+        try {
+        	for (ContentValues value : values) {
+				String[] args = {(String)value.get(<%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE)};
+				Cursor retCursor = query(null, sPorChaveSel, args, null);
+				if (retCursor.moveToFirst()) {
+						db.update(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME,value,sPorChaveSel,args);
+						//DCLog.d(DCLog.DATABASE_CRUD,this,"update (bulk " + <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME + "  " + values.toString());
+						DCLog.d(DCLog.DATABASE_CRUD,this,"update (bulk id:" + value.get(<%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE) + ")" + values.toString());
+				} else {
+					long _id = db.insert(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME, null, value);
+					if (_id != -1) {
+						//DCLog.d(DCLog.DATABASE_CRUD,this,"insert (bulk)" + <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME + "  " + values.toString() + " (id:" + _id + ")");
+						DCLog.d(DCLog.DATABASE_CRUD,this,"insert (bulk)" + values.toString() + " (id:" + _id + ")");
+						returnCount++;
+					}
+				}
+            }
+            db.setTransactionSuccessful();
+            notificaUriOperacoes();
+   		} finally {
+ 			db.endTransaction();
+        }
+        return returnCount;
+    }
+	public int bulkInsertOld(Uri uri, ContentValues[] values) {
+    	final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        db.beginTransaction();
+        int returnCount = 0;
+        try {
+        	for (ContentValues value : values) {
+            	long _id = db.insert(<%= classe.getNomeParaClasse() %>Contract.TABLE_NAME, null, value);
+            	if (_id != -1) {
+            		returnCount++;
+            	}
+            }
+            db.setTransactionSuccessful();
+   		} finally {
+ 			db.endTransaction();
+        }
+        return returnCount;
+    }
+    
+    
+    public long getMaxId(SQLiteDatabase db) {
+		String sql = "select max(" + <%= classe.getNomeParaClasse() %>Contract.COLUNA_CHAVE + ") from " + <%= classe.getNomeParaClasse() %>Contract.TABLE_NAME;
+		return this.getNumeroSql(sql,db);
+	}
+	
+	// Arquitetura - Padrao
+	protected long getNumeroSql(String sql,SQLiteDatabase db) {
+		long saida = 0;
+		Cursor c = null;
+		try {
+			c =db.rawQuery(sql, null);
+			c.moveToFirst();
+			saida = c.getLong(0);
+		} catch (SQLException e) {
+			DCLog.e(DCLog.DATABASE_ERRO_CORE, this, e);
+		} finally {
+			if (c != null && !c.isClosed()) {
+				c.close();
+			}
+		}
+		return saida;
+	}
+    
+}

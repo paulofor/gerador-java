@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 1 elements(s) to &apos;jet.wrappers.base.ClasseWrapper.java&apos;&#x0D;&#x0A;- Original project: &apos;GeradorJavaTemplate&apos;&#x0D;&#x0A;- Destination element: &apos;jet.wrappers.base.ClasseWrapper.java&apos;&#x0D;&#x0A;- Original element: &apos;gerapp.modelo.AtributoTotalI.java&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="/src&lt;jet.wrappers.base{ClasseWrapper.java" element1="/src&lt;gerapp.modelo{AtributoTotalI.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1319807934796" units="1" version="1.0"/>
+</session>

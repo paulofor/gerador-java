@@ -1,0 +1,52 @@
+<%@ jet package="jet.csdn35.mvc" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="ControllerBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.mvc.controller {
+
+
+using System.Web;
+using System.Web.Mvc;
+
+
+public class BaseController : Controller {
+
+public string DiretorioVirtual
+    {
+        get
+        {
+            string teste = Request.Url.AbsolutePath;
+            string saida = "";
+             if (teste.ToLower().Contains("sisacaomvc"))
+                saida = "/sisacaomvc";
+            if (teste.ToLower().Contains("gerprojmvc3"))
+                saida = "/gerprojmvc3";
+            if (teste.ToLower().Contains("sim4mvc"))
+                saida = "/sim4mvc";
+            if (teste.ToLower().Contains("sim4"))
+                saida = "/sim4";
+            if (teste.ToLower().Contains("cadvideo"))
+                saida = "/cadvideo";
+			if (teste.ToLower().Contains("gesafil"))
+                saida = "/gesafil";
+            if (teste.ToLower().Contains("valealim"))
+                saida = "/valealim";
+            if (teste.ToLower().Contains("ctrlestoque"))
+                saida = "/ctrlestoque";
+            if (teste.ToLower().Contains("dafitiafil"))
+                saida = "/dafitiafil";
+            return saida;
+        }
+        set
+        {
+        }
+    }
+
+}
+
+
+}

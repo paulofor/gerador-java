@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: com.metys.merlin.generation.templates; singleton:=true
+Bundle-Version: 0.5.0
+Bundle-ClassPath: generationtemplates.jar
+Bundle-Activator: com.metys.merlin.generation.templates.JETTemplatesPlugin$Implementation
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: com.metys.merlin.generation.templates,
+ com.metys.merlin.generation.templates.impl,
+ com.metys.merlin.generation.templates.jetmapping,
+ com.metys.merlin.generation.templates.jetmapping.impl,
+ com.metys.merlin.generation.templates.jetmapping.util,
+ com.metys.merlin.generation.templates.util,
+ model
+Require-Bundle: org.eclipse.emf.mapping.ui;visibility:=reexport,
+ org.eclipse.emf.mapping;visibility:=reexport,
+ org.eclipse.emf.codegen.ecore,
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.core,
+ org.eclipse.emf.mapping.ecore2ecore,
+ org.eclipse.emf.mapping.ecore2ecore.editor
+Eclipse-AutoStart: true

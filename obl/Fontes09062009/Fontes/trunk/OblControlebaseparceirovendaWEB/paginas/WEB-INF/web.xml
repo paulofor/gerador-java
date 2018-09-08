@@ -1,0 +1,36 @@
+<?xml version = '1.0' encoding = 'iso-8859-1'?>
+<web-app xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd' version='2.4' xmlns='http://java.sun.com/xml/ns/j2ee'>
+<description>Empty web.xml file for Web Application</description>
+<filter>
+<description>filtro do PRM</description>
+<display-name>prmFilter</display-name>
+<filter-name>prmFilter</filter-name>
+<filter-class>com.br.brasilcap.arq.prm.prmfrmwrk.prmfiltro.PrmFilter</filter-class>
+</filter>
+<filter-mapping>
+<filter-name>prmFilter</filter-name>
+<servlet-name>ControlebaseparceirovendaCT</servlet-name>
+<dispatcher>FORWARD</dispatcher>
+<dispatcher>INCLUDE</dispatcher>
+<dispatcher>REQUEST</dispatcher>
+</filter-mapping>
+<servlet>
+<servlet-name>ControlebaseparceirovendaCT</servlet-name>
+<servlet-class>com.br.brasilcap.cap.obl.controlebaseparceirovenda.servlet.ControlebaseparceirovendaCT</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>ControlebaseparceirovendaCT</servlet-name>
+<url-pattern>/controlebaseparceirovendact</url-pattern>
+</servlet-mapping>
+<session-config>
+<session-timeout>35</session-timeout>
+</session-config>
+<mime-mapping>
+<extension>html</extension>
+<mime-type>text/html</mime-type>
+</mime-mapping>
+<mime-mapping>
+<extension>txt</extension>
+<mime-type>text/plain</mime-type>
+</mime-mapping>
+</web-app>

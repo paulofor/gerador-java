@@ -1,0 +1,17 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* br.com.probid.gerador.execucao.wrappers.* " 
+class="Business" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNomePacoteModel() %>.business;
+
+import <%= conf.getNomePacoteModel() %>.business.base.busBase<%= classe.getNomeBasico() %>;
+
+public class bus<%= classe.getNomeBasico() %> extends busBase<%= classe.getNomeBasico() %> {
+
+    
+}
+

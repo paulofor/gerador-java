@@ -1,0 +1,17 @@
+<%@ jet package="jet.android.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ServicoJsonImpl" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+package <%= conf.getNomePacoteServicoWsJsonImpl() %>;
+
+import <%= conf.getNomePacoteServicoWsJsonBase() %>.*;
+
+public class <%= classe.getNomeParaClasse() %>ServicoWsJsonImpl extends <%= classe.getNomeParaClasse() %>ServicoWsJsonBase {
+
+	
+}

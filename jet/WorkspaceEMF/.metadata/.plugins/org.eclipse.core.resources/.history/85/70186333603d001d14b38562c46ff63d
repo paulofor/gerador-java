@@ -1,0 +1,121 @@
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
+ */
+package exemplo1.impl;
+
+import exemplo1.*;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+
+import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model <b>Factory</b>.
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public class Exemplo1FactoryImpl extends EFactoryImpl implements Exemplo1Factory {
+	/**
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static Exemplo1Factory init() {
+		try {
+			Exemplo1Factory theExemplo1Factory = (Exemplo1Factory)EPackage.Registry.INSTANCE.getEFactory("http:///exemplo1.ecore"); 
+			if (theExemplo1Factory != null) {
+				return theExemplo1Factory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new Exemplo1FactoryImpl();
+	}
+
+	/**
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Exemplo1FactoryImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EObject create(EClass eClass) {
+		switch (eClass.getClassifierID()) {
+			case Exemplo1Package.BOOK: return createBook();
+			case Exemplo1Package.WRITER: return createWriter();
+			case Exemplo1Package.LIBRARY: return createLibrary();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Book createBook() {
+		BookImpl book = new BookImpl();
+		return book;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Writer createWriter() {
+		WriterImpl writer = new WriterImpl();
+		return writer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Library createLibrary() {
+		LibraryImpl library = new LibraryImpl();
+		return library;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Exemplo1Package getExemplo1Package() {
+		return (Exemplo1Package)getEPackage();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @deprecated
+	 * @generated
+	 */
+	@Deprecated
+	public static Exemplo1Package getPackage() {
+		return Exemplo1Package.eINSTANCE;
+	}
+
+} //Exemplo1FactoryImpl

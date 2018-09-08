@@ -1,0 +1,56 @@
+<%@ jet package="jet.android2.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ListViewHolderBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.template.lista;
+
+
+
+
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
+import <%= conf.getNamespaceExtendido() %>.data.contract.<%= classe.getNomeParaClasse() %>Contract;
+import <%= conf.getNamespaceExtendido() %>.template.comum.ItemChoiceManager;
+
+/**
+ * Created by Paulo on 03/11/15.
+ */
+public abstract class <%= classe.getNomeParaClasse() %>ListViewHolderBase extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+    protected Cursor mCursor;
+    protected <%= classe.getNomeParaClasse() %>ListAdapterBase.<%= classe.getNomeParaClasse() %>ListAdapterOnClickHandler mClickHandler;
+    protected ItemChoiceManager mICM = null;
+
+    public void setCursor(Cursor valor) {
+        mCursor = valor;
+    }
+    public void setOnClickHandler(<%= classe.getNomeParaClasse() %>ListAdapterBase.<%= classe.getNomeParaClasse() %>ListAdapterOnClickHandler valor){
+        mClickHandler = valor;
+    }
+
+    public <%= classe.getNomeParaClasse() %>ListViewHolderBase(View itemView) {
+        super(itemView);
+        itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int adapterPosition = getAdapterPosition();
+        mCursor.moveToPosition(adapterPosition);
+        int id = mCursor.getInt(<%= classe.getNomeParaClasse() %>Contract.COL_<%= classe.getChaveW().getNomeConstante() %>);
+        //Uri uri = <%= classe.getNomeParaClasse() %>Contract.build<%= classe.getNomeParaClasse() %>Uri(id);
+        //int dateColumnIndex = mCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE);
+        mClickHandler.onClick(id, this);
+        //mICM.onClick(this);
+    }
+}

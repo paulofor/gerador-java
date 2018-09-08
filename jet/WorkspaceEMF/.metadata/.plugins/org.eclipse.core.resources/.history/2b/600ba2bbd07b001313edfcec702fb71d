@@ -1,0 +1,59 @@
+<%@ jet package="jet.android.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="PrincipalActivityBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.app.base;
+
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
+
+import <%= conf.getNamespace() %>.app.MenuFragment;
+import <%= conf.getNamespace() %>.app.R;
+import <%= conf.getNamespace() %>.dao.datasource.DataSourceAplicacao;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+
+public abstract class PrincipalActivityBase extends FragmentActivity implements MenuFragment.OnButtonClick{
+
+	public abstract void onButtonClick(String acao);
+	
+	 @Override
+     public void onCreate(Bundle savedInstanceState) {
+       setTheme(android.R.style.Theme_Light);
+       DataSourceAplicacao.criaInstancia(getApplication());
+       super.onCreate(savedInstanceState);
+       
+       setContentView(R.layout.main_frame);
+
+       if (findViewById(R.id.fragment_container) != null) {
+           if (savedInstanceState != null) {
+               return;
+           }
+           MenuFragment firstFragment = new MenuFragment();
+           firstFragment.setArguments(getIntent().getExtras());
+           getSupportFragmentManager().beginTransaction()
+                   .add(R.id.fragment_container, firstFragment).commit();
+       }
+   }
+	
+	/*
+	// Poderia ser criado caso existe a definição dos comandos 
+	// do Menu - Melhoria no Gerenciador2005
+	public void onButtonClick(String acao) {
+		if ("Produto".equals(acao))
+			chamaProduto();
+		if ("Projeto".equals(acao))
+			chamaProjeto();
+		if ("Sincronizador".equals(acao)) {
+			Sincronizador sinc = new Sincronizador();
+			sinc.principal(getApplication());
+		}
+	}
+	*/
+
+}

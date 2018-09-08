@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><feature id="org.eclipse.datatools.connectivity.feature" image="eclipse_update_120.jpg" label="%featureName" plugin="org.eclipse.datatools.connectivity" provider-name="%providerName" version="1.5.2.200802201">
+	<description>%description</description>
+	<license url="%licenseURL">%license</license>
+	<url>
+		<update label="Data Tools Platform (DTP) Updates" url="http://download.eclipse.org/datatools/updates"/>
+		<discovery label="Data Tools Platform (DTP) Updates" url="http://download.eclipse.org/datatools/updates"/>
+	</url>
+	<requires>
+		<import feature="org.eclipse.datatools.modelbase.feature" version="1.5.2"/>
+	</requires>
+	<includes id="org.eclipse.datatools.connectivity.oda.feature" optional="true" version="1.5.2.200802201"/>
+	<includes id="org.eclipse.datatools.connectivity.oda.designer.feature" optional="true" version="1.5.2.200802201"/>
+	<plugin download-size="225" id="org.eclipse.datatools.connectivity.sqm.core.ui" install-size="225" unpack="false" version="1.0.1.200708201"/>
+	<plugin download-size="257" id="org.eclipse.datatools.connectivity.sqm.core" install-size="257" unpack="false" version="1.0.1.200801111"/>
+	<plugin download-size="4" id="org.eclipse.datatools.connectivity.sqm.fe.ui.actions" install-size="4" unpack="false" version="1.0.0.200706071"/>
+	<plugin download-size="46" id="org.eclipse.datatools.connectivity.sqm.fe.ui" install-size="46" unpack="false" version="1.0.0.200706071"/>
+	<plugin download-size="110" id="org.eclipse.datatools.connectivity.sqm.server.ui" install-size="110" unpack="false" version="1.0.0.200709141"/>
+	<plugin download-size="80" id="org.eclipse.datatools.connectivity.ui.dse" install-size="80" unpack="false" version="1.0.1.200709171"/>
+	<plugin download-size="332" id="org.eclipse.datatools.connectivity.ui" install-size="332" unpack="false" version="1.0.1.200708231"/>
+	<plugin download-size="182" id="org.eclipse.datatools.connectivity" install-size="182" unpack="false" version="1.0.1.200802191"/>
+	<plugin download-size="9" id="org.eclipse.datatools.help" install-size="9" unpack="false" version="1.5.0.200706181"/>
+</feature>

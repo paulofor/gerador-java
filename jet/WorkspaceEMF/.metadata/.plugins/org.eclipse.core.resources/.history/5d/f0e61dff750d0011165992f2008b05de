@@ -1,0 +1,132 @@
+package jet.android.servico;
+
+import java.util.*;
+import gerapp.app.*;
+import jet.wrappers.base.*;
+import jet.wrappers.android.*;
+import gerapp.modelo.*;
+
+public class ServicoSqliteBase
+{
+  protected static String nl;
+  public static synchronized ServicoSqliteBase create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    ServicoSqliteBase result = new ServicoSqliteBase();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = NL + "package ";
+  protected final String TEXT_2 = ";" + NL + "" + NL + "import java.util.List;" + NL + "import ";
+  protected final String TEXT_3 = ".";
+  protected final String TEXT_4 = ";" + NL + "import android.content.Context;" + NL + "import ";
+  protected final String TEXT_5 = ".";
+  protected final String TEXT_6 = "DBHelper;" + NL + "import ";
+  protected final String TEXT_7 = ".";
+  protected final String TEXT_8 = "Servico;" + NL + "" + NL + "public abstract class ";
+  protected final String TEXT_9 = "ServicoSqliteBase extends  ";
+  protected final String TEXT_10 = "Servico {" + NL + "" + NL + "" + NL + "\t";
+  protected final String TEXT_11 = NL + "\t//public List<";
+  protected final String TEXT_12 = "> ";
+  protected final String TEXT_13 = "(Context contexto){}";
+  protected final String TEXT_14 = NL + NL + "\tpublic List<";
+  protected final String TEXT_15 = "> getAll(Context contexto) {" + NL + "\t\t";
+  protected final String TEXT_16 = "DBHelper dao = new ";
+  protected final String TEXT_17 = "DBHelper(contexto);" + NL + "\t\treturn dao.getAll();" + NL + "\t}" + NL + "\t" + NL + "\tpublic void insertAll(List<";
+  protected final String TEXT_18 = "> lista, Context contexto) {" + NL + "\t\t";
+  protected final String TEXT_19 = "DBHelper dao = new ";
+  protected final String TEXT_20 = "DBHelper(contexto);" + NL + "\t\tfor (int i=0;i<lista.size();i++) {" + NL + "\t\t\tdao.insert(lista.get(i));" + NL + "\t\t}" + NL + "\t}\t" + NL + "\tpublic void dropCreate(Context contexto) {" + NL + "\t\t";
+  protected final String TEXT_21 = "DBHelper dao = new ";
+  protected final String TEXT_22 = "DBHelper(contexto);" + NL + "\t\tdao.dropTable();" + NL + "\t\tdao.criaTabela();" + NL + "\t}\t" + NL + "\t\t" + NL + "\t";
+  protected final String TEXT_23 = NL + "\t@Override" + NL + "\tpublic List<";
+  protected final String TEXT_24 = "> getPor";
+  protected final String TEXT_25 = "(Context contexto, long id) {" + NL + "\t\t";
+  protected final String TEXT_26 = "DBHelper dao = new ";
+  protected final String TEXT_27 = "DBHelper(contexto);" + NL + "\t\treturn dao.getPor";
+  protected final String TEXT_28 = "(contexto, id);" + NL + "\t}" + NL + "\t";
+  protected final String TEXT_29 = NL + "\t" + NL + "}";
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+
+    stringBuffer.append(TEXT_1);
+    stringBuffer.append( conf.getNomePacoteServicoSqliteBase() );
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append( conf.getNomePacoteModeloVo() );
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append( conf.getNomePacoteDaoBase() );
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append( conf.getNomePacoteServicoInterface() );
+    stringBuffer.append(TEXT_7);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_8);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_10);
+    
+	Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra.hasNext()) {
+	RegraColecao regra = iteradorRegra.next();
+	if (regra.getAtivoCs()) {
+
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append( regra.getNome() );
+    stringBuffer.append(TEXT_13);
+    
+	}
+	}
+
+    stringBuffer.append(TEXT_14);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_15);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_16);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_17);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_18);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_19);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_20);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_22);
+    
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper relCorrente = iterador.next();
+	
+    stringBuffer.append(TEXT_23);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_24);
+    stringBuffer.append( relCorrente.getNome() );
+    stringBuffer.append(TEXT_25);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_26);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_27);
+    stringBuffer.append( relCorrente.getNome() );
+    stringBuffer.append(TEXT_28);
+    
+	}
+	
+    stringBuffer.append(TEXT_29);
+    return stringBuffer.toString();
+  }
+}

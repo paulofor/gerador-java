@@ -1,0 +1,65 @@
+<%@ jet package="jet.android.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="AgregadoInterface" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo.agregado;
+
+import java.util.List;
+import <%= conf.getNamespace() %>.modelo.*;
+
+public interface <%= classe.getNomeParaClasse() %>AgregadoI{
+
+	// ComChaveEstrangeira
+  	<%
+		Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+		while (iterador.hasNext()) {
+		RelacionamentoWrapper relac = iterador.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(); 
+		public void set<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item); 
+		<% if (classeOposta.getId()!=classe.getId()) { %>
+		public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item); 
+		public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(); 
+		<% } %>
+		<%
+		}
+	%>
+	
+	// SemChaveEstrangeira
+	<%
+		Iterator<RelacionamentoWrapper> iteradorN = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iteradorN.hasNext()) {
+		RelacionamentoWrapper relac = iteradorN.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item);
+		public List<<%= classeOposta.getNomeParaClasse() %>> getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		public List<<%= classeOposta.getNomeParaClasse() %>> getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>Original();
+		public List<<%= classeOposta.getNomeParaClasse() %>> getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(int qtde);
+		public void setLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(List<<%= classeOposta.getNomeParaClasse() %>> lista); 
+		public void setLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>ByDao(List<<%= classeOposta.getNomeParaClasse() %>> lista); 
+		public void criaVaziaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		public boolean existeLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+ 		<%
+		}
+	%>
+	
+	// UmPraUm
+	<%
+		Iterator<RelacionamentoWrapper> iterador1x1 = classe.obtemListaUmPraUm().iterator();
+		while (iterador1x1.hasNext()) {
+		RelacionamentoWrapper relac = iterador1x1.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(); 
+		public void set<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item); 
+ 		<%
+		}
+	%>
+}

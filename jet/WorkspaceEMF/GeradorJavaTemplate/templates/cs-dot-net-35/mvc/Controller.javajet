@@ -1,0 +1,509 @@
+<%@ jet package="jet.csdn35.mvc" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="Controller" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.mvc.controller {
+
+using System;
+using System.Web.Mvc;
+using System.Collections.Generic;
+using <%= conf.getNamespace() %>.mvc.controller;
+using <%= conf.getNamespace() %>.servico;
+using <%= conf.getNamespace() %>.servico.filtro;
+using <%= conf.getNamespace() %>.modelo;
+
+
+public abstract class <%= classe.getNomeParaClasse() %>BaseController : BaseController {
+
+
+		protected <%= classe.getNomeParaClasse() %>Servico servico =
+            FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico
+            (FabricaServico.LOCAL);
+
+		protected <%= classe.getNomeParaClasse() %>Filtro Filtro 
+		{
+			get { return servico.getFiltro(); }
+		}
+		
+		/*
+		<%
+		Iterator<RelacionamentoWrapper> iterador4 = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iterador4.hasNext()) {
+		RelacionamentoWrapper relac = iterador4.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		// Utilizado para carregar dados de um outro objeto em uma Pagina Estrutura.
+		public ActionResult ObtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(long id) {
+			<%= classe.getNomeParaClasse() %> item = servico.obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(id);
+			var model = item;
+			return PartialView("<%= classe.getNomeParaClasse() %>Display", model); 
+		}
+ 		<%
+			}
+		%>
+		*/		
+
+		/**
+         * 1- Obtem objeto passado por Id;
+         * 2- Se id=0 cria novo objeto no banco
+         * 3- Desvia para view Display
+		 * Obs: sem acesso a camada de serviço.
+         */
+ 		public ActionResult Display(long id)
+        {
+            <%= classe.getNomeParaClasse() %> item = null;
+            if (id>0) {
+            	item = servico.obtemPorId(id);
+            } else {
+              	item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+              	preencheNovoItem(item);
+              	servico.criaLoad(item);
+            }
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Display", model);
+        }
+        
+        // Utilizado para exibir um objeto que e parte de outro
+        // sem criar
+        public ActionResult DisplaySimples(long id)
+        {
+            <%= classe.getNomeParaClasse() %> item = null;
+            if (id>0) {
+            	item = servico.obtemPorId(id);
+            } 
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Display", model);
+        }
+        /**
+         * 1- Obtem objeto passado por Id;
+         * (nao tem) 2- Se id=0 cria novo objeto no banco
+         * 3- Desvia para view DisplayPage
+		 * Obs: sem acesso a camada de serviço.
+         */
+ 		public ActionResult DisplayPage(long id)
+        {
+        	ViewData["DiretorioVirtual"] = DiretorioVirtual;
+            <%= classe.getNomeParaClasse() %>  item = obtemObjetoDisplay(id);
+            var model = item;
+            return View("<%= classe.getNomeParaClasse() %>DisplayPage", model);
+        }
+        protected virtual <%= classe.getNomeParaClasse() %> obtemObjetoDisplay(long id) 
+        {
+            return servico.obtemPorId(id);
+        }
+        
+        public ActionResult ExcluiRetornaListaCompleta(long id)
+        {
+        	long idObjeto = Convert.ToInt32(id);
+        	servico.excluiPorId(idObjeto);
+        	return ListaCompleta();
+        }
+        
+        // Chamando um DialogBox para editar.
+        public ActionResult Edita(long id)
+        {
+            <%= classe.getNomeParaClasse() %> item = servico.obtemPorId(id);
+            <%
+			Iterator<RelacionamentoWrapper> itRel3 = classe.obtemListaComChaveEstrangeira().iterator();
+			while (itRel3.hasNext()) {
+			RelacionamentoWrapper relac = itRel3.next();
+			ClasseWrapper classeOposta = relac.getClasseOposta();
+			%>
+			ViewData["<%= classeOposta.getChaveW().getNomePropriedade() %><%= relac.getIniciais() %>"] = item.<%= classeOposta.getChaveW().getNomePropriedade() %><%= relac.getIniciais() %>;
+			<%
+			}
+			%>
+			ViewData["IdCorrente"] = id;
+			PreTelaEdita(item);
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Edita", model);
+        }
+        protected virtual void PreTelaEdita(<%= classe.getNomeParaClasse() %> item) {
+        }
+        
+        
+        
+        <%
+		String parametros = "";
+		Iterator<RelacionamentoWrapper> itRel1 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (itRel1.hasNext()) {
+		RelacionamentoWrapper relac = itRel1.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		if (parametros.length()>0) parametros += " , ";
+		parametros += "int? " + relac.getNomePropriedade();
+		}
+		%>
+       	/**
+         * 1- Cria novo objeto;
+         * 2- Chama preencheNovoItem(item)
+         * 3- Desvia para view Edita
+		 * Obs: sem acesso a camada de serviço.
+	     * Para a montagem do DialogBox
+         */
+         // Montagem do DialogBox para uma criação. 
+         // Para edicao receber o ID e usar metodo Edita
+         // 
+         // Candidato para passar a camada de servico,
+         // e ficar no core da aplicação definindo um padrao 
+         // para objetos novos que jã sao montados com valores iniciais
+         // independente da camada de aplicação.
+         // o unico problema é que nao se encaixa nem num remote nem 
+         // em um local - 09/05/2012 -> Decidir até 09/08/2012
+        public ActionResult Novo(<%= parametros %>)
+        //public ActionResult Novo()
+        {
+            <%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+            <%
+			Iterator<RelacionamentoWrapper> itRel2 = classe.obtemListaComChaveEstrangeira().iterator();
+			while (itRel2.hasNext()) {
+			RelacionamentoWrapper relac = itRel2.next();
+			ClasseWrapper classeOposta = relac.getClasseOposta();
+			%>
+			item.<%= relac.getNomePropriedade() %> = Convert.ToInt32(<%= relac.getNomePropriedade() %>!=null?<%= relac.getNomePropriedade() %>:0);<%
+			}
+			%>
+			ViewData["IdCorrente"] = 0;
+            preencheNovoItem(item);
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Edita", model);
+        }
+        public ActionResult ListaCorrente(<%= parametros %>) {
+         	<%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+            <%
+			Iterator<RelacionamentoWrapper> itRel6 = classe.obtemListaComChaveEstrangeira().iterator();
+			while (itRel6.hasNext()) {
+			RelacionamentoWrapper relac = itRel6.next();
+			ClasseWrapper classeOposta = relac.getClasseOposta();
+			%>
+			item.<%= relac.getNomePropriedade() %> = Convert.ToInt32(<%= relac.getNomePropriedade() %>!=null?<%= relac.getNomePropriedade() %>:0);<%
+			}
+			%>
+			montaFiltroChaves(item);
+			var model = servico.listaFiltroChaves();
+        	return PartialView("<%= classe.getNomeParaClasse() %>Lista", model);
+        }
+        
+        // Para ser usado quando vai se criar um objeto, exibindo lista.
+        // Apartir de um outro ja existente
+        /*
+        public ActionResult EstruturaDependente(<%= parametros %>) {
+        	<%
+			Iterator<RelacionamentoWrapper> itRel7 = classe.obtemListaComChaveEstrangeira().iterator();
+			while (itRel7.hasNext()) {
+			RelacionamentoWrapper relac = itRel7.next();
+			ClasseWrapper classeOposta = relac.getClasseOposta();
+			%>
+			ViewData["<%= relac.getNomePropriedade() %>"] = Convert.ToInt32(<%= relac.getNomePropriedade() %>!=null?<%= relac.getNomePropriedade() %>:0);<%
+			}
+			%>
+			preViewEstrutura();
+           	return View("<%= classe.getNomeParaClasse() %>Estrutura");
+        }
+		*/
+        
+        
+        private <%= classe.getNomeParaClasse() %> criaNovoComChaves(FormCollection collection) {
+        	<%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+            <%
+			Iterator<RelacionamentoWrapper> itRel4 = classe.obtemListaComChaveEstrangeira().iterator();
+			while (itRel4.hasNext()) {
+			RelacionamentoWrapper relac = itRel4.next();
+			ClasseWrapper classeOposta = relac.getClasseOposta();
+			%>
+			item.<%= relac.getNomePropriedade() %> = (collection["<%= relac.getNomePropriedade() %>"]!=null?Convert.ToInt32(collection["<%= relac.getNomePropriedade() %>"]):0);
+			<%
+			}
+			%>
+			item.<%= classe.getChaveW().getNomePropriedade() %> = (collection["<%= classe.getChaveW().getNomePropriedade() %>"]!=null?Convert.ToInt32(collection["<%= classe.getChaveW().getNomePropriedade() %>"]):0);
+			return item;
+        }
+        
+        protected void montaFiltroChaves(<%= classe.getNomeParaClasse() %> item) {
+            <%
+			Iterator<RelacionamentoWrapper> itRel5 = classe.obtemListaComChaveEstrangeira().iterator();
+			while (itRel5.hasNext()) {
+			RelacionamentoWrapper relac = itRel5.next();
+			ClasseWrapper classeOposta = relac.getClasseOposta();
+			%>
+			servico.getFiltro().Codigo<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = item.<%= relac.getNomePropriedade() %>;
+			<%
+			}
+			%>
+        }
+        
+        
+        <% if (parametros.length()>0) { %>
+        /*
+        public ActionResult Novo()
+        {
+            <%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+			ViewData["IdCorrente"] = 0;
+            preencheNovoItem(item);
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Edita", model);
+        }
+		*/
+        <% } %>
+        
+        
+        
+         /**
+         * 1- Chama listaFiltroChaves ( precisa montar Filtro )
+         * 2- Retorna view Lista
+         */
+        protected ActionResult ListaCorrenteFiltro() 
+        {
+        	var model = servico.listaFiltroChaves();
+        	//preViewLista();
+			return PartialView("<%= classe.getNomeParaClasse() %>Lista", model);
+        }
+        
+        
+        /*
+		Nao funciona com QueryString
+        public ActionResult ListaCorrente(FormCollection collection) 
+        {
+        <%
+		Iterator<RelacionamentoWrapper> itRel = classe.obtemListaComChaveEstrangeira().iterator();
+		while (itRel.hasNext()) {
+		RelacionamentoWrapper relac = itRel.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+			servico.getFiltro().Codigo<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = Convert.ToInt32(collection["Id<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>"]);
+ 		<%
+		}
+		%>	
+			var model = servico.listaFiltroChaves();
+			return PartialView("<%= classe.getNomeParaClasse() %>Lista", model);
+        }
+		*/        
+
+        /**
+         * 1- Obtem objeto por ID
+         * 2- Chama preencheItemEdicao(item,form)
+         * 3- Atualiza na base de dados 
+		 * 4- Chama Método Display
+         */
+        public ActionResult AtualizaDisplay(int id, FormCollection collection)
+        {
+        	ViewData["DiretorioVirtual"] = DiretorioVirtual;
+            <%= classe.getNomeParaClasse() %> item = servico.obtemPorId(id);
+            preencheItemEdicao(item,collection);
+            servico.atualiza(item);
+            return Display(id);
+        }
+        
+         /**
+         * 1- Obtem objeto por ID
+         * 2- Chama preencheItemEdicao(item,form)
+         * 3- Atualiza na base de dados 
+		 * 4- Chama Método ListaCorrente
+         */
+        /* 
+		Depende do ListaCorrente que esta desativado
+        public ActionResult AtualizaLista(int id, FormCollection collection)
+        {
+            <%= classe.getNomeParaClasse() %> item = servico.obtemPorId(id);
+            preencheItemEdicao(item,collection);
+            servico.atualiza(item);
+            return ListaCorrente(collection);
+        }
+        */
+        public ActionResult CriaEditaRetornaLista(FormCollection collection)
+        {
+        	ViewData["DiretorioVirtual"] = DiretorioVirtual;
+            <%= classe.getNomeParaClasse() %> item = criaNovoComChaves(collection); // cria mais do que precisa no caso de edicao
+            if (item.<%= classe.getChaveW().getNomePropriedade() %> != 0)
+                item = servico.obtemPorId(item.<%= classe.getChaveW().getNomePropriedade() %>);
+            preencheItemEdicao(item, collection);
+            if (item.<%= classe.getChaveW().getNomePropriedade() %>==0) {
+            	montaFiltroChaves(item); // utilizando somente para criacao - recuperacao da tela de edicao
+	            servico.criaLoad(item);
+	        } else {
+	        	servico.atualiza(item);
+            }
+            var lista = RetornaLista(servico.getFiltro(),item, collection);
+            return PartialView("<%= classe.getNomeParaClasse() %>Lista", lista);
+        }
+        // Permite alterar o metodo de retorno para exibição de lista e nao usar listaFiltroChave
+        protected virtual List<<%= classe.getNomeParaClasse() %>> RetornaLista(<%= classe.getNomeParaClasse() %>Filtro filtro, <%= classe.getNomeParaClasse() %> item, FormCollection collection )
+        {
+            montaFiltroListaRetorno(filtro, item);
+            return servico.listaFiltroChaves();
+        }
+        
+        public ActionResult CriaNovoRetornaLista(FormCollection collection)
+        {
+        	ViewData["DiretorioVirtual"] = DiretorioVirtual;
+            <%= classe.getNomeParaClasse() %> item = criaNovoComChaves(collection);
+            preencheItemEdicao(item, collection);
+            servico.criaLoad(item);
+            montaFiltroChaves(item);
+            var lista = RetornaLista(servico.getFiltro(),item, collection);
+            return PartialView("<%= classe.getNomeParaClasse() %>Lista", lista);
+        }
+        
+        // Permite montar o filtro para lista de retorno em caso de poder usar listaFiltroChave
+        protected abstract void montaFiltroListaRetorno(<%= classe.getNomeParaClasse() %>Filtro filtro, <%= classe.getNomeParaClasse() %> item);
+ 
+        
+        protected virtual void preencheItemEdicao(<%= classe.getNomeParaClasse() %> item,FormCollection collection) {
+        	<%
+        	Iterator<AtributoWrapper> it2 = classe.getListaCamposEdicao().iterator();
+        	String campoTela = "";
+        	while (it2.hasNext()) {
+        		AtributoWrapper corrente = it2.next();
+        		campoTela = "collection[\"" + corrente.getNomePropriedade() + "\"]";
+        		if (corrente.ehDecimal()) campoTela = "(float) Convert.ToDecimal(collection[\"" + corrente.getNomePropriedade() + "\"])";
+        		if (corrente.ehLogico()) campoTela = "(collection[\"" + corrente.getNomePropriedade() + "\"]==\"S\")";
+        		if (corrente.ehInteiro()) campoTela =  " Convert.ToInt32(collection[\"" + corrente.getNomePropriedade() + "\"])"; 
+        	%>
+	        	item.<%= corrente.getNomePropriedade() %> = <%= campoTela %>;
+	        <%
+        	}
+        	%>
+        }
+        /**
+         * 1- Chama view de Estrutura
+         */
+        public ActionResult Estrutura(int? id)
+        {
+        	ViewData["DiretorioVirtual"] = DiretorioVirtual;
+        	ViewData["Id<%= classe.getNomeParaClasse() %>"] = (id!=null?id:0);
+        	preViewEstrutura();
+           	return View("<%= classe.getNomeParaClasse() %>Estrutura");
+        }
+        protected virtual void preViewEstrutura() {
+        }
+        
+        protected abstract void preencheNovoItem(<%= classe.getNomeParaClasse() %> item);
+        
+            
+        public virtual ActionResult ListaCompleta()
+        {
+        	ViewData["DiretorioVirtual"] = DiretorioVirtual;
+            var model = servico.listaTotal();
+            return View("ListaCompleta",model);
+        }
+        
+        <%
+		Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador.hasNext()) {
+			RelacionamentoWrapper relCorrente = iterador.next();
+		%>
+
+		<% if (classe.isAssociativa()) { %>
+		// Para fazer atualizacoes em objetos associativos.
+		// **** Usar para fazer atualização de relacionamentos NxN usando uma unica tela.
+		// Exemplo: Experimento/Periodo
+		public ActionResult AtualizaPor<%= relCorrente.getNome() %>NN(int id, FormCollection collection) {
+			string[] ids = collection["<%= classe.getChaveW().getNomePropriedade() %>"].ToString().Split(',');
+            long idItem = Convert.ToInt32(id);
+            servico.AtualizaPor<%= relCorrente.getNome() %>NN(idItem,ids);
+            return ListaPor<%= relCorrente.getNome() %>(id);
+		}
+		<% } %>
+
+		protected ActionResult AtualizaListaPor<%= relCorrente.getNome() %>(int id, FormCollection collection) {
+			<%= classe.getNomeParaClasse() %> item = servico.obtemPorId(id);
+            preencheItemEdicao(item,collection);
+            servico.atualiza(item);
+			var model = servico.getPor<%= relCorrente.getNome() %>(item.<%= relCorrente.getNomePropriedade() %>);
+            return PartialView("<%= classe.getNomeParaClasse() %>Lista", model);
+		}
+
+		
+		
+		
+		// Usada nas telas.
+		public ActionResult ListaPor<%= relCorrente.getNome() %>(int id) {
+			ViewData["DiretorioVirtual"] = DiretorioVirtual;
+			var model = servico.getPor<%= relCorrente.getNome() %>(id);
+			ViewData["Matriz"] = ObtemMatriz<%= relCorrente.getNome() %>(id);
+            return PartialView("<%= classe.getNomeParaClasse() %>Lista", model);
+		}
+		public ActionResult ListaPagePor<%= relCorrente.getNome() %>(int id) {
+			ViewData["DiretorioVirtual"] = DiretorioVirtual;
+			var model = servico.getPor<%= relCorrente.getNome() %>(id);
+	        ViewData["Matriz"] = ObtemMatriz<%= relCorrente.getNome() %>(id);
+            return View("<%= classe.getNomeParaClasse() %>Lista", model);
+		}
+		// Se for utilizar marcar o relacionamento como dependente para
+		// melhor aproveitar os arquivos de View
+		public ActionResult EstruturaPor<%= relCorrente.getNome() %>(int id) {
+			ViewData["DiretorioVirtual"] = DiretorioVirtual;
+			var model = servico.getPor<%= relCorrente.getNome() %>(id);
+			ViewData["Matriz"] = ObtemMatriz<%= relCorrente.getNome() %>(id);
+			//preViewEstrutura();
+            return View("<%= classe.getNomeParaClasse() %>Estrutura", model);
+		}
+		protected virtual <%= relCorrente.getClasseOposta().getNomeParaClasse() %> ObtemMatriz<%= relCorrente.getNome() %>(int id) {
+			<%= relCorrente.getClasseOposta().getNomeParaClasse() %>Servico servicoAux = FabricaServico.getInstancia().get<%= relCorrente.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.LOCAL);
+            <%= relCorrente.getClasseOposta().getNomeParaClasse() %> item = servicoAux.obtemPorId(id);
+            return item;
+		}
+		protected ActionResult CriaPor<%= relCorrente.getNome() %>(int id) {
+			ViewData["DiretorioVirtual"] = DiretorioVirtual;
+			<%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+            item.<%= relCorrente.getNomePropriedade() %> = id;
+            preencheNovoItem(item);
+            servico.criaLoad(item);
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Edita", model);
+		}
+		protected ActionResult CriaNovoRetornaListaPor<%= relCorrente.getNome() %>(int id) {
+			ViewData["DiretorioVirtual"] = DiretorioVirtual;
+			<%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+            item.<%= relCorrente.getNomePropriedade() %> = id;
+            preencheNovoItem(item);
+            servico.criaLoad(item);
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Edita", model);
+		}
+		<%
+		}
+		%>
+		
+		
+		
+		<%
+	// *****  Somente associativas ********
+	if (classe.isAssociativa()) {
+	List<RelacionamentoWrapper> relac = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper rel1 = relac.get(0);
+	RelacionamentoWrapper rel2 = relac.get(1);
+	%>
+	public ActionResult EditaAssociacao<%= rel1.getClasseOposta().getNomeParaClasse() %><%= rel1.getNomeRelacionamento() %>(int id)
+    {
+    	long idLg = Convert.ToInt32(id);
+        List<<%= classe.getNomeParaClasse() %>> listaAssociada = servico.getPor<%= rel1.getNome() %>(id);
+        List<<%= rel2.getClasseOposta().getNomeParaClasse() %>> listaComplementar = servico.lista<%= rel2.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel2.getNomeRelacionamento() %>(id);
+        ViewData["<%= classe.getChaveW().getNomePropriedade() %>"] = new SelectList(listaAssociada, "IdPeriodoExperimentoA", "<%= rel2.getClasseOposta().getNomeParaClasse() %>_<%= rel1.getNomeRelacionamento() %>.<%= rel2.getClasseOposta().getIdentificadorW().getNomePropriedade() %>");
+        ViewData["<%= rel2.getClasseOposta().getChaveW().getNomePropriedade() %>"] = new SelectList(listaComplementar, "<%= rel2.getClasseOposta().getChaveW().getNomePropriedade() %>", "<%= rel2.getClasseOposta().getIdentificadorW().getNomePropriedade() %>");
+        return PartialView("<%= classe.getNomeParaClasse() %>Associacao");
+    }
+    
+    public ActionResult EditaAssociacao<%= rel2.getClasseOposta().getNomeParaClasse() %><%= rel2.getNomeRelacionamento() %>(int id)
+    {
+    	long idLg = Convert.ToInt32(id);
+        List<<%= classe.getNomeParaClasse() %>> listaAssociada = servico.getPor<%= rel2.getNome() %>(id);
+        List<<%= rel1.getClasseOposta().getNomeParaClasse() %>> listaComplementar = servico.lista<%= rel1.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel1.getNomeRelacionamento() %>(id);
+        ViewData["<%= classe.getChaveW().getNomePropriedade() %>"] = new SelectList(listaAssociada, "IdPeriodoExperimentoA", "<%= rel1.getClasseOposta().getNomeParaClasse() %>_<%= rel2.getNomeRelacionamento() %>.<%= rel1.getClasseOposta().getIdentificadorW().getNomePropriedade() %>");
+        ViewData["<%= rel1.getClasseOposta().getChaveW().getNomePropriedade() %>"] = new SelectList(listaComplementar, "<%= rel1.getClasseOposta().getChaveW().getNomePropriedade() %>", "<%= rel1.getClasseOposta().getIdentificadorW().getNomePropriedade() %>");
+        return PartialView("<%= classe.getNomeParaClasse() %>Associacao");
+    }
+    <%
+	}
+	%>
+		
+		
+	}
+
+
+}
+

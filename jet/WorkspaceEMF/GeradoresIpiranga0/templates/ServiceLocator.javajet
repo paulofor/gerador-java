@@ -1,0 +1,26 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ServiceLocator" %>
+<%
+EPackage pacote = (EPackage) argument; 
+ClassWrapper classe = new ClassWrapper();
+AttributeWrapper atributo = new AttributeWrapper();
+ReferenceWrapper referencia = null;
+Iterator<EClassifier> iterador = pacote.getEClassifiers().iterator();
+%>
+package <%= classe.getPacoteServiceI() %>;
+
+import <%= classe.getPacoteServiceImpl() %>.*;
+
+public class ServiceLocator {
+	<%
+	while (iterador.hasNext()) {
+		classe.setClasse((EClass) iterador.next());
+	%>
+	public static <%= classe.getNomeServiceI() %> get<%= classe.getNomeServiceI() %>() {
+		return new <%= classe.getNomeServiceImpl() %>();
+	}
+	<%
+	}
+	%>
+}

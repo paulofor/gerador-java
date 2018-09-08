@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Name: %Bundle-Name.0
+Bundle-ClassPath: .
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-SymbolicName: org.apache.cactus
+Bundle-Version: 1.7.2.v200606181221
+Eclipse-LazyStart: true
+

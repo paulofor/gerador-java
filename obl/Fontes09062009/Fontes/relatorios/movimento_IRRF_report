@@ -1,0 +1,1609 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="movimento_IRRF"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="5"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="102"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="197"
+						y="6"
+						width="146"
+						height="44"
+						key="image-1"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA["C:\\Documents and Settings\\robson.oliveira\\Desktop\\relatorios\\logo.jpg"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="24"
+						y="69"
+						width="0"
+						height="0"
+						key="staticText-1"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<text><![CDATA[Texto Estático]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="78"
+						y="56"
+						width="393"
+						height="20"
+						key="staticText-2"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+					</textElement>
+				<text><![CDATA[INFORME DE RENDIMENTOS E IRRF - PESSOA JURÍDICA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="146"
+						y="76"
+						width="255"
+						height="19"
+						key="staticText-3"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[GERAÇÃO DE BASE DE RENDIMENTOS E IRRF]]></text>
+				</staticText>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="51"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="2"
+						y="7"
+						width="98"
+						height="17"
+						key="staticText-4"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[PERÍODO REF.:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="104"
+						y="7"
+						width="173"
+						height="17"
+						key="staticText-5"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica" size="12" isBold="false"/>
+					</textElement>
+				<text><![CDATA[01/01/2006  a 29/02/2006]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="3"
+						y="29"
+						width="274"
+						height="17"
+						key="staticText-7"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[PV: 0001 - Banco do Brasil]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="47"
+						width="535"
+						height="0"
+						key="line-1"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="473"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="2"
+						y="1"
+						width="32"
+						height="16"
+						key="staticText-8"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[MÊS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="39"
+						y="1"
+						width="59"
+						height="16"
+						key="staticText-9"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[PRODUTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="103"
+						y="1"
+						width="91"
+						height="16"
+						key="staticText-10"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[CÓD. RETENÇÃO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="199"
+						y="1"
+						width="71"
+						height="16"
+						key="staticText-11"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[DESCRIÇÃO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="1"
+						width="63"
+						height="16"
+						key="staticText-12"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[QUANT. TIT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="1"
+						width="112"
+						height="16"
+						key="staticText-13"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[VALOR RENDIMENTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="1"
+						width="67"
+						height="16"
+						key="staticText-14"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[VALORR IR]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="23"
+						width="28"
+						height="16"
+						key="staticText-15"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[01]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="39"
+						y="23"
+						width="59"
+						height="16"
+						key="staticText-16"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[pm48]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="132"
+						y="23"
+						width="59"
+						height="16"
+						key="staticText-17"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[3426]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="199"
+						y="23"
+						width="71"
+						height="16"
+						key="staticText-18"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[resgate]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="23"
+						width="63"
+						height="16"
+						key="staticText-19"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[190.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="23"
+						width="112"
+						height="16"
+						key="staticText-20"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[500.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="23"
+						width="67"
+						height="16"
+						key="staticText-21"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[150.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="43"
+						width="28"
+						height="16"
+						key="staticText-22"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[01]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="39"
+						y="43"
+						width="59"
+						height="16"
+						key="staticText-23"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[pm48]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="132"
+						y="43"
+						width="59"
+						height="16"
+						key="staticText-24"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[0916]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="199"
+						y="43"
+						width="71"
+						height="16"
+						key="staticText-25"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[sorteio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="43"
+						width="63"
+						height="16"
+						key="staticText-26"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[50.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="43"
+						width="112"
+						height="16"
+						key="staticText-27"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[700.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="43"
+						width="67"
+						height="16"
+						key="staticText-28"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[210.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="5"
+						y="62"
+						width="28"
+						height="16"
+						key="staticText-29"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[01]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="38"
+						y="62"
+						width="59"
+						height="16"
+						key="staticText-30"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[pm60]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="131"
+						y="62"
+						width="59"
+						height="16"
+						key="staticText-31"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[3426]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="198"
+						y="62"
+						width="71"
+						height="16"
+						key="staticText-32"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[resgate]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="277"
+						y="62"
+						width="63"
+						height="16"
+						key="staticText-33"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[290.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="346"
+						y="62"
+						width="112"
+						height="16"
+						key="staticText-34"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[1.000.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="467"
+						y="62"
+						width="67"
+						height="16"
+						key="staticText-35"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[300.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="5"
+						y="82"
+						width="28"
+						height="16"
+						key="staticText-36"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[01]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="38"
+						y="82"
+						width="59"
+						height="16"
+						key="staticText-37"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[pm60]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="131"
+						y="82"
+						width="59"
+						height="16"
+						key="staticText-38"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[3426]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="198"
+						y="82"
+						width="71"
+						height="16"
+						key="staticText-39"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[resgate]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="277"
+						y="82"
+						width="63"
+						height="16"
+						key="staticText-40"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[150.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="346"
+						y="82"
+						width="112"
+						height="16"
+						key="staticText-41"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[20.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="467"
+						y="82"
+						width="67"
+						height="16"
+						key="staticText-42"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[6.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="178"
+						y="105"
+						width="92"
+						height="16"
+						key="staticText-43"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TOTAL DO MÊS:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="277"
+						y="105"
+						width="63"
+						height="16"
+						key="staticText-44"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[680.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="105"
+						width="112"
+						height="16"
+						key="staticText-45"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[2.220.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="105"
+						width="67"
+						height="16"
+						key="staticText-46"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[666.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="2"
+						y="131"
+						width="32"
+						height="16"
+						key="staticText-47"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[MÊS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="39"
+						y="131"
+						width="59"
+						height="16"
+						key="staticText-48"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[PRODUTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="103"
+						y="131"
+						width="91"
+						height="16"
+						key="staticText-49"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[CÓD. RETENÇÃO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="199"
+						y="131"
+						width="71"
+						height="16"
+						key="staticText-50"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[DESCRIÇÃO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="131"
+						width="63"
+						height="16"
+						key="staticText-51"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[QUANT. TIT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="131"
+						width="112"
+						height="16"
+						key="staticText-52"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[VALOR RENDIMENTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="131"
+						width="67"
+						height="16"
+						key="staticText-53"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[VALORR IR]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="153"
+						width="28"
+						height="16"
+						key="staticText-54"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[02]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="39"
+						y="153"
+						width="59"
+						height="16"
+						key="staticText-55"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[pm48]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="132"
+						y="153"
+						width="59"
+						height="16"
+						key="staticText-56"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[3426]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="199"
+						y="153"
+						width="71"
+						height="16"
+						key="staticText-57"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[resgate]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="153"
+						width="63"
+						height="16"
+						key="staticText-58"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[125.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="153"
+						width="112"
+						height="16"
+						key="staticText-59"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[320.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="153"
+						width="67"
+						height="16"
+						key="staticText-60"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[96.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="173"
+						width="28"
+						height="16"
+						key="staticText-61"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[02]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="39"
+						y="173"
+						width="59"
+						height="16"
+						key="staticText-62"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[pm36a]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="132"
+						y="173"
+						width="59"
+						height="16"
+						key="staticText-63"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[3426]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="199"
+						y="173"
+						width="71"
+						height="16"
+						key="staticText-64"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[resgate]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="173"
+						width="63"
+						height="16"
+						key="staticText-65"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[75.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="173"
+						width="112"
+						height="16"
+						key="staticText-66"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[550.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="173"
+						width="67"
+						height="16"
+						key="staticText-67"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[165.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="5"
+						y="192"
+						width="28"
+						height="16"
+						key="staticText-68"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[02]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="38"
+						y="192"
+						width="59"
+						height="16"
+						key="staticText-69"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[pm36a]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="131"
+						y="192"
+						width="59"
+						height="16"
+						key="staticText-70"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[0916]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="198"
+						y="192"
+						width="71"
+						height="16"
+						key="staticText-71"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[sorteio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="277"
+						y="192"
+						width="63"
+						height="16"
+						key="staticText-72"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[50.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="346"
+						y="192"
+						width="112"
+						height="16"
+						key="staticText-73"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[110.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="467"
+						y="192"
+						width="67"
+						height="16"
+						key="staticText-74"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[33.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="178"
+						y="214"
+						width="92"
+						height="16"
+						key="staticText-82"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TOTAL DO MÊS:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="277"
+						y="214"
+						width="63"
+						height="16"
+						key="staticText-83"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[250.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="214"
+						width="112"
+						height="16"
+						key="staticText-84"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[980.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="214"
+						width="67"
+						height="16"
+						key="staticText-85"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[294.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="178"
+						y="233"
+						width="92"
+						height="16"
+						key="staticText-86"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TOTAL DO PV:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="277"
+						y="233"
+						width="63"
+						height="16"
+						key="staticText-87"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[930.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="233"
+						width="112"
+						height="16"
+						key="staticText-88"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[3.200.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="233"
+						width="67"
+						height="16"
+						key="staticText-89"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[960.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="2"
+						y="300"
+						width="32"
+						height="16"
+						key="staticText-90"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[MÊS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="39"
+						y="300"
+						width="59"
+						height="16"
+						key="staticText-91"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[PRODUTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="103"
+						y="300"
+						width="91"
+						height="16"
+						key="staticText-92"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[CÓD. RETENÇÃO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="199"
+						y="300"
+						width="71"
+						height="16"
+						key="staticText-93"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[DESCRIÇÃO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="300"
+						width="63"
+						height="16"
+						key="staticText-94"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[QUANT. TIT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="300"
+						width="112"
+						height="16"
+						key="staticText-95"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[VALOR RENDIMENTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="300"
+						width="67"
+						height="16"
+						key="staticText-96"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[VALORR IR]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="322"
+						width="28"
+						height="16"
+						key="staticText-97"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[01]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="39"
+						y="322"
+						width="59"
+						height="16"
+						key="staticText-98"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[pm48]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="132"
+						y="322"
+						width="59"
+						height="16"
+						key="staticText-99"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[3426]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="199"
+						y="322"
+						width="71"
+						height="16"
+						key="staticText-100"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[resgate]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="322"
+						width="63"
+						height="16"
+						key="staticText-101"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[400.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="322"
+						width="112"
+						height="16"
+						key="staticText-102"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[500.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="322"
+						width="67"
+						height="16"
+						key="staticText-103"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[150.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="342"
+						width="28"
+						height="16"
+						key="staticText-104"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[01]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="39"
+						y="342"
+						width="59"
+						height="16"
+						key="staticText-105"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[pm48]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="132"
+						y="342"
+						width="59"
+						height="16"
+						key="staticText-106"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[3426]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="199"
+						y="342"
+						width="71"
+						height="16"
+						key="staticText-107"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[resgate]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="342"
+						width="63"
+						height="16"
+						key="staticText-108"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[480.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="342"
+						width="112"
+						height="16"
+						key="staticText-109"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[700.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="342"
+						width="67"
+						height="16"
+						key="staticText-110"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[210.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="178"
+						y="364"
+						width="92"
+						height="16"
+						key="staticText-118"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TOTAL DO MÊS:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="277"
+						y="364"
+						width="63"
+						height="16"
+						key="staticText-119"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[880.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="364"
+						width="112"
+						height="16"
+						key="staticText-120"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[1.200.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="364"
+						width="67"
+						height="16"
+						key="staticText-121"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[360.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="178"
+						y="384"
+						width="92"
+						height="16"
+						key="staticText-122"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TOTAL DO PV:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="277"
+						y="384"
+						width="63"
+						height="16"
+						key="staticText-123"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[880.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="384"
+						width="112"
+						height="16"
+						key="staticText-124"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[1.200.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="384"
+						width="67"
+						height="16"
+						key="staticText-125"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[360.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="2"
+						y="273"
+						width="274"
+						height="17"
+						key="staticText-126"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[PV: 0002 - Aliança do Brasil]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="291"
+						width="535"
+						height="0"
+						key="line-2"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="161"
+						y="411"
+						width="109"
+						height="16"
+						key="staticText-127"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TOTAL DO GERAL:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="277"
+						y="411"
+						width="63"
+						height="16"
+						key="staticText-128"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[1.810.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="347"
+						y="411"
+						width="112"
+						height="16"
+						key="staticText-129"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[4.400.000,00]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="411"
+						width="67"
+						height="16"
+						key="staticText-130"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[1.320.000,00]]></text>
+				</staticText>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="30"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="50"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<lastPageFooter>
+			<band height="50"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="21"
+						width="535"
+						height="0"
+						key="line-3"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="423"
+						y="22"
+						width="112"
+						height="16"
+						key="staticText-131"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+					</textElement>
+				<text><![CDATA[15/01/2009 - 15:30]]></text>
+				</staticText>
+			</band>
+		</lastPageFooter>
+		<summary>
+			<band height="50"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

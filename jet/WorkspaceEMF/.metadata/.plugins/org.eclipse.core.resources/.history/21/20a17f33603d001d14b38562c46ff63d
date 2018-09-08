@@ -1,0 +1,25 @@
+import java.net.URI;
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+
+
+
+public class Testando {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ResourceSet resourceSet = new ResourceSetImpl();
+
+		//Resource resource = resourceSet.getResource(URI.createFileURI("C:/eclipse/workspace/ProjetoModelo2/model/teste2.ecore"), true);
+		Resource resource = resourceSet.getResource(URI.create("C:/eclipse/workspace/ProjetoModelo2/model/teste2.ecore"), true);
+
+		EObject documentRoot = (EObject)resource.getContents().get(0);
+	}
+
+}

@@ -1,0 +1,514 @@
+<%@ jet package="jet.java.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="DaoBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.dao.basica;
+
+import java.util.List;
+
+import <%= conf.getNamespace() %>.dao.montador.*;
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.regracolecao.filtro.<%= classe.getNomeParaClasse() %>Filtro;
+import br.com.digicom.lib.dao.DaoException;
+import br.com.digicom.lib.dao.DataFonte;
+import br.com.digicom.lib.dao.MontadorDaoI;
+import br.com.digicom.lib.util.DCConvert;
+import br.com.digicom.lib.dao.MontadorDaoComposite;
+
+
+
+public abstract class <%= classe.getNomeParaClasse() %>DaoBase extends DaoAplicacao implements <%= classe.getNomeParaClasse() %>DaoBaseI {
+	
+	
+	public <%= classe.getNomeParaClasse() %>DaoBase() {
+		super();
+	}
+	public <%= classe.getNomeParaClasse() %>DaoBase(DataFonte dataSource) {
+		super(dataSource);
+	}
+	protected String ConsultaJoin() {
+		String tabelas;
+		tabelas = tabelaSelect();
+		return tabelas;
+	}
+	protected String CamposSelectJoin() {
+		String select;
+		select = camposOrdenados();
+		return select;
+	}
+	protected  MontadorDaoI criaMontadorPadrao() {
+		return new <%= classe.getNomeParaClasse() %>Montador();
+	}
+	public static String tabelaSelect() {
+		return " <%= classe.getNomeParaTabela() %>" ;
+	}
+	public  String orderByLista() {
+		return orderBy();
+	}
+	public  String whereLista() {
+		return "";
+	}
+	public  String whereListaConcatenado() {
+		return "";
+	}
+	public   static String orderBy() {
+		return " order by " + tabelaSelect() + ".<%= classe.getIdentificadorW().getNomeCampoTabela() %> " ;
+	}
+	
+	
+	public static String camposOrdenados() {
+		return <%
+		Iterator<AtributoTotalI> iterador10 = classe.getListaAtributoTotal().iterator();
+		boolean primeiro = true;
+		while (iterador10.hasNext()) {
+		AtributoTotalI atributo = iterador10.next();
+		String campo = classe.getNomeParaTabela() + "." + atributo.getNomeCampoTabela();
+		if (atributo.getTipoOriginal().compareTo("Tempo")==0)
+			campo = " DATE_FORMAT(" + campo + ",'%H:%i')";
+		if (atributo.getTipoOriginal().compareTo("Data")==0)
+			campo = " DATE_FORMAT(" + campo + ",'%d-%m-%Y')";
+		if (atributo.getTipoOriginal().compareTo("DTemp")==0)
+			campo = " DATE_FORMAT(" + campo + ",'%d-%m-%Y %H:%i:%s')";
+		if (primeiro) {
+		%>" <%= campo %> " 
+		<% } else { %>+ " ,<%= campo %> " 
+		<%
+		}
+		primeiro = false;
+		}
+		%>;
+	}
+
+	public static String camposOrdenadosAlias(String nomeTabela) {
+		return <%
+		Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+		primeiro = true;
+		while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();
+		String campo = "nomeTabela + \"." + atributo.getNomeCampoTabela();
+		if (atributo.getTipoOriginal().compareTo("Tempo")==0)
+			campo = " \"DATE_FORMAT(\" + " + campo + ",'%H:%i')";
+		if (atributo.getTipoOriginal().compareTo("Data")==0)
+			campo = " \"DATE_FORMAT(\" + " + campo + ",'%d-%m-%Y')";
+		if (atributo.getTipoOriginal().compareTo("DTemp")==0)
+			campo = " \"DATE_FORMAT(\" + " + campo + ",'%d-%m-%Y %H:%i:%s')";
+		if (primeiro) {
+		%> <%= campo %> " 
+		<% } else { %>+ " , " + <%= campo %> " 
+		<%
+		}
+		primeiro = false;
+		}
+		%>;
+	}
+	
+	
+	@Override
+	public void insereItem(<%= classe.getNomeParaClasse() %> item) throws DaoException {
+		String sql;
+        sql = "insert into " + tabelaSelect() +
+            camposInsert() + " values " + valoresInsert(item);
+        this.executaSql(sql);
+	}
+	@Override
+	public void insereItemCompleto(<%= classe.getNomeParaClasse() %> item) throws DaoException {
+		// mesmo que anterior com a chave
+		throw new UnsupportedOperationException ();
+	}
+	@Override
+	public boolean insereSeNaoExiste(<%= classe.getNomeParaClasse() %> item) throws DaoException {
+		<%= classe.getNomeParaClasse() %> teste = this.obtemPorChave(item.get<%= classe.getChaveW().getNomePropriedade() %>());
+      	if (teste == null)
+      	{
+        	insereItemCompleto(item);
+          	return true;
+      	}
+      	else
+      	{
+          	return false;
+      	}
+	}
+	@Override
+	public void insereItemLoad(<%= classe.getNomeParaClasse() %> item) throws DaoException {
+		String sql;
+        sql = "insert into " + tabelaSelect() +
+            camposInsert() + " values " + valoresInsert(item);
+        this.executaSql(sql);
+        sql = " SELECT MAX(<%= classe.getChaveW().getNomeCampoTabela() %>) from " + tabelaSelect();
+        long id = this.getValorLong(sql);
+        item.set<%= classe.getChaveW().getNomePropriedade() %>(id);	
+	}
+	@Override
+	public void alteraItem(<%= classe.getNomeParaClasse() %> item) throws DaoException {
+		String sql;
+        sql = "update " + tabelaSelect() +
+            " set " + camposValoresUpdateEdicao(item) + 
+            " where <%= classe.getChaveW().getNomeCampoTabela() %> = " + item.get<%= classe.getChaveW().getNomePropriedade() %>();
+        this.executaSql(sql);
+ 	}
+	@Override
+	public void excluiItem(<%= classe.getNomeParaClasse() %> item) throws DaoException {
+		String query = null;
+		query = " delete from " + tabelaSelect() + " where <%= classe.getChaveW().getNomeCampoTabela() %> = " + item.get<%= classe.getChaveW().getNomePropriedade() %>();
+		executaSql(query);
+	}
+	@Override
+	public <%= classe.getNomeParaClasse() %> obtemPorChave(long id) throws DaoException {
+		setMontador(null);
+		String sql;
+        sql = "select " + camposOrdenados() + 
+        	" from " + tabelaSelect() +
+         	" where <%= classe.getChaveW().getNomeCampoTabela() %> = " + id;
+        return (<%= classe.getNomeParaClasse() %>) getObjeto(sql);
+	}
+	@Override
+	public List ListaFiltro(<%= classe.getNomeParaClasse() %>Filtro filtro) throws DaoException {
+		setMontador(null);
+		String sql;
+      	sql = "select " + CamposSelectJoin() + " from " + ConsultaJoin();
+      	String where;
+      	where = WhereFiltro(filtro) + whereListaConcatenado();
+      	if (where.length() > 0)
+        	sql += " where " + where;
+      	sql += orderByLista();
+      	return getListaSql(sql);
+	}
+	
+	protected  String WhereFiltro( <%= classe.getNomeParaClasse() %>Filtro filtro ) {
+    	String saida = "";
+      	boolean primeiro;
+      	primeiro = true;
+      	<%
+		Iterator<RelacionamentoWrapper> it1 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (it1.hasNext()) {
+		RelacionamentoWrapper relac = it1.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		if (filtro.getCodigo<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>() != -1)
+      	{
+        	if (!primeiro) saida += " and ";
+          	else primeiro = false;
+          	saida += " " + tabelaSelect() + ".<%= relac.getNomeCampoTabela() %> = " + filtro.getCodigo<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>();
+      	}
+      	<%
+		}
+		%>
+      	return saida;
+	}
+	
+	
+	@Override
+	public List ListaFiltroSimples(<%= classe.getNomeParaClasse() %>Filtro filtro)
+			throws DaoException {
+		setMontador(null);
+		String sql;
+		sql = "select " + camposOrdenados() + " from " + tabelaSelect();
+      	String where;
+		where = WhereFiltro(filtro)  + whereListaConcatenado();
+		if (where.length() > 0)
+			sql += " where " + where;
+		sql += orderByLista();
+		return getListaSql(sql);
+	}
+	
+	@Override
+	public List ListaCorrente() throws DaoException {
+		setMontador(null);
+		String sql;
+      	sql = "select " + camposOrdenados() + " from " + tabelaSelect() + orderByLista();
+      	return getListaSql(sql);
+	}
+	
+	
+	protected String valoresInsert(<%= classe.getNomeParaClasse() %> item) {
+		return <%
+		Iterator<AtributoTotalI> iteradorIns = classe.getListaAtributoTotal().iterator();
+		boolean primeiro3 = true;
+		while (iteradorIns.hasNext()) {
+		AtributoTotalI atributo = iteradorIns.next();
+		String campo = atributo.formatoUpdateInsert("item");
+		if (primeiro3) {
+		%>" ( <%= campo %> " 
+		<% } else { %>+ " ,<%= campo %> "
+		<%
+		}
+		primeiro3 = false;
+		}
+		%>+ " ) ";
+	}
+	protected String camposInsert() 
+	{
+		return <%
+		Iterator<AtributoTotalI> iteradorCi = classe.getListaAtributoTotal().iterator();
+		boolean primeiro2 = true;
+		while (iteradorCi.hasNext()) {
+		AtributoTotalI atributo = iteradorCi.next();
+		String campo = atributo.getNomeCampoTabela();
+		if (primeiro2) {
+		%>" ( <%= campo %> " 
+		<% } else { %>+ " ,<%= campo %> " 
+		<%
+		}
+		primeiro2 = false;
+		}
+		%> + " ) ";
+	}
+	
+	protected String camposValoresUpdate(<%= classe.getNomeParaClasse() %> item) {
+		return <%
+		Iterator<AtributoTotalI> iteradorUpd = classe.getListaAtributoTotal().iterator();
+		boolean primeiro4 = true;
+		while (iteradorUpd.hasNext()) {
+		AtributoTotalI atributo = iteradorUpd.next();
+		String campo = atributo.formatoUpdateInsert("item");
+		if (primeiro4) {
+		%>" <%= atributo.getNomeCampoTabela() %> = <%= campo %> " 
+		<% } else { %>+ " , <%= atributo.getNomeCampoTabela() %> = <%= campo %> "
+		<%
+		}
+		primeiro4 = false;
+		}
+		%>;
+	}
+	protected String camposValoresUpdateEdicao(<%= classe.getNomeParaClasse() %> item) {
+		return <%
+		Iterator<AtributoTotalI> iteradorUpdEd = classe.getListaAtributoTotal().iterator();
+		boolean primeiro5 = true;
+		while (iteradorUpdEd.hasNext()) {
+		AtributoTotalI atributo = iteradorUpdEd.next();
+		String campo = atributo.formatoUpdateInsert("item");
+		if (primeiro5) {
+		primeiro5 = false;
+		%>" <%= atributo.getNomeCampoTabela() %> = <%= campo %> " 
+		<% } else { %>+ " , <%= atributo.getNomeCampoTabela() %> = <%= campo %> " 
+		<%
+		}// else
+		}// fim do if do while
+		if (primeiro5) {%>""<%}
+		%>;
+	}
+	
+	
+	<%
+	Iterator<RelacionamentoWrapper> itSemChave = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (itSemChave.hasNext()) {
+	RelacionamentoWrapper relac = itSemChave.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	AtributoWrapper chaveOposta = classeOposta.getChaveW();
+	%>
+	/*
+	public <%= classe.getNomeParaClasse() %> obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(long id) {
+		string sql;
+		sql = "select " + camposOrdenados() +
+			" from " + tabelaSelect() +
+			innerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() + 
+			" where <%= classeOposta.getChaveW().getNomeCampoTabela() %> = " + id;
+		return (<%= classe.getNomeParaClasse() %>) getObjeto(sql);
+	}
+	*/
+	public static String innerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " inner join " + <%= classeOposta.getNomeParaClasse() %>DaoBase.tabelaSelect() + " on " + <%= classeOposta.getNomeParaClasse() %>DaoBase.tabelaSelect() + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + tabelaSelect() + ".<%= classe.getChaveW().getNomeCampoTabela() %> ";  
+	}
+	public static String outerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " left outer join " + <%= classeOposta.getNomeParaClasse() %>DaoBase.tabelaSelect() + " on " + <%= classeOposta.getNomeParaClasse() %>DaoBase.tabelaSelect() + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + tabelaSelect() + ".<%= classe.getChaveW().getNomeCampoTabela() %> ";  
+	}
+ 	<%
+		}
+	%>
+	
+	
+	<% if (!classe.isAssociativa()) { %>
+	<%
+	Iterator<RelacionamentoWrapper> iteradorRel1 = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel1.hasNext()) {
+		RelacionamentoWrapper relCorrente1 = iteradorRel1.next();
+	%>
+	// Tratamento de objetos que possuem FK nesse objeto para objetos nao associativos
+	public List getPor<%= relCorrente1.getNome() %>(long id) throws DaoException {
+		setMontador(null);
+		String sql;
+      	sql = "select " + camposOrdenadosJoin() + " from " + tabelaSelect() + 
+        outterJoinAgrupado() +
+       	" where <%= relCorrente1.getNomeCampoTabela() %> = " + id + orderByLista();
+       	setMontador(getMontadorAgrupado());
+      	return getListaSql(sql);
+	}
+	public boolean excluiPor<%= relCorrente1.getNome() %>(long id) throws DaoException{
+		setMontador(null);
+		String sql;
+      	sql = "delete from " + tabelaSelect() + 
+       	" where <%= relCorrente1.getNomeCampoTabela() %> = " + id;
+       	this.executaSql(sql);
+       	return true;
+	}
+	<%
+	}
+	} else { 
+	%>
+	
+	<%
+	List<RelacionamentoWrapper> lista = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper rel1 = lista.get(0);
+	RelacionamentoWrapper rel2 = lista.get(1);
+	if (rel1.getClasseOposta().getId()!= rel2.getClasseOposta().getId()) {
+	%>
+	@Override
+	public <%= classe.getNomeParaClasse() %> obtemPorRel(long <%= rel1.getNomeVariavel() %>, long <%= rel2.getNomeVariavel() %>) throws DaoException {
+		String sql = "select " + camposOrdenados() + " from " + tabelaSelect() +
+				" where <%= rel1.getNomeCampoTabela() %> = " + <%= rel1.getNomeVariavel() %> + 
+				" and <%= rel2.getNomeCampoTabela() %> = " + <%= rel2.getNomeVariavel() %>;
+		return (<%= classe.getNomeParaClasse() %>) this.getObjeto(sql);
+	}
+	<%
+	}
+	%>
+	
+	// Tratamento de objetos que possuem FK nesse objeto para objetos associativos
+	<%
+	Iterator<RelacionamentoWrapper> iteradorRel2 = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel2.hasNext()) {
+		RelacionamentoWrapper relCorrente2 = iteradorRel2.next();
+		RelacionamentoWrapper relOutro = classe.outroRel(relCorrente2);
+	%>
+	//public List getPor<%= relCorrente2.getNome() %>(long id) throws DaoException{ // Padrao
+	public List ListaPor<%= relCorrente2.getClasseOposta().getNomeParaClasse() %><%= relCorrente2.getNomeRelacionamento() %>(long id) throws DaoException{ // Combinar com Interface
+		String sql;
+        sql = "select " + camposOrdenados() + " , " +
+        	<%= relOutro.getClasseOposta().getNomeParaClasse() %>DaoBase.camposOrdenados() +
+        	" from " + tabelaSelect() +
+        	" inner join " + <%= relOutro.getClasseOposta().getNomeParaClasse() %>DaoBase.tabelaSelect() +
+            " on " + <%= relOutro.getClasseOposta().getNomeParaClasse() %>DaoBase.tabelaSelect() + ".<%= relOutro.getClasseOposta().getChaveW().getNomeCampoTabela() %> = " +
+            tabelaSelect() + ".<%= relOutro.getNomeCampoTabela() %>" +
+            " where <%= relCorrente2.getNomeCampoTabela() %> = " + id + " " +
+            criterioExclusao<%= relCorrente2.getClasseOposta().getNomeParaClasse() %><%= relCorrente2.getNomeRelacionamento() %>() + " " +
+            orderByLista();
+        MontadorDaoComposite montador = new MontadorDaoComposite();
+        montador.adicionaMontador(new <%= classe.getNomeParaClasse() %>Montador(),null);
+        montador.adicionaMontador(new <%= relOutro.getClasseOposta().getNomeParaClasse() %>Montador(), "<%= relOutro.getClasseOposta().getNomeParaClasse() %><%= relOutro.getNomeRelacionamento() %>");
+        setMontador(montador);
+        return getListaSqlListaInterna(sql);
+	}
+	public boolean excluiPor<%= relCorrente2.getNome() %>(long id) throws DaoException{
+		String sql;
+      	sql = "delete from " + tabelaSelect() + 
+        " where <%= relCorrente2.getNomeCampoTabela() %> = " + id;
+       	this.executaSql(sql);
+       	return true;
+	}
+	protected String criterioExclusao<%= relCorrente2.getClasseOposta().getNomeParaClasse() %><%= relCorrente2.getNomeRelacionamento() %>() {
+		return "";
+	}
+	<%
+	}
+	%>
+	
+	<%
+	}
+	%>
+	
+	
+	
+	// Relacionamento onde esse objeto é chave estrangeira de outro. ????
+	<%
+	Iterator<RelacionamentoWrapper> iterador2 = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador2.hasNext()) {
+	RelacionamentoWrapper relac = iterador2.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	AtributoWrapper chaveOposta = classeOposta.getChaveW();
+	%>
+	private boolean _obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = false;
+	public void setObtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		_obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = true;
+	}
+	protected String outterJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " left outer join " + <%= classeOposta.getNomeParaClasse() %>DaoBase.tabelaSelect() + " on " + <%= classeOposta.getNomeParaClasse() %>DaoBase.tabelaSelect() + ".<%= chaveOposta.getNomeCampoTabela() %> = " + tabelaSelect() + ".<%= relac.getNomeCampoTabela() %> ";  
+	}
+	public boolean atualiza<%= relac.getNome() %>(long <%= classe.getChaveW().getNomeVariavel() %>, long <%= relac.getNomeVariavel() %>) throws DaoException{
+		String sql;
+      	sql = "update " + tabelaSelect() + 
+      	" set <%= relac.getNomeCampoTabela() %>  = " + <%= relac.getNomeVariavel() %> +
+        " where <%= classe.getChaveW().getNomeCampoTabela() %> = " +  <%= classe.getChaveW().getNomeVariavel() %>;
+       	this.executaSql(sql);
+       	return true;
+	}
+	<% if (!relac.ehAuto()) { %>
+	public static String innerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " inner join " + <%= classeOposta.getNomeParaClasse() %>DaoBase.tabelaSelect() + " on " + <%= classeOposta.getNomeParaClasse() %>DaoBase.tabelaSelect() + ".<%= chaveOposta.getNomeCampoTabela() %> = " + tabelaSelect() + ".<%= relac.getNomeCampoTabela() %> ";  
+	}
+	<% } %>
+ 	<%
+		}
+	%>
+	// ********************************************************************	
+	
+	
+	
+	protected String camposOrdenadosJoin()
+    {
+        String saida = camposOrdenados();
+        <%
+		Iterator<RelacionamentoWrapper> iterador3 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador3.hasNext()) {
+		RelacionamentoWrapper relac = iterador3.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		saida += (this._obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>?" , " +<%= classeOposta.getNomeParaClasse() %>DaoBase.camposOrdenados():"");<%
+		}
+		%>
+        return saida;
+    }
+    
+    public void limpaObtem()
+    {
+        <%
+		Iterator<RelacionamentoWrapper> iterador7 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador7.hasNext()) {
+		RelacionamentoWrapper relac = iterador7.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		_obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = false;<%
+		}
+		%>
+    }
+    
+	protected String outterJoinAgrupado()
+    {
+        String saida = " ";
+        <%
+		Iterator<RelacionamentoWrapper> iterador4 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador4.hasNext()) {
+		RelacionamentoWrapper relac = iterador4.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		saida += (this._obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>? outterJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() + " ":"");<%
+		}
+		%>
+        return saida;
+    }
+    protected MontadorDaoI getMontadorAgrupado()
+    {
+        MontadorDaoComposite montador = new MontadorDaoComposite();
+        montador.adicionaMontador(new <%= classe.getNomeParaClasse() %>Montador(), null);
+        <%
+		Iterator<RelacionamentoWrapper> iterador5 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador5.hasNext()) {
+		RelacionamentoWrapper relac = iterador5.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		if (this._obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>)
+            montador.adicionaMontador(new <%= classeOposta.getNomeParaClasse() %>Montador(), "<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>");<%
+		}
+		%>
+         return montador;
+    }
+	
+	
+}

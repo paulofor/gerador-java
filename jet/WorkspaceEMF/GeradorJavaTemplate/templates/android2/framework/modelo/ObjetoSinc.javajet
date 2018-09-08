@@ -1,0 +1,17 @@
+<%@ jet package="jet.android2.framework.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ObjetoSinc" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.framework.modelo;
+
+
+public interface ObjetoSinc {
+    public String getOperacaoSinc();
+    public void setOperacaoSinc(String valor);
+    //public JSONObject JSonSinc() throws JSONException;
+}

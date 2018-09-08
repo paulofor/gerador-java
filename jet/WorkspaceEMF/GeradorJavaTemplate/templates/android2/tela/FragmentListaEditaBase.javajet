@@ -1,0 +1,21 @@
+<%@ jet package="jet.android2.tela" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="FragmentListaEditaBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.tela.base;
+
+import android.content.ContentResolver;
+import android.net.Uri;
+import android.provider.BaseColumns;
+import android.support.v4.app.Fragment;
+
+public abstract class <%= classe.getNomeParaClasse() %>FragmentListaEditaBase extends Fragment{
+
+	
+	
+}

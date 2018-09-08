@@ -1,0 +1,79 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="OracleDao" %>
+<%
+EClass eClass = (EClass) argument;  
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+AttributeWrapper atributo = new AttributeWrapper();
+ReferenceWrapper referencia = null;
+%>
+package <%= classe.getPacoteOracleDao() %>;
+
+import java.sql.ResultSet;
+
+import <%= classe.getPacoteModeloI() %>.*;
+import <%= classe.getPacoteDaoI() %>.<%= classe.getNomeDaoI() %>;
+import <%= classe.getPacoteDaoI() %>.DaoFidelizacao;
+import <%= classe.getPacoteReferencias() %>.BuilderI;
+import <%= classe.getPacoteReferencias() %>.ObjetoI;
+import <%= classe.getPacoteBuilderDaoImpl() %>.<%= classe.getNomeBuilderDaoImpl() %>;
+import <%= classe.getPacoteUtil() %>.MetodoNaoImplementadoException;
+
+public class <%= classe.getNomeOracleDao() %>  extends DaoFidelizacao implements <%= classe.getNomeDaoI() %>{
+
+	protected ObjetoI criaObjeto(ResultSet rs) {
+		throw new MetodoNaoImplementadoException("<%= classe.getNomeOracleDao() %>","criaObjeto(ResultSet rs)");
+	}
+	protected BuilderI criaBuilder(ResultSet rs) {
+		return new <%= classe.getNomeBuilderDaoImpl() %>();
+	}
+	public <%= classe.getNomeModeloI() %> cadastra<%= classe.getNomeSimples() %>(<%= classe.getNomeModeloI() %> item) throws DaoException {
+		StringBuffer campos = new StringBuffer();
+		StringBuffer valores = new StringBuffer();
+		<%
+		boolean primeiro = true;
+		
+		for (AttributeWrapper item : classe.getListaChave()) { 
+			atributo = item;
+		%>
+		campos.append("<%= (primeiro?"(":",") %><%= atributo.getNomeBD() %>");
+		<% if (item.tipoString()) {%>
+		valores.append("<%= (primeiro?"(":",") %>'" + item.<%= atributo.getGetter() %>() + "'");
+		<% } %>
+		<% if (item.tipoLong() || item.tipoFloat()) {%>
+		valores.append("<%= (primeiro?"(":",") %> " + item.<%= atributo.getGetter() %>() + " ");
+		<% } %>
+		<% if (primeiro) primeiro = false; %>
+		<%}%>
+		
+		<%for (AttributeWrapper item : classe.getListaNaoChave()) { 
+			atributo = item;
+		%>
+		if (items.<%= atributo.getGetter() %>() != null) {
+			campos.append(",<%= atributo.getNomeBD() %>");
+			<% if (item.tipoString()) {%>
+			valores.append(",'" + item.<%= atributo.getGetter() %>() + "'");
+			<% } %>
+			<% if (item.tipoLong() || item.tipoFloat()) {%>
+			valores.append(", " + item.<%= atributo.getGetter() %>() + " ");
+			<% } %>
+			<% if (item.tipoBoolean()) {%>
+			valores.append("," + (motorista.<%= atributo.getGetter() %>() ? "'S'" : "'N'"));
+			<% } %>
+		}
+		<%}%>
+		
+		campos.append(")");
+		valores.append(")");
+		
+		
+		String sql = "insert into fideliza.cliente_fidelizacao " + campos.toString()
+				+ " values " + valores.toString();
+
+		Query query = new Query();
+		query.setText(sql);
+		this.alterData(query);
+		return item;
+	}
+}

@@ -1,0 +1,34 @@
+<%@ jet package="jet.android.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="FabricaVo" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo.vo;
+
+import android.content.Context;
+import org.json.JSONObject;
+import org.json.JSONException;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.modelo.derivada.impl.*;
+
+public class FabricaVo {
+
+<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+%>
+	public static <%= corrente.getNomeParaClasse() %> cria<%= corrente.getNomeParaClasse() %>() {
+		return new <%= corrente.getNomeParaClasse() %>Vo();
+	}
+	public static <%= corrente.getNomeParaClasse() %> cria<%= corrente.getNomeParaClasse() %>(JSONObject json) throws JSONException {
+		return new <%= corrente.getNomeParaClasse() %>Vo(json);
+	}
+<%
+	}
+%>
+}
+

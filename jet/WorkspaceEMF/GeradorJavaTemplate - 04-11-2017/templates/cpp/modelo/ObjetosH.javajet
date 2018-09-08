@@ -1,0 +1,24 @@
+<%@ jet package="jet.cpp.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cpp.* gerapp.modelo.* " 
+class="ObjetosH" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+#pragma once
+<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapperCpp corrente = (ClasseWrapperCpp) iterador.next();
+%>
+	typedef struct _<%= corrente.getNomeEstrutura() %> {
+		//unsigned long IdAmbienteRegra;
+		//char DiretrioGeracao[100];
+		struct _<%= corrente.getNomeEstrutura() %>* pProximo; 
+		struct _<%= corrente.getNomeEstrutura() %>* pAnterior; 
+	} <%= corrente.getNomeEstrutura() %>;
+<%
+}
+%>
+

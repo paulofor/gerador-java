@@ -1,0 +1,31 @@
+<?xml version = '1.0' encoding = 'windows-1252'?>
+<orion-application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/orion-application-10_0.xsd">
+    <ejb-module path="file:/C:/BrasilCap/Repositorio/Brasilcap/Informe de Rendimentos/Fontes/trunk/OblTrataparametrosEJB/classes/" id="AplicacaoOBL_OblTrataparametrosEJB_0"/>
+    <ejb-module path="file:/C:/BrasilCap/Repositorio/Brasilcap/Informe de Rendimentos/Fontes/trunk/OblTrataparametrosWEB/classes/" id="AplicacaoOBL_OblTrataparametrosWEB_1"/>
+    <web-module id="OblTrataparametrosWEB" path="file:/C:/BrasilCap/Repositorio/Brasilcap/Informe de Rendimentos/Fontes/trunk/OblTrataparametrosWEB/paginas/"/>
+    <library path="C:\jdevstudio10133\j2ee\home\lib\activation.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\j2ee\home\lib\ejb.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\j2ee\home\lib\jms.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\j2ee\home\lib\jta.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\j2ee\home\lib\mail.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\j2ee\home\lib\servlet.jar">jdev-generated</library>
+    <library path="C:\BrasilCap\Repositorio\Brasilcap\Informe de Rendimentos\Fontes\Bibliotecas\cliente\global\ArqGlbPersistenciaJDBC.jar">jdev-generated</library>
+    <library path="C:\BrasilCap\Repositorio\Brasilcap\Informe de Rendimentos\Fontes\Bibliotecas\cliente\global\ArqGlbLog.jar">jdev-generated</library>
+    <library path="C:\BrasilCap\Repositorio\Brasilcap\Informe de Rendimentos\Fontes\Bibliotecas\cliente\global\ArqGlbHomeFactory.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\j2ee\home\lib\oc4j-internal.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\opmn\lib\optic.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\lib\xmlparserv2.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\lib\xml.jar">jdev-generated</library>
+    <library path="C:\BrasilCap\Repositorio\Brasilcap\Informe de Rendimentos\Fontes\Bibliotecas\cliente\global\ArqGlbUtil.jar">jdev-generated</library>
+    <library path="C:\BrasilCap\Repositorio\Brasilcap\Informe de Rendimentos\Fontes\trunk\OblTrataparametrosEJB\classes">jdev-generated</library>
+    <library path="C:\jdevstudio10133\jakarta-taglibs\jstl-1.1\lib\standard.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\jakarta-taglibs\jstl-1.1\lib\jstl.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\j2ee\home\lib\ojsp.jar">jdev-generated</library>
+    <library path="C:\jdevstudio10133\j2ee\home\jsp\lib\taglib\ojsputil.jar">jdev-generated</library>
+    <library path="C:\BrasilCap\Repositorio\Brasilcap\Informe de Rendimentos\Fontes\Bibliotecas\cliente\permissionamento\prmfilter.jar">jdev-generated</library>
+    <log>
+        <file path="AplicacaoOBL-oc4j-app.log"/>
+    </log>
+    <jazn provider="XML" location="AplicacaoOBL-jazn-data.xml" default-realm="jazn.com"/>
+    <data-sources path="AplicacaoOBL-data-sources.xml"/>
+</orion-application>

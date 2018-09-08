@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><feature id="org.eclipse.datatools.sqldevtools.data.feature" image="eclipse_update_120.jpg" label="%featureName" provider-name="%providerName" version="1.5.2.200802201">
+	<description>%description</description>
+	<license url="%licenseURL">%license</license>
+	<url>
+		<update label="Data Tools Platform (DTP) Updates" url="http://download.eclipse.org/datatools/updates"/>
+		<discovery label="Data Tools Platform (DTP) Updates" url="http://download.eclipse.org/datatools/updates"/>
+	</url>
+	<requires>
+		<import feature="org.eclipse.datatools.modelbase.feature" version="1.5.2"/>
+		<import feature="org.eclipse.datatools.connectivity.feature" version="1.5.2"/>
+	</requires>
+	<plugin download-size="49" id="org.eclipse.datatools.sqltools.data.core" install-size="49" unpack="false" version="1.0.0.200712191"/>
+	<plugin download-size="89" id="org.eclipse.datatools.sqltools.data.ui" install-size="89" unpack="false" version="1.0.1.200711091"/>
+	<plugin download-size="19" id="org.eclipse.datatools.sqltools.tabledataeditor" install-size="19" unpack="false" version="1.0.0.200706071"/>
+</feature>

@@ -1,0 +1,23 @@
+<%@ jet package="jet.android.complementares" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="PrincipalActivity" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.app;
+
+import <%= conf.getNamespace() %>.app.base.PrincipalActivityBase;
+import br.com.digicom.modelo.DCIObjetoDominio;
+import br.com.digicom.quadro.IFragment;
+
+public class <%= conf.getNomeAplicacao() %>PrincipalActivity extends PrincipalActivityBase {
+	
+
+	@Override
+	protected void inicializaServicos() {
+	}
+	
+}

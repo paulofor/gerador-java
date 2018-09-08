@@ -1,0 +1,40 @@
+<%@ jet package="jet.android2.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ServicoBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.servico.base;
+
+
+import android.content.Context;
+import android.net.Uri;
+
+import <%= conf.getNamespaceExtendido() %>.data.contract.<%= classe.getNomeParaClasse() %>Contract;
+import <%= conf.getNamespaceExtendido() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespaceExtendido() %>.framework.log.DCLog;
+
+public abstract class <%= classe.getNomeParaClasse() %>Servico {
+
+
+
+ 	public final void insereAtualiza(<%= classe.getNomeParaClasse() %> item, Context context) {
+        if (item.getIdObj()==0) {
+        	DCLog.d(DCLog.TRACE_CRUD,this,"insercao");
+            insere(item,context);
+        } else {
+        	DCLog.d(DCLog.TRACE_CRUD,this,"alteracao");
+            atualiza(item,context);
+        }
+    }
+    public final void insere(<%= classe.getNomeParaClasse() %> item, Context ctx) {
+        Uri uriInsert = <%= classe.getNomeParaClasse() %>Contract.buildInsereSinc();
+        ctx.getContentResolver().insert(uriInsert, item.getContentValues());
+    }
+    public final void atualiza(<%= classe.getNomeParaClasse() %> item, Context ctx) {
+        Uri uriUpdate = <%= classe.getNomeParaClasse() %>Contract.buildAtualizaSinc();
+        ctx.getContentResolver().update(uriUpdate,item.getContentValues(),null,null);
+    }
+}

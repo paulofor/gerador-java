@@ -1,0 +1,21 @@
+<%@ jet package="jet.android.view" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="View" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.view;
+
+import android.content.Context;
+import <%= conf.getNamespace() %>.view.base.<%= classe.getNomeParaClasse() %>ViewBase;
+import <%= conf.getNamespace() %>.modelo.*;
+
+public class <%= classe.getNomeParaClasse() %>View extends  <%= classe.getNomeParaClasse() %>ViewBase{
+
+	public <%= classe.getNomeParaClasse() %>View(<%= classe.getNomeParaClasse() %> item) {
+		super(item);
+	}
+}

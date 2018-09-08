@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappingmodel.mapping:TypeMappingRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mappingmodel.mapping="http://www.metys.com/merlin/generation/mappingmodel/mapping.ecore" xmlns:mappingmodel.rules="http://www.metys.com/merlin/generation/mappingmodel/rules.ecore" topToBottom="true">
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+    </helper>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Class/ownedOperation"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EClass/eOperations"/>
+    </nested>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Class/superClass"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EClass/eSuperTypes"/>
+    </nested>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Class"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EClass"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+    </helper>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Package/ownedMember"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EPackage/eClassifiers"/>
+    </nested>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Package/ownedMember"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EPackage/eSubpackages"/>
+    </nested>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Package"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EPackage"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//NamedElement/name"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//ENamedElement/name"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+      <mappingRuleConditions condition="((org.eclipse.uml2.Property) source).getType() instanceof org.eclipse.uml2.DataType"/>
+      <mappingRuleConditions condition="source.eContainer() instanceof org.eclipse.uml2.Class"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Property"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EAttribute"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+      <mappingRuleConditions condition="((org.eclipse.uml2.Property) source).getType() instanceof org.eclipse.uml2.Class"/>
+      <mappingRuleConditions condition="source.eContainer() instanceof org.eclipse.uml2.Class"/>
+    </helper>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Property/isComposite"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EReference/containment"/>
+    </nested>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Property/opposite.1"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EReference/eOpposite"/>
+    </nested>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Property"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EReference"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+      <mappingRuleActions action="if (!(source.getName().equals(target.getInstanceClassName()))) target.setInstanceClassName(source.getName())"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//PrimitiveType"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EDataType"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Model"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EPackage"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Classifier/isAbstract"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EClass/abstract"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Classifier/attribute"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EClass/eStructuralFeatures"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//EnumerationLiteral"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EEnumLiteral"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+    </helper>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule">
+        <mappingRuleActions action="for (java.util.Iterator it = target.getELiterals().iterator();it.hasNext();) {  literal = it.next(); int index = target.getELiterals().indexOf(literal); if (index != literal.getValue()) literal.setValue(index); }"/>
+      </helper>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Enumeration/ownedLiteral"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EEnum/eLiterals"/>
+    </nested>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Enumeration"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EEnum"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+    </helper>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Parameter/operation"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EParameter/eOperation"/>
+    </nested>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Parameter"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EParameter"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(source).equals(com.metys.merlin.generation.mappingmodel.util.MappingModelUtil.qualifiedName(target))"/>
+    </helper>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Operation/class_"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EOperation/eContainingClass"/>
+    </nested>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Operation/ownedParameter"/>
+      <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EOperation/eParameters"/>
+    </nested>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Operation"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EOperation"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Property/isDerived"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature/derived"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Property/default"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature/defaultValueLiteral"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//TypedElement/type"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement/eType"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//MultiplicityElement/lower.1"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement/lowerBound"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//MultiplicityElement/upper.1"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement/upperBound"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//MultiplicityElement/isOrdered"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement/ordered"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule"/>
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//MultiplicityElement/isUnique"/>
+    <outputs href="http://www.eclipse.org/emf/2002/Ecore#//ETypedElement/unique"/>
+  </nested>
+  <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#/"/>
+  <outputs href="http://www.eclipse.org/emf/2002/Ecore#/"/>
+</mappingmodel.mapping:TypeMappingRoot>

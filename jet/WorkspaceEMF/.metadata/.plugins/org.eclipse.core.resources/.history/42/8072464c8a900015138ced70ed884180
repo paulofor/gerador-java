@@ -1,0 +1,223 @@
+<%@ jet package="jet.android.data" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ContractEntidade" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+<%
+	AtributoWrapper atributoW = new AtributoWrapperAndroid();
+	AtributoWrapper chaveW = new AtributoWrapperAndroid();
+	chaveW.setBase(classe.getChave());
+	
+%>
+package  <%= conf.getNamespaceExtendido() %>.data.contract;
+
+import android.content.ContentResolver;
+import android.net.Uri;
+import android.provider.BaseColumns;
+import android.content.ContentUris;
+import <%= conf.getNamespaceExtendido() %>.framework.data.MontadorDaoI;
+import <%= conf.getNamespaceExtendido() %>.modelo.montador.<%= classe.getNomeParaClasse() %>Montador;
+
+public final class <%= classe.getNomeParaClasse() %>Contract implements BaseColumns {
+	
+	public static final String PATH = "<%= classe.getNomeParaTabela() %>";
+
+	public static final Uri CONTENT_URI = AplicacaoContract.BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
+
+    public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AplicacaoContract.CONTENT_AUTHORITY + "/" + PATH;
+    public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AplicacaoContract.CONTENT_AUTHORITY + "/" + PATH;
+
+    public static final String TABLE_NAME = "<%= classe.getNomeParaTabela() %>";
+    public static final String TABLE_NAME_SINC = "<%= classe.getNomeParaTabela() %>_sinc";
+
+	public static Uri build<%= classe.getNomeParaClasse() %>Uri(long id) {
+    	return ContentUris.withAppendedId(CONTENT_URI, id);
+    }
+    
+    <%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper relCorrente = iterador.next();
+	%>
+	public static Uri buildGetPor<%= relCorrente.getNome() %>Uri(long id) {
+    	Uri saida = CONTENT_URI;
+		saida = saida.buildUpon().appendPath(""+id).build();
+		saida = saida.buildUpon().appendPath(<%= relCorrente.getClasseOposta().getNomeParaClasse() %>Contract.PATH).build();
+    	return saida;
+    }
+	<%
+	}
+	%>
+	
+	
+    <%
+    int cont = 0;
+    %>
+    //public static final int COL_ID = 0;
+    <%
+    for (AtributoEntidade corrente : classe.getListaAtributoEntidade()) {
+     	atributoW.setBase(corrente);
+    %>
+    public static final String COLUNA_<%= atributoW.getNomeConstante() %> = "<%= atributoW.getNomeCampoTabelaAndroid2() %>";
+    public static final int COL_<%= atributoW.getNomeConstante() %> = <%= cont++ %>;
+    <%
+    }
+    for (RelacionamentoWrapper relCorrente : classe.obtemListaComChaveEstrangeira()) {
+	%>
+    public static final String COLUNA_<%= relCorrente.getNomeConstante() %> = "<%= relCorrente.getNomeCampoTabela() %>";
+    public static final int COL_<%= relCorrente.getNomeConstante() %> = <%= cont++ %>;
+	<%
+	}
+	%>
+	public static final String[] COLS = new String[] { 
+			TABLE_NAME + "." + _ID
+    <% 
+    for (AtributoEntidade corrente : classe.getListaAtributoEntidadeSemChave()) {
+     	atributoW.setBase(corrente);
+    %>
+        	, TABLE_NAME + "." +COLUNA_<%= atributoW.getNomeConstante() %>
+    <%
+     }
+    %>
+    <%
+    for (RelacionamentoWrapper relCorrente : classe.obtemListaComChaveEstrangeira()) {
+	%>
+			, TABLE_NAME + "." +COLUNA_<%= relCorrente.getNomeConstante() %>
+	<%
+	}
+	%>
+    };
+    
+    public static final String[] COLS_SINC = new String[] { 
+			TABLE_NAME_SINC + "." + _ID
+    <% 
+    for (AtributoEntidade corrente : classe.getListaAtributoEntidadeSemChave()) {
+     	atributoW.setBase(corrente);
+    %>
+        	, TABLE_NAME_SINC + "." +COLUNA_<%= atributoW.getNomeConstante() %>
+    <%
+     }
+    %>
+    <%
+    for (RelacionamentoWrapper relCorrente : classe.obtemListaComChaveEstrangeira()) {
+	%>
+			, TABLE_NAME_SINC + "." +COLUNA_<%= relCorrente.getNomeConstante() %>
+	<%
+	}
+	%>
+			, TABLE_NAME_SINC + ".operacao_sinc"
+    };
+    
+    private static <%= classe.getNomeParaClasse() %>Operacao operacao = new <%= classe.getNomeParaClasse() %>Operacao();
+<%
+ 	for (RegraColecao regra : classe.getListaRegraColecao()) {
+ 	if (regra.getAtivoFlex()) {
+%>
+ 	public static Uri build<%= regra.getNome() %>() {
+		return operacao.build<%= regra.getNome() %>(filtro);
+    }
+<%
+ 	}
+ 	}
+%>
+    
+	private static <%= classe.getNomeParaClasse() %>Filtro filtro = null;
+	public static <%= classe.getNomeParaClasse() %>Filtro getFiltro() {
+		if (filtro==null) {
+			filtro = new <%= classe.getNomeParaClasse() %>Filtro();
+		}
+		return filtro;
+	}
+	
+	
+    public static Uri buildAllSinc() {
+		Uri saida = CONTENT_URI;
+		saida = saida.buildUpon().appendPath("Sinc").build();
+		return saida;
+	}
+	
+	public static Uri buildAll() {
+		Uri saida = CONTENT_URI;
+		return saida;
+	}
+	
+	 public static Uri buildInsereSinc() {
+		Uri saida = CONTENT_URI;
+		saida = saida.buildUpon().appendPath("InsereSinc").build();
+		return saida;
+	}
+	
+	
+	<%
+	Iterator<RelacionamentoWrapper> itSemChave = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (itSemChave.hasNext()) {
+	RelacionamentoWrapper relac = itSemChave.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	AtributoWrapper chaveOposta = classeOposta.getChaveW();
+	%>
+	public static String innerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " inner join " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME + " on " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + TABLE_NAME + "._id ";  
+	}
+	public static String innerJoinSinc<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " inner join " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME_SINC + " on " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME_SINC + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + TABLE_NAME_SINC + "._id ";  
+	}
+	public static String outerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " left outer join " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME + " on " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + TABLE_NAME + "._id ";  
+	}
+	public static String outerJoinSinc<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " left outer join " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME_SINC + " on " + <%= classeOposta.getNomeParaClasse() %>Contract.TABLE_NAME_SINC + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + TABLE_NAME_SINC + "._id ";  
+	}
+ 	<%
+		}
+	%>
+	
+	
+	public static String camposOrdenados() 
+	{
+		return <%
+		Iterator<AtributoTotalI> iterador9 = classe.getListaAtributoTotal().iterator();
+		boolean primeiro = true;
+		while (iterador9.hasNext()) {
+		AtributoTotalI atributo = iterador9.next();
+		String campo = classe.getNomeParaTabela() + "." + atributo.getNomeCampoTabela();
+		if (primeiro) {
+		%>" " + TABLE_NAME + "." + COLUNA_<%= atributo.getNomeConstante() %>  
+		<% } else { %>+ " , " + TABLE_NAME + "." + COLUNA_<%= atributo.getNomeConstante() %> 
+		<%
+		}
+		primeiro = false;
+		}
+		%>;
+	}
+	
+	
+	
+	public static String camposOrdenadosSinc() 
+	{
+		return <%
+		Iterator<AtributoTotalI> iterador11 = classe.getListaAtributoTotal().iterator();
+		primeiro = true;
+		while (iterador11.hasNext()) {
+		AtributoTotalI atributo = iterador11.next();
+		String campo = classe.getNomeParaTabela() + "_sinc." + atributo.getNomeCampoTabela();
+		if (primeiro) {
+		%>" <%= campo %> " 
+		<% } else { %>+ " ,<%= campo %> " 
+		<%
+		}
+		primeiro = false;
+		}
+		%>
+		+ " ,<%= classe.getNomeParaTabela() %>_sinc.operacao_sinc "
+		;
+	}
+	
+	public static MontadorDaoI getMontador() {
+		return new <%= classe.getNomeParaClasse() %>Montador();
+	}
+}

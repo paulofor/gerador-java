@@ -1,0 +1,190 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<jws:workspace xmlns:jws="http://xmlns.oracle.com/ide/project">
+   <hash n="component-versions">
+      <value n="oracle.ide.model.Project" v="10.1.3.3.0"/>
+      <value n="oracle.jdevimpl.xml.oc4j.ds.DataSourcesMigratorHelper" v="10.1.3.3.0"/>
+   </hash>
+   <list n="listOfChildren">
+        <!--
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblAutorizacaoparamEJB/OblAutorizacaoparamEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblAutorizacaoparamWEB/OblAutorizacaoparamWEB.jpr"/>
+      </hash>
+
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblAutorizacaoprocesEJB/OblAutorizacaoprocesEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblAutorizacaoprocesWEB/OblAutorizacaoprocesWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblAutorizacaoresponsavelEJB/OblAutorizacaoresponsavelEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblAutorizacaoresponsavelWEB/OblAutorizacaoresponsavelWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblConferenciasituacaoEJB/OblConferenciasituacaoEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblConsultacodretencaoWEB/OblConsultacodretencaoWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblConsultaobrigacaolegalEJB/OblConsultaobrigacaolegalEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblConsultaobrigacaolegalWEB/OblConsultaobrigacaolegalWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblConsultaperiodicidadesEJB/OblConsultaperiodicidadesEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblConsultaperiodicidadesWEB/OblConsultaperiodicidadesWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblConsultarotinasEJB/OblConsultarotinasEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblConsultarotinasWEB/OblConsultarotinasWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblControlebasegraficaEJB/OblControlebasegraficaEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblControlebasegraficaWEB/OblControlebasegraficaWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblControlebaseparceirovendaEJB/OblControlebaseparceirovendaEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblControleretornoparceirovendaWEB/OblControleretornoparceirovendaWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendgraficapessoafisicaEJB/OblRendgraficapessoafisicaEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendgraficapessoafisicaWEB/OblRendgraficapessoafisicaWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendgraficapessoajuridicaEJB/OblRendgraficapessoajuridicaEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendgraficapessoajuridicaWEB/OblRendgraficapessoajuridicaWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendmovimpessoafisicaccorrenteEJB/OblRendmovimpessoafisicaccorrenteEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendmovimpessoajuridicaccorrenteWEB/OblRendmovimpessoajuridicaccorrenteWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendmovimpessoajuridicacnpjEJB/OblRendmovimpessoajuridicacnpjEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendmovimpessoajuridicacnpjWEB/OblRendmovimpessoajuridicacnpjWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendparceirovendapessoafisicaEJB/OblRendparceirovendapessoafisicaEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendparceirovendapessoafisicaWEB/OblRendparceirovendapessoafisicaWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendparceirovendapessoajuridicaEJB/OblRendparceirovendapessoajuridicaEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblRendparceirovendapessoajuridicaWEB/OblRendparceirovendapessoajuridicaWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblSolicitacaoacertoEJB/OblSolicitacaoacertoEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblSolicitacaoacertoWEB/OblSolicitacaoacertoWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblSolicitacaosegundaviaEJB/OblSolicitacaosegundaviaEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblSolicitacaosegundaviaWEB/OblSolicitacaosegundaviaWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblSolicitacaoverificacaofuturaEJB/OblSolicitacaoverificacaofuturaEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblSolicitacaoverificacaofuturaWEB/OblSolicitacaoverificacaofuturaWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblTratacodretencaoEJB/OblTratacodretencaoEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblTratacodretencaoWEB/OblTratacodretencaoWEB.jpr"/>
+      </hash>
+      -->
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblTrataparametrosEJB/OblTrataparametrosEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblTrataparametrosWEB/OblTrataparametrosWEB.jpr"/>
+      </hash>
+      <!--
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblTrataprocesEJB/OblTrataprocesEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblTrataprocesWEB/OblTrataprocesWEB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblTrataresponsavelEJB/OblTrataresponsavelEJB.jpr"/>
+      </hash>
+      <hash>
+         <value n="nodeClass" v="oracle.ide.model.Project"/>
+         <url n="URL" path="../OblTrataresponsavelWEB/OblTrataresponsavelWEB.jpr"/>
+      </hash>
+      -->
+   </list>
+</jws:workspace>

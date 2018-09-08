@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="%_UI_Merlin_Tools_Wizard_category"
+            id="com.metys.merlin.tools.Wizard.category.ID">
+      </category>
+      <category
+            name="%_UI_Merlin_Tools_ModelMappings_Wizard_category"
+            parentCategory="com.metys.merlin.tools.Wizard.category.ID"
+            id="com.metys.merlin.tools.modelmapping.Wizard.category.ID">
+      </category>      
+      <wizard
+            name="%_UI_ModelMappingModelWizard_label"
+            icon="icons/full/ctool16/NewModelMapping.gif"
+            category="com.metys.merlin.tools.Wizard.category.ID/com.metys.merlin.tools.modelmapping.Wizard.category.ID"
+            class="com.metys.merlin.generation.mappingmodel.mapping.presentation.MappingModelWizard"
+            id="com.metys.merlin.generation.mappingmodel.MappingModelWizardID">
+         <description>
+            %_UI_ModelMappingModelWizard_description
+         </description>
+         <selection
+               class="org.eclipse.core.resources.IResource">
+         </selection>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="%_UI_ModelMappingEditor_label"
+            icon="icons/full/obj16/MappingModelFile.gif"
+            extensions="mapping, ecore2ecore"
+            class="com.metys.merlin.generation.mappingmodel.mapping.presentation.MappingEditor"
+            contributorClass="com.metys.merlin.generation.mappingmodel.mapping.presentation.MappingActionBarContributor"
+            id="com.metys.merlin.generation.mappingmodel.mapping.MappingEditorID">
+      </editor>      
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="com.metys.merlin.generation.mappingmodel.mapping.MappingEditorID"
+            id="com.metys.merlin.generation.mappingmodel.mapping.MappingContributionID">
+         <menu
+               label="%_UI_MappingEditor_menu"
+               path="additions"
+               id="com.metys.merlin.generation.mappingmodel.mappingMenuID">
+            <separator
+                  name="settings">
+            </separator>
+            <separator
+                  name="actions">
+            </separator>
+            <separator
+                  name="global-actions">
+            </separator>
+            <separator
+                  name="additions">
+            </separator>
+            <separator
+                  name="additions-end">
+            </separator>
+         </menu>
+         <action
+               label="&amp;Remove Mapping"
+               icon="platform:/plugin/org.eclipse.emf.mapping/icons/full/ctool16/RemoveOneToOneMapping.gif"
+               class="org.eclipse.emf.mapping.action.RemoveMappingAction"
+               tooltip="Remove the mapping associated with the selected objects."
+               menubarPath="com.metys.merlin.generation.mappingmodel.mappingMenuID/actions"
+               toolbarPath="Normal/mapping-additions"
+               id="org.eclipse.emf.mapping.action.RemoveMappingActionID">
+         </action>
+         <action
+               label="Create &amp;Mapping"
+               icon="platform:/plugin/org.eclipse.emf.mapping/icons/full/ctool16/CreateOneToOneMapping.gif"
+               class="org.eclipse.emf.mapping.action.CreateMappingAction"
+               tooltip="Create a new mapping between the selected objects."
+               menubarPath="com.metys.merlin.generation.mappingmodel.mappingMenuID/actions"
+               toolbarPath="Normal/mapping-additions"
+               id="org.eclipse.emf.mapping.action.CreateMappingActionID">
+         </action>
+         <action
+               label="Add &amp;Output Root..."
+               icon="platform:/plugin/org.eclipse.emf.mapping.ui/icons/full/ctool16/AddRootBottom.gif"
+               class="com.metys.merlin.generation.mappingmodel.mapping.presentation.AddOutputRootAction"
+               tooltip="Add an existing output root."
+               menubarPath="com.metys.merlin.generation.mappingmodel.mappingMenuID/actions"
+               toolbarPath="Normal/mapping-additions"
+               id="com.metys.merlin.generation.mapping.action.AddOuputRootActionID">
+         </action>
+         <action
+               label="Add &amp;Input Root..."
+               icon="platform:/plugin/org.eclipse.emf.mapping.ui/icons/full/ctool16/AddRootTop.gif"
+               class="com.metys.merlin.generation.mappingmodel.mapping.presentation.AddInputRootAction"
+               tooltip="Add new input root."
+               menubarPath="com.metys.merlin.generation.mappingmodel.mappingMenuID/actions"
+               toolbarPath="Normal/mapping-additions"
+               id="com.metys.merlin.generation.mapping.action.AddInputRootActionID">
+         </action>
+      </editorContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="com.metys.merlin.generation.objectContribution"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="merlin.menu.main"
+               label="%MerlinGroupMenu.label"
+               path="additions">
+            <groupMarker name="transform"/>
+         </menu>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="com.metys.merlin.generation.mapping.ui.IFileMappingContribution"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="com.metys.merlin.generation.mappingmodel.mapping.presentation.TransformResourceAction"
+               icon="icons/full/obj16/MappingRule.gif"
+               id="com.metys.merlin.generation.mapping.ui.TransformFile"
+               label="%TransformResource.label"
+               menubarPath="merlin.menu.main/transform"
+               tooltip="%TransformResource.tooltip"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="com.metys.merlin.generation.mapping.ui.IFileMapperContribution"
+            nameFilter="*.mapper"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="com.metys.merlin.generation.mappingmodel.mapping.presentation.ReApplyTransformationAction"
+               icon="icons/full/obj16/MappingRule.gif"
+               id="com.metys.merlin.generation.mapping.ui.ApplyTransformation"
+               label="%ApplyTransformation.label"
+               menubarPath="merlin.menu.main/transform"
+               tooltip="%ApplyTransformation.tooltip"/>
+      </objectContribution>
+   </extension>
+
+</plugin>

@@ -1,0 +1,62 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* " 
+class="EjbCNBean" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseFuncionalidade classe = (ClasseFuncionalidade) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= classe.getPacoteEjb() %>;
+
+import com.br.brasilcap.arq.glb.log.standard.Log;
+import com.br.brasilcap.arq.glb.persistencia.standard.AbstractDTO;
+import com.br.brasilcap.arq.glb.persistencia.standard.Command;
+import com.br.brasilcap.arq.glb.persistencia.standard.CommandFactory;
+import com.br.brasilcap.arq.glb.persistencia.standard.ConcreteCommandFactory;
+import com.br.brasilcap.arq.glb.util.standard.BusinessException;
+import com.br.brasilcap.arq.glb.util.standard.CatalogoGlobal;
+
+import com.br.brasilcap.cap.obl.trataparametros.dto.Cap_lista_parametros_sps;
+
+import java.rmi.RemoteException;
+
+import javax.ejb.EJBException;
+import javax.ejb.SessionBean;
+import javax.ejb.SessionContext;
+
+import javax.sql.RowSet;
+
+public class <%= classe.getNomeParaClasse() %>CNBean implements SessionBean {
+    private SessionContext _context;
+    private Log log = null;
+
+    public void ejbCreate() {
+        final String CST_METODO = "ejbCreate";
+        log = new Log(CatalogoGlobal.CST_MODULO_OBRIGACAO_LEGAL, this.getClass());
+        log.setInfo(CatalogoGlobal.CST_MENSAGEM_CRIAOBJ, CST_METODO);
+    }
+
+    public void setSessionContext(SessionContext context) throws EJBException {
+        _context = context;
+    }
+
+    public void ejbRemove() throws EJBException {
+    }
+
+    public void ejbActivate() throws EJBException {
+    }
+
+    public void ejbPassivate() throws EJBException {
+    }
+
+    public String getJNDI() {
+        return CatalogoGlobal.CST_JNDI_OBRIGACAO_LEGAL;
+    }
+
+    public RowSet listaParametros(AbstractDTO o, Object credencial) throws BusinessException, RemoteException{
+        String CST_METODO = "listaParametros";
+        log.setInfo(CatalogoGlobal.CST_MENSAGEM_METODOINI, CST_METODO);
+        return null;
+    }
+}
+

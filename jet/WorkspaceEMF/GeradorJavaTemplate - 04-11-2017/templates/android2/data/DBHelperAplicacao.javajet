@@ -1,0 +1,97 @@
+<%@ jet package="jet.android.data" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DBHelperAplicacao" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.data.helper;
+
+import android.content.Context;
+import android.database.DatabaseErrorHandler;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.database.sqlite.SQLiteOpenHelper;
+import <%= conf.getNamespaceExtendido() %>.framework.log.DCLog;
+import <%= conf.getNamespaceExtendido() %>.data.DatabaseConst;
+
+public class AplicacaoDbHelper extends SQLiteOpenHelper{
+
+	/*
+	private static final int DATABASE_VERSION = 1;
+	public static String DATABASE_NAME = "<%= conf.getNamespace() %>.db";
+	*/
+	//public static String DATABASE_NAME = "/mnt/extSdCard/digidata/<%= conf.getNamespace() %>.db";
+
+	private static DatabaseConst databaseConst = null;
+
+	public static void setDatabaseConst(DatabaseConst dbConst) {
+		databaseConst = dbConst;
+	}
+
+	public static String getNomeBanco() {
+		return databaseConst.getName();
+	}
+	
+	public AplicacaoDbHelper(Context context) {
+		//super(context, DATABASE_NAME , null, DATABASE_VERSION);
+		super(context,databaseConst.getName(),null,databaseConst.getVersion());
+	}
+	
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		DCLog.d(DCLog.DATABASE_ADM,this,"Create database em " + databaseConst.getName());
+	
+		String CREATE_SQL = null;
+	<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+	%>
+		CREATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlCreate();
+		db.execSQL(CREATE_SQL);
+		CREATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlCreateSinc();
+		db.execSQL(CREATE_SQL);
+	<%
+	}
+	%>
+	}
+	
+	
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		DCLog.d(DCLog.DATABASE_ADM,this,"Upgrade database em " + databaseConst.getName());
+		String UPDATE_SQL = null;
+	<%
+	for (ClasseWrapper corrente : classes) {
+	%>
+		//UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.onUpgrade(oldVersion,newVersion);
+		//db.execSQL(UPDATE_SQL);
+		//UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.onUpgradeSinc(oldVersion,newVersion);
+		//db.execSQL(UPDATE_SQL);
+		UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlDrop();
+		db.execSQL(UPDATE_SQL);
+		UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlCreate();
+		db.execSQL(UPDATE_SQL);
+		UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlDropSinc();
+		db.execSQL(UPDATE_SQL);
+		UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlCreateSinc();
+		db.execSQL(UPDATE_SQL);
+	<%
+	}
+	%>
+	
+	<%
+	for (ClasseWrapper corrente : classes) {
+	%>
+		//SQlite nao permite isso ?
+		//UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlChavesEstrangeiras();
+		//db.execSQL(UPDATE_SQL);
+	<%
+	}
+	%>
+	}
+	
+}

@@ -1,0 +1,41 @@
+<%@ jet package="jet.csdn35.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="FabricaDao" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using br.com.digicom.lib.dao;
+
+namespace <%= conf.getNamespace() %>.dao.basico
+{
+public class FabricaDao {
+
+	static FabricaDao fabrica = new FabricaDao();
+	
+	public static FabricaDao getInstancia() {
+		return fabrica;
+	}
+
+<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+%>
+
+	private <%= corrente.getNomeParaClasse() %>Dao <%= corrente.getNomeParaVariavel() %>Dao = null;
+	
+	private <%= corrente.getNomeParaClasse() %>Dao get<%= corrente.getNomeParaClasse() %>Dao() {
+		if (<%= corrente.getNomeParaVariavel() %>Dao==null) {
+			<%= corrente.getNomeParaVariavel() %>Dao = new <%= corrente.getNomeParaClasse() %>Dao();
+		}
+		return <%= corrente.getNomeParaVariavel() %>Dao;
+	}
+	
+<%
+	}
+%>
+}
+}
+

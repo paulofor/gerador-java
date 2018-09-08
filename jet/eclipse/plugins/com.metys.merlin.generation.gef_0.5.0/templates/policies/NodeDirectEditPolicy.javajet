@@ -1,0 +1,113 @@
+<%
+/**
+ * Copyright (c) 2005 Joel Cheuoua & Contributors
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Merlin project nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+%>
+<%@ jet package="com.metys.merlin.generation.gef.compiledtemplates.policies" imports="com.metys.merlin.generation.gef.genmodel.* com.metys.merlin.generation.gef.genmodel.util.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.ecore.genmodel.*" class="NodeDirectEditPolicy" %>
+<%GenNodeEditPart genEditPart = (GenNodeEditPart) argument; EClass ecoreClass = genEditPart.getEcoreClass(); EPackage ecorePackage = (EPackage) ecoreClass.getEPackage(); GenModel genModel = genEditPart.getGenGEFModel().getGenModel(); GenClass genClass = GenModelHelper.getGenClass(genModel, ecoreClass);%>
+<%@ include file="../Header.jetinc"%>
+package <%=genEditPart.getPackageName()%>.policies;
+
+<%genModel.markImportLocation(stringBuffer);%>
+
+/**
+ * <!-- begin-user-doc -->
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public <%if (ecoreClass.isAbstract()) {%>abstract <%}%>class <%=ecoreClass.getName()%>DirectEditPolicy<%=GenModelHelper.getDirectEditPolicyExtendsLitteral(genModel, genEditPart)%>{
+	
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected <%=genModel.getImportedName("org.eclipse.gef.commands.Command")%> getDirectEditCommand(<%=genModel.getImportedName("org.eclipse.gef.requests.DirectEditRequest")%> request) {
+    String name = (String) request.getCellEditor().getValue();
+	<%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.RenameCommand")%> cmd = new RenameCommand((<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>)getHost(), name);		
+	return cmd;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected void showCurrentEditValue(DirectEditRequest request) {
+	<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%> hostEditPart = (<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>) getHost();
+   	hostEditPart.refreshVisuals();
+  }
+	
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected boolean isDirectEditLocation(<%=genModel.getImportedName("org.eclipse.draw2d.geometry.Point")%> requestLoc) {
+    Point locationCopy = requestLoc.getCopy();
+    <%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%> hostEditPart = (<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>) getHost();
+    <%=genModel.getImportedName("org.eclipse.draw2d.IFigure")%> header = ((<%=genModel.getImportedName("com.metys.merlin.generation.gef.figures.ENodeFigure")%>) hostEditPart.getFigure()).getHeader();
+    header.translateToRelative(locationCopy);
+    if (header.containsPoint(locationCopy))
+      return true;
+    return false;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected void performDirectEdit() {
+  	<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%> hostEditPart = (<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>) getHost();
+	<%=genModel.getImportedName("org.eclipse.draw2d.Label")%> header = ((ENodeFigure) hostEditPart.getFigure()).getHeader();
+    if (manager == null)
+      manager = new <%=genModel.getImportedName("com.metys.merlin.generation.gef.figures.EObjectDirectEditManager")%>(hostEditPart, <%=genModel.getImportedName("org.eclipse.jface.viewers.TextCellEditor")%>.class, new <%=genModel.getImportedName("com.metys.merlin.generation.gef.figures.EObjectCellEditorLocator")%>(header), header);    
+    manager.show();
+  }
+	
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+	public void handleNodeNameChanged(<%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ENode")%> node, String newName, String oldName) {
+<% if (genClass.getLabelFeature() != null) {%>
+    <%=genClass.getImportedClassName()%> object = (<%=genClass.getImportedClassName()%>) node.getEObject();
+    <%=genModel.getImportedName("org.eclipse.emf.ecore.EStructuralFeature")%> labelFeature = 
+      <%=genClass.getLabelFeature().getQualifiedFeatureAccessorName()%>(); 
+    object.eSet(labelFeature, newName);
+<%} else {%>
+		// TODO : Implements this method to react to node name change
+		// Ensure that you remove @generated or mark it @generated NOT
+<%}%>		
+  }
+}
+<%genModel.emitSortedImports();%>

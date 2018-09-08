@@ -1,0 +1,20 @@
+<%@ jet package="jet.csdn35.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="Derivada" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.modelo.derivadas {
+
+public class <%= classe.getNomeParaClasse() %>Derivada : <%= classe.getNomeParaClasse() %>DerivadaBase, <%= classe.getNomeParaClasse() %>DerivadaI
+{
+	private <%= classe.getNomeParaClasse() %> principal;
+	
+	public <%= classe.getNomeParaClasse() %>Derivada(<%= classe.getNomeParaClasse() %> item) {
+		principal = item;
+	}
+}
+
+}

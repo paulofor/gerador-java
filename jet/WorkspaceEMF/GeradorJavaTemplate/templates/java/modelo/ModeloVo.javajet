@@ -1,0 +1,265 @@
+<%@ jet package="jet.java.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="ModeloVo" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo.vo;
+
+import java.util.List;
+import java.text.*;
+import br.com.digicom.lib.DCIObjetoDominio;
+import br.com.digicom.lib.dao.DaoConexao;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.modelo.agregado.*;
+import <%= conf.getNamespace() %>.modelo.derivadas.*;
+
+// Geração automática não alterar
+public class <%= classe.getNomeParaClasse() %>Vo implements <%= classe.getNomeParaClasse() %>
+{
+		
+	public long getIdObj()
+    {
+       return <%= classe.getChaveW().getNomeVariavel() %>;
+    }
+    
+	public String toWS() {
+		return "" + getIdObj();
+	}
+	
+	private String JsonAtributos() {
+		return 
+	<%
+	Iterator<AtributoTotalI> iteradorAtt = classe.getListaAtributoTotal().iterator();
+	boolean primeiro1 = true;
+	while (iteradorAtt.hasNext()) {
+	AtributoTotalI atributoJson = iteradorAtt.next();
+	%>	<%= (primeiro1?"\"":"+ \",") %> \"<%= atributoJson.getNomePropriedade() %>\" : \"" + <%= atributoJson.getNomeVariavel() %> + "\" "
+	<%
+	primeiro1 = false;
+	}
+	%>
+	;
+	}
+	
+	
+	
+	public String JSon() {
+		return " { " + JsonAtributos() + " } ";
+	}
+	
+	private <%= classe.getNomeParaClasse() %>Derivada derivada = null;
+	private <%= classe.getNomeParaClasse() %>Derivada getDerivada() {
+		if (derivada==null) {
+			derivada = new <%= classe.getNomeParaClasse() %>Derivada(this);
+		}
+		return derivada;
+	}
+
+	private <%= classe.getNomeParaClasse() %>Agregado agregado = null;
+	private <%= classe.getNomeParaClasse() %>Agregado getAgregado() {
+		if (agregado==null) {
+			agregado = new <%= classe.getNomeParaClasse() %>Agregado(this);
+		}
+		return agregado;
+	}
+	
+	
+	// Com Chave Estrangeira
+	<%
+	Iterator<RelacionamentoWrapper> itRel = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+	while (itRel.hasNext()) {
+	RelacionamentoWrapper relac = itRel.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+	// Montador Tradicional
+	public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(boolean lazyLoader)
+	{
+		return getAgregado().get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(lazyLoader); 
+	} 
+	public void set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> value) 
+	{
+		getAgregado().set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(value); 
+	} 
+	/*
+	public void set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>ComReversao(<%= classeOposta.getNomeParaClasse() %> value) 
+	{
+		getAgregado().set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>ComReversao(value); 
+	} 
+	*/
+	<% if (classe.getId()==classeOposta.getId()) {%>
+	/*  AutoRelacionamento
+	<% } %>
+	// Montador Alternativo e Tradicional
+	public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> value)
+	{
+		getAgregado().set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(value); 
+	} 
+	public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()
+	{
+		return getAgregado().get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(false); 
+	} 
+	<% if (classe.getId()==classeOposta.getId()) {%>
+	*/
+	<% } %>
+	<%
+	}
+	%>
+	
+	
+	// Um pra um
+	<%
+	Iterator<RelacionamentoWrapper> itRel1x1 = classe.obtemListaUmPraUm().iterator();
+	while (itRel1x1.hasNext()) {
+	RelacionamentoWrapper relac = itRel1x1.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+	// Montador Tradicional
+	public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>()
+	{
+		return getAgregado().get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(); 
+	} 
+	public void set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> value) 
+	{
+		getAgregado().set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(value); 
+	} 
+	
+	<%
+	}
+	%>
+	
+	
+	<%
+	ProcValorWrapper procValor = new ProcValorWrapperJava();
+	Iterator<ProcValor> iteradorPV = classe.getListaProcValor().iterator();
+	while (iteradorPV.hasNext()) {
+		procValor.setProcValor(iteradorPV.next());
+	%>
+	public <%= procValor.getTipo() %> get<%= procValor.getNomePropriedade() %>()
+	{
+		return getDerivada().get<%= procValor.getNomePropriedade() %>(); 
+	} 
+	public void set<%= procValor.getNomePropriedade() %>(<%= procValor.getTipo() %> value)
+	{
+		getDerivada().set<%= procValor.getNomePropriedade() %>(value); 
+	} 
+	<% if (procValor.ehPercentual()) { %>
+	public String <%= procValor.getNomePropriedade() %>Tela
+	{
+		return String.Format("{0:0.00}", <%= procValor.getNomePropriedade() %> * 100);  
+	} 
+	<% }
+	}
+	%>
+	
+	public void setConexaoCarregador(DaoConexao conexao) {
+		getAgregado().setConexaoCarregador(conexao);
+	}
+	
+	
+	// Sem chave estrangeira
+	<%
+	Iterator<RelacionamentoWrapper> itRelN = classe.obtemListaSemChaveEstrangeiraComUsuario().iterator();
+	while (itRelN.hasNext()) {
+	RelacionamentoWrapper relac = itRelN.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+	// Montador Alternativo
+	public boolean existeLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return getAgregado().existeLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+	}
+	public void criaVaziaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		getAgregado().criaVaziaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+	}
+	public List<<%= classeOposta.getNomeParaClasse() %>> getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() 
+	{
+		return getAgregado().getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(); 
+	} 
+	public void setLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(List<<%= classeOposta.getNomeParaClasse() %>> value) 
+	{
+		getAgregado().setLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(value); 
+	} 
+	public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> value) 
+	{
+		getAgregado().addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(value); 
+	} 
+	public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()
+	{
+		return getAgregado().getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(); 
+	} 
+	<%
+	}
+	%>
+
+	<%
+	Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+	while (iterador.hasNext()) {
+	AtributoTotalI atributo = iterador.next();
+	%>
+	
+	<% if (atributo.ehMoeda()) { %>
+	public String get<%= atributo.getNomePropriedade() %>Formatada()
+	{
+		DecimalFormat df = new DecimalFormat("0.00");
+		return df.format(<%= atributo.getNomeVariavel() %>);
+	}
+	<% } %>
+	
+	<%
+	if (atributo instanceof RelacionamentoWrapper) {
+	RelacionamentoWrapper relac = (RelacionamentoWrapper) atributo;
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>	
+	private <%= atributo.getTipo() %> <%= atributo.getNomeVariavel() %>;
+	public <%= atributo.getTipo() %> get<%= atributo.getNomePropriedade() %>() {
+		// relacionamento
+		if (<%= atributo.getNomeVariavel() %>==0 && this.get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(false)!=null) 
+			return get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(false).getIdObj();
+		else
+			return <%= atributo.getNomeVariavel() %>;
+	}
+	public void set<%= atributo.getNomePropriedade() %>(<%= atributo.getTipo() %> _valor) {
+		<%= atributo.getNomeVariavel() %> = _valor;
+	}
+	<%
+	} else {
+	%>
+	private <%= atributo.getTipo() %> <%= atributo.getNomeVariavel() %>;
+	public <%= atributo.getTipo() %> get<%= atributo.getNomePropriedade() %>()
+	{
+		return <%= atributo.getNomeVariavel() %>;
+	}
+	public  void set<%= atributo.getNomePropriedade() %>(<%= atributo.getTipo() %> value)
+	{
+		<%= atributo.getNomeVariavel() %> = value; 
+	}
+	<%
+	}
+	}
+	%>
+	
+	
+	<%
+	Iterator itHtml = classe.obtemListaHtml().iterator();
+	while (itHtml.hasNext()) {
+		String htmlItem = (String) itHtml.next();
+	%>
+	public void set<%= htmlItem %>(String value)
+	{
+		derivada.set<%= htmlItem %>(value); 
+	} 
+	public String  get<%= htmlItem %>()
+	{
+		return derivada.get<%= htmlItem %>()
+	} 
+	<%
+	}
+	%>
+	
+	
+	//-------------------------------------------------------
+	
+	
+}

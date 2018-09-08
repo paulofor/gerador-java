@@ -1,0 +1,38 @@
+<%@ jet package="jet.android2.tela" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ExibeItemListaBaseActivity" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.tela.base.activity.detalhe;
+
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
+import android.content.SharedPreferences;
+
+import android.widget.ImageView;
+import <%= conf.getNamespaceExtendido() %>.data.contract.<%= classe.getNomeParaClasse() %>Contract;
+import <%= conf.getNamespaceExtendido() %>.framework.dao.MontadorDaoI;
+import <%= conf.getNamespaceExtendido() %>.framework.data.DCCursorLoader;
+import <%= conf.getNamespaceExtendido() %>.framework.tela.ResourceObj;
+import <%= conf.getNamespaceExtendido() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespaceExtendido() %>.framework.data.MontadorDaoComposite;
+import <%= conf.getNamespaceExtendido() %>.tela.base.activity.Constantes;
+import <%= conf.getNamespaceExtendido() %>.framework.storage.DownloadImageTask;
+
+
+
+public abstract class <%= classe.getNomeParaClasse() %>ExibeItemListaBaseActivity extends <%= classe.getNomeParaClasse() %>DetalheBaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+	
+}

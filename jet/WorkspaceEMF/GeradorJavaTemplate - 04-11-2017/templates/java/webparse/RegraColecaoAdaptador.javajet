@@ -1,0 +1,147 @@
+<%@ jet package="jet.java.webparse" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="RegraColecaoAdaptador" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.parse.regracolecaoadaptador;
+
+import java.util.Iterator;
+import java.util.List;
+
+import <%= conf.getNamespace() %>.dao.*;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.parse.callback.<%= classe.getNomeParaClasse() %>ListaCallbackHtml;
+import <%= conf.getNamespace() %>.parse.callback.<%= classe.getNomeParaClasse() %>DetalheCallbackHtml;
+import <%= conf.getNamespace() %>.parse.dados.<%= classe.getNomeParaClasse() %>DadosParse;
+import br.com.digicom.lib.dao.DaoConexao;
+import br.com.digicom.lib.dao.DaoException;
+import br.com.digicom.parse.ExecutadorParse;
+import br.com.digicom.parse.callback.ICallbackParse;
+
+
+public class <%= classe.getNomeParaClasse() %>RegraColecaoAdaptador  {
+
+
+	protected ExecutadorParse exec = null;
+	protected ICallbackParse callbackLista = null;
+	protected ICallbackParse callbackDetalhe = null;
+	protected <%= classe.getNomeParaClasse() %>DadosParse dadosParse = null;
+	
+	public <%= classe.getNomeParaClasse() %>RegraColecaoAdaptador() {
+		exec = new ExecutadorParse();
+		//callbackLista = criaListaCallbackHtml();
+		//callbackDetalhe = criaDetalheCallbackHtml();
+		dadosParse = new <%= classe.getNomeParaClasse() %>DadosParse();
+	}
+	private ICallbackParse getCallbackLista() {
+		if (callbackLista==null) {
+			callbackLista = criaListaCallbackHtml();
+		}
+		return callbackLista;
+	}
+	private ICallbackParse getCallbackDetalhe() {
+		if (callbackDetalhe==null) {
+			callbackDetalhe = criaDetalheCallbackHtml();
+		}
+		return callbackDetalhe;
+	}
+	protected ICallbackParse criaListaCallbackHtml() {
+		return new <%= classe.getNomeParaClasse() %>ListaCallbackHtml();
+	}
+	protected ICallbackParse criaDetalheCallbackHtml() {
+		return new <%= classe.getNomeParaClasse() %>DetalheCallbackHtml();
+	}
+
+	// Atualizar uma lista de objeto em uma página sem referencia de objeto pai.
+	// Exemplo Categorias em uma loja Virtual
+	public final void atualizaLista(DaoConexao conexao)
+			throws DaoException {
+		
+		dadosParse.setConexao(conexao);
+		preparaDadosLista(dadosParse);
+		exec.setCallbackParse(getCallbackLista()); // Callback recebe dados parse -> manter ordem.
+		exec.setDadosParse(dadosParse);
+		exec.executa();
+		return;
+		
+		/*
+		// Passo 2 - Montagem da fonte das urls
+		<%
+		Iterator<RelacionamentoWrapper> it1 = classe.obtemListaDependentePai().iterator();
+		while (it1.hasNext()) {
+			RelacionamentoWrapper relac = it1.next();
+		%>
+		<%= relac.getClasseOposta().getNomeParaClasse() %>Dao daoFonte = DBB.getInstancia().get<%= relac.getClasseOposta().getNomeParaClasse() %>Dao(); // Dependente ?
+		daoFonte.setConexao(conexao);
+		List<<%= relac.getClasseOposta().getNomeParaClasse() %>> lista = daoFonte.ListaCorrente();
+		Iterator<<%= relac.getClasseOposta().getNomeParaClasse() %>> itLista = lista.iterator();
+		while (itLista.hasNext()) {
+			<%= relac.getClasseOposta().getNomeParaClasse() %> corrente = itLista.next();
+			dadosParse.set<%= relac.getClasseOposta().getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(corrente);
+			exec.setDadosParse(dadosParse);
+			exec.executa();
+		}
+		<%
+		}
+		%>
+		return;
+		*/
+	}
+	
+	protected void preparaDadosLista(<%= classe.getNomeParaClasse() %>DadosParse dados) {
+	}
+	
+	// Atualiza todos os objetos do banco (retornado pelo dao.ListaCorrente )
+	public void atualizaDetalhe(DaoConexao conexao) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao daoFonte = DBB.getInstancia().get<%= classe.getNomeParaClasse() %>Dao(); // 
+		daoFonte.setConexao(conexao);
+		List<<%= classe.getNomeParaClasse() %>> lista = daoFonte.ListaCorrente();
+		Iterator<<%= classe.getNomeParaClasse() %>> itLista = lista.iterator();
+		while (itLista.hasNext()) {
+			<%= classe.getNomeParaClasse() %> corrente = itLista.next();
+			atualizaDetalhe(corrente,conexao);
+			
+		}
+		return;
+	}
+	
+	// Atualiza apenas um objeto
+	public final void atualizaDetalhe(<%= classe.getNomeParaClasse() %> itemRaiz, DaoConexao conexao) throws DaoException {
+		dadosParse.setItemDetalhe(itemRaiz);
+		dadosParse.setConexao(conexao);
+		preparaDadosDetalhe(dadosParse);
+		exec.setCallbackParse(getCallbackDetalhe()); // Callback recebe dados parse -> manter ordem.
+		exec.setDadosParse(dadosParse);
+		exec.executa();
+	}
+	protected void preparaDadosDetalhe(<%= classe.getNomeParaClasse() %>DadosParse dados) {
+	}
+	
+	// Candidato para nao mais ser usado.
+	private void atualizaItens(DaoConexao conexao) throws DaoException {
+		// Passo 1 - Montagem do parse do objeto
+		ExecutadorParse exec = new ExecutadorParse();
+		ICallbackParse callback = new <%= classe.getNomeParaClasse() %>ListaCallbackHtml();
+		<%= classe.getNomeParaClasse() %>DadosParse dadosParse = new <%= classe.getNomeParaClasse() %>DadosParse();
+		dadosParse.setConexao(conexao);
+		exec.setCallbackParse(callback);
+		
+		// Passo 2 - Montagem da fonte das urls
+		
+		<%= classe.getNomeParaClasse() %>Dao daoFonte = DBB.getInstancia().get<%= classe.getNomeParaClasse() %>Dao(); // 
+		daoFonte.setConexao(conexao);
+		List<<%= classe.getNomeParaClasse() %>> lista = daoFonte.ListaCorrente();
+		Iterator<<%= classe.getNomeParaClasse() %>> itLista = lista.iterator();
+		while (itLista.hasNext()) {
+			<%= classe.getNomeParaClasse() %> corrente = itLista.next();
+			dadosParse.setItemDetalhe(corrente);
+			exec.setDadosParse(dadosParse);
+			exec.executa();
+		}
+		return;
+	} 
+
+}

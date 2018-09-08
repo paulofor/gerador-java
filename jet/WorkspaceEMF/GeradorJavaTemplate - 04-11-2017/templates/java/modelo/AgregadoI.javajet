@@ -1,0 +1,78 @@
+<%@ jet package="jet.java.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="AgregadoI" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo.agregado;
+
+import java.util.List;
+
+import br.com.digicom.lib.dao.DaoConexao;
+import <%= conf.getNamespace() %>.modelo.*;
+
+// Geração automática não alterar
+public interface <%= classe.getNomeParaClasse() %>AgregadoI{
+
+	//void setConexaoCarregador(DaoConexao conexao);
+		
+	// Com chave estrangeira
+  	<%
+		Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+		while (iterador.hasNext()) {
+		RelacionamentoWrapper relac = iterador.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+	// Montador tradicional
+	public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(boolean lazyLoader);
+	public void set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item);
+	//public void set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>ComReversao(<%= classeOposta.getNomeParaClasse() %> item);
+	
+	// Montador alternativo
+	<% if (classe.getId()==classeOposta.getId()) {%>
+	/*  AutoRelacionamento
+	<% } %>
+	public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item); 
+	public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+	<% if (classe.getId()==classeOposta.getId()) {%>
+	*/
+	<% } %>
+		<%
+		}
+	%>
+	
+	// Sem Chave Estrangeira
+	<%
+		Iterator<RelacionamentoWrapper> iteradorN = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iteradorN.hasNext()) {
+		RelacionamentoWrapper relac = iteradorN.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+	public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+	public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item);
+	public List<<%= classeOposta.getNomeParaClasse() %>> getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(); 
+	public void setLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(List<<%= classeOposta.getNomeParaClasse() %>> item); 
+	public void criaVaziaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+	public boolean existeLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+ 		<%
+		}
+	%>
+	
+	// Um pra um
+	<%
+		Iterator<RelacionamentoWrapper> iterador1x1 = classe.obtemListaUmPraUm().iterator();
+		while (iterador1x1.hasNext()) {
+		RelacionamentoWrapper relac = iterador1x1.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+	// Montador tradicional
+	public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(); 
+	public void set<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item); 
+ 		<%
+		}
+	%>
+	
+	public void setConexaoCarregador(DaoConexao conexao);
+}

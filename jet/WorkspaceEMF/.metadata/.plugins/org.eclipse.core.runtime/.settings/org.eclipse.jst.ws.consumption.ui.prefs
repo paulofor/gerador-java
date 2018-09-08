@@ -1,0 +1,4 @@
+#Thu May 19 21:05:37 GMT-03:00 2011
+eclipse.preferences.version=1
+PREFERENCE_SERVER=org.eclipse.jst.server.generic.jboss5
+PREFERENCE_RUNTIME=org.eclipse.jst.ws.axis2.creation.axis2WebServiceRT

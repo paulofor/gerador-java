@@ -1,0 +1,307 @@
+<%@ jet package="jet.java.webparse" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="DadosParseBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.parse.dados.basico;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import <%= conf.getNamespace() %>.dao.<%= classe.getNomeParaClasse() %>Dao;
+import <%= conf.getNamespace() %>.dao.DBB;
+import br.com.digicom.lib.dao.DaoException;
+import br.com.digicom.parse.callback.IDadosParse;
+import br.com.digicom.parse.dao.DadosParseDao;
+import <%= conf.getNamespace() %>.parse.dados.*;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.log.ArquivoLog;
+
+
+public abstract class <%= classe.getNomeParaClasse() %>DadosParseBase extends DadosParseDao {
+
+	protected <%= classe.getNomeParaClasse() %>Dao dao = null;
+	protected <%= classe.getNomeParaClasse() %> itemDetalhe = null;
+	protected List<<%= classe.getNomeParaClasse() %>> lista = null;
+	
+	private boolean debug;
+	
+	public void setDebug() {
+		debug = true;
+	}
+	
+	private String proximaPagina = null;
+	public void setProximaPagina(String url) {
+		proximaPagina = url;
+	}
+	
+	
+	// Para ser utilizado quando se esta obtendo o detalhe 
+	// do Objeto <%= classe.getNomeParaClasse() %>
+	// Para listas usar itemCorrente.
+	public <%= classe.getNomeParaClasse() %> getItemDetalhe() {
+		return itemDetalhe;
+	}
+	
+	private <%= classe.getNomeParaClasse() %> itemCorrente = null;
+	<%
+		Iterator<RelacionamentoWrapper> iteradorN = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iteradorN.hasNext()) {
+		RelacionamentoWrapper relac = iteradorN.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+	//<%= relac.getNomeRelacionamento() %> 
+	private	<%= classeOposta.getNomeParaClasse() %> corrente<%= classeOposta.getNomeParaClasse() %>;
+	protected List<<%= classeOposta.getNomeParaClasse() %>> lista<%= classeOposta.getNomeParaClasse() %> = new ArrayList<<%= classeOposta.getNomeParaClasse() %>>();
+	
+	// Adicionado em 01-08-2016
+	public void adiciona<%= classeOposta.getNomeParaClasse() %>(<%= classeOposta.getNomeParaClasse() %> itemLista) {
+		itemLista.set<%= relac.getNomePropriedadeEntidadeOposta() %>(itemDetalhe.getId<%= classe.getNomeParaClasse() %>());
+		//ArquivoLog.getInstancia().salvaLog("<%= classe.getNomeParaClasse() %>(adicionaCorrente<%= classeOposta.getNomeParaClasse() %>):" + <%= classeOposta.getNomeParaClasse() %>DadosParseBase.displayLog(corrente<%= classeOposta.getNomeParaClasse() %>));
+		lista<%= classeOposta.getNomeParaClasse() %>.add(itemLista);
+	}
+	
+	
+	
+	@Deprecated
+	public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>() {
+		return corrente<%= classeOposta.getNomeParaClasse() %>;
+	}
+	@Deprecated
+	public void adicionaCorrente<%= classeOposta.getNomeParaClasse() %>() {
+		corrente<%= classeOposta.getNomeParaClasse() %>.set<%= relac.getNomePropriedadeEntidadeOposta() %>(itemDetalhe.getId<%= classe.getNomeParaClasse() %>());
+		ArquivoLog.getInstancia().salvaLog("<%= classe.getNomeParaClasse() %>(adicionaCorrente<%= classeOposta.getNomeParaClasse() %>):" + <%= classeOposta.getNomeParaClasse() %>DadosParseBase.displayLog(corrente<%= classeOposta.getNomeParaClasse() %>));
+		
+		lista<%= classeOposta.getNomeParaClasse() %>.add(corrente<%= classeOposta.getNomeParaClasse() %>);
+	}
+	@Deprecated
+	public void criaCorrente<%= classeOposta.getNomeParaClasse() %>() {
+		corrente<%= classeOposta.getNomeParaClasse() %> = FabricaVo.cria<%= classeOposta.getNomeParaClasse() %>();
+	}
+ 		<%
+		}
+	%>
+	
+	public <%= classe.getNomeParaClasse() %>DadosParseBase() {
+		super();
+		lista = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+	}
+
+	// Para ser chamado pelos CallbackParsing
+	@Deprecated
+	public <%= classe.getNomeParaClasse() %> getCorrente() {
+		return itemCorrente;
+	}
+	public void adicionaCorrenteExterno(<%= classe.getNomeParaClasse() %> item) {
+		ArquivoLog.getInstancia().salvaLog("<%= classe.getNomeParaClasse() %>(adicionaCorrenteExterno):" + displayLog(item));
+		if (debug) {
+			displayDebug(item);
+		}
+		lista.add(item);
+	}
+	protected void displayDebug(<%= classe.getNomeParaClasse() %> item) {
+		System.out.println(displayLog(item));
+	}
+	
+	@Deprecated
+	public void adicionaCorrente() {
+		ArquivoLog.getInstancia().salvaLog("<%= classe.getNomeParaClasse() %>(adicionaCorrente):" + displayLog(itemCorrente));
+		lista.add(itemCorrente);
+	}
+	
+	@Deprecated
+	public void criaCorrente() {
+		itemCorrente = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+	}
+
+
+	public void setItemDetalhe(<%= classe.getNomeParaClasse() %> item){
+		itemDetalhe = item;
+	}
+
+	public String getUrlLista() {
+ 		return "implementar getUrlLista() em <%= classe.getNomeParaClasse() %>DadosParse";
+ 	}
+ 	public String getUrlDetalhe() {
+ 		return "implementar getUrlDetalhe() em <%= classe.getNomeParaClasse() %>DadosParse";
+ 	}
+
+	<%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+	RelacionamentoWrapper relac = iterador.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+	private <%= classeOposta.getNomeParaClasse() %> _<%= classeOposta.getNomeParaVariavel() %>_<%= relac.getNomeRelacionamento() %>; 
+	
+	@Deprecated
+	public void set<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item) {
+		_<%= classeOposta.getNomeParaVariavel() %>_<%= relac.getNomeRelacionamento() %> = item;
+	}
+	@Deprecated
+	public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return _<%= classeOposta.getNomeParaVariavel() %>_<%= relac.getNomeRelacionamento() %>;
+	}
+ 	<%
+	}
+	%>
+
+	@Override
+	public void setServidor(String paramString) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void finalizacaoOkDetalhe() {
+		// deve ser sobrescrito caso nao seja um update de objeto.
+		try {
+			dao = DBB.getInstancia().get<%= classe.getNomeParaClasse() %>Dao();
+			dao.setConexao(getConexao());
+			dao.alteraItem(itemDetalhe);
+		} catch (DaoException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+
+	public void finalizacaoOkLista() {
+		try {
+			dao = DBB.getInstancia().get<%= classe.getNomeParaClasse() %>Dao();
+			dao.setConexao(getConexao());
+			List<<%= classe.getNomeParaClasse() %>> listaBanco = dao.ListaCorrente();
+			List<<%= classe.getNomeParaClasse() %>> listaInclusao = subtraiListaPorNome(lista,listaBanco);
+			List<<%= classe.getNomeParaClasse() %>> listaExclusao = subtraiListaPorNome(listaBanco,lista);
+			displayLogLista(listaInclusao,"Inclusao");
+			displayLogLista(listaExclusao,"Exclusao");
+			Iterator<<%= classe.getNomeParaClasse() %>> it = listaInclusao.iterator();
+			while (it.hasNext()) {
+				<%= classe.getNomeParaClasse() %> item = it.next();
+				System.out.println("<%= classe.getNomeParaClasse() %> Nova: " + toString(item));
+				setDataInclusaoItemLista(item);
+				dao.insereItem(item);
+			}
+			Iterator<<%= classe.getNomeParaClasse() %>> itExclusao = listaExclusao.iterator();
+			while (itExclusao.hasNext()) {
+				<%= classe.getNomeParaClasse() %> item = itExclusao.next();
+				excluiItemLista(item, dao);
+			}
+			//Nao se pode fechar a conexao aqui, preciso arrumar outro ponto.
+			//dao.liberaConexao(getConexao());
+		} catch (DaoException e) {
+			e.printStackTrace();
+		}
+	}
+	protected void excluiItemLista(<%= classe.getNomeParaClasse() %> item, <%= classe.getNomeParaClasse() %>Dao dao) throws DaoException{
+		//dao.insereHistorico(item,  DCConvert.getDataDD_MM_AAAA());
+		//dao.excluiItem(item);
+	}
+	protected void setDataInclusaoItemLista(<%= classe.getNomeParaClasse() %> item) {
+		//item.setDataInclusao(DCConvert.getDataDD_MM_AAAA());
+	}
+	
+	
+	public void finalizacaoOk(<%= classe.getNomeParaClasse() %> item) {
+		try {
+			dao = DBB.getInstancia().get<%= classe.getNomeParaClasse() %>Dao();
+			dao.setConexao(getConexao());
+			dao.alteraItem(item);
+		} catch (DaoException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public List<<%= classe.getNomeParaClasse() %>> subtraiListaPorNome(List<<%= classe.getNomeParaClasse() %>> listaMaior, List<<%= classe.getNomeParaClasse() %>> listaMenor) {
+		Iterator<<%= classe.getNomeParaClasse() %>> itMaior = listaMaior.iterator();
+		Iterator<<%= classe.getNomeParaClasse() %>> itMenor = null;
+		List<<%= classe.getNomeParaClasse() %>> listaDiferenca = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+		boolean achou = false;
+		while (itMaior.hasNext()) {
+			achou = false;
+			<%= classe.getNomeParaClasse() %> corrente = itMaior.next();
+			itMenor = listaMenor.iterator();
+			while (itMenor.hasNext()) {
+				<%= classe.getNomeParaClasse() %> comparador = itMenor.next();
+				if (iguais(comparador,corrente)) {
+					achou = true;
+					break;
+				}
+			}
+			if (!achou) {
+				listaDiferenca.add(corrente);
+			}
+		}
+		return listaDiferenca;
+	}
+	protected boolean iguais(<%= classe.getNomeParaClasse() %> item1, <%= classe.getNomeParaClasse() %> item2) {
+		throw new RuntimeException("Fazer override em <%= classe.getNomeParaClasse() %>DadosParse.iguais()");
+		//return (item1.getNome().compareTo(item2.getNome())==0);
+	}
+	
+	protected String toString(<%= classe.getNomeParaClasse() %> item) {
+		return "Fazer override em <%= classe.getNomeParaClasse() %>DadosParse.toString()";
+	}
+	
+	public void inicializacaoLista() {
+		lista.clear();
+	}
+	
+	public void inicializacaoDetalhe() {
+	<%
+		Iterator<RelacionamentoWrapper> iteradorIni = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iteradorIni.hasNext()) {
+		RelacionamentoWrapper relac = iteradorIni.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		lista<%= classeOposta.getNomeParaClasse() %>.clear();<%
+		}
+	%>
+	
+	}
+	
+	
+	public void displayLogLista(List<<%= classe.getNomeParaClasse() %>> lista, String codigo) {
+		for (<%= classe.getNomeParaClasse() %> item : lista) {
+			ArquivoLog.getInstancia().salvaLog("<%= classe.getNomeParaClasse() %>(lista" + codigo + "):" + displayLog(item));
+		}
+	}
+	public static String displayLog(<%= classe.getNomeParaClasse() %> item) {
+		StringBuffer display = new StringBuffer();
+		display.append("<%= classe.getNomeParaClasse() %> {");
+		<%
+		Iterator<AtributoTotalI> it = classe.getListaAtributoTotal().iterator();
+		while (it.hasNext()) {
+		AtributoTotalI atributo = it.next();
+		%>
+		display.append("<%= atributo.getNomePropriedade() %>:" + item.get<%= atributo.getNomePropriedade() %>() + ";");
+		<% 
+		}
+		%>
+		
+		<%
+		Iterator<RelacionamentoWrapper> iterador2 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador2.hasNext()) {
+		RelacionamentoWrapper relac = iterador2.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		if (item.get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(false)!=null) {
+			display.append("<%= classeOposta.getNomeParaClasse() %>{");
+			display.append(<%= classeOposta.getNomeParaClasse() %>DadosParse.displayLog(item.get<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(false)));
+			display.append("}");
+		}
+ 		<%
+		}
+		%>
+
+		display.append("}");
+		return display.toString();
+	}
+	
+	public List camposPost() {
+		return null;
+	}
+}

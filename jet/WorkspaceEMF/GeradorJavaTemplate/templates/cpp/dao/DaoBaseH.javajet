@@ -1,0 +1,27 @@
+<%@ jet package="jet.cpp.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cpp.* gerapp.modelo.* " 
+class="DaoBaseH" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapperCpp classe = (ClasseWrapperCpp) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+#pragma once
+#include "..\digicom\DaoBase.h"
+#include "estruturaobjeto.h"
+#include "..\digicom\DaoConexao.h"
+
+#include "DaoAplicacao.h"
+#include "..\digicom\DataFonte.h"
+
+class C<%= classe.getNomeParaClasse() %>DaoBase : public CDaoAplicacao
+{
+public:
+	C<%= classe.getNomeParaClasse() %>DaoBase(CDataFonte* dataSource);
+	C<%= classe.getNomeParaClasse() %>DaoBase(void);
+	~C<%= classe.getNomeParaClasse() %>DaoBase(void);
+	CDaoConexao* criaConexao();
+	
+	void setConexao(CDaoConexao* conexao);
+	void liberaConexao(CDaoConexao* conexao);
+};

@@ -1,0 +1,247 @@
+<%@ jet package="jet.android.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="SincronizadorBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.app.base;
+
+import br.com.digicom.servico.ServicoLocal;
+import br.com.digicom.servico.ServicoRemoto;
+import br.com.digicom.network.WifiTest;
+import br.com.digicom.dao.DataSource;
+import br.com.digicom.log.DCLog;
+import br.com.digicom.dao.DaoSincronismo;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.servico.*;
+import java.util.List;
+import android.content.Context;
+import android.util.Log;
+
+// extends AsyncTask<URL, Integer, Long> 
+public abstract class SincronizadorBase  extends Thread{
+	
+	Context ctx = null;
+	private String TAG = "Sincronizacao";
+	
+	public void setContexto(Context contexto) {
+		ctx = contexto;
+	}
+	public void run()  {
+		if (WifiTest.existe(ctx)) {
+			Log.d(TAG , "Inicio Sincronizacao");
+			sincronizaDispositivoUsuario(ctx);
+			sincronizaUsuario(ctx); // parece que vai precisar sempre. nao faz sentido Usuario_Usuario
+			principal(ctx);
+			atualizaDispositivo();
+			Log.d(TAG , "Final Sincronizacao");
+		} else {
+			Log.d(TAG , "Sem Sincronizacao - Wifi Indisponivel");
+		}
+	}
+	
+	public static void atualizaDispositivo() {
+		DispositivoUsuarioServico dispositivoSrv = FabricaServico.getInstancia().getDispositivoUsuarioServico(FabricaServico.TIPO_SQLITE);
+		DispositivoUsuario dispositivo = dispositivoSrv.getCorrente();
+		if (dispositivo!=null && dispositivo.getMelhorPath()!=null) {
+			if (dispositivo.getMelhorPath().compareTo(DataSource.getValorPath())!=0) {
+				dispositivo.setMelhorPath(DataSource.getValorPath());
+				dispositivoSrv.alteraParaSincronizacao(dispositivo);
+			}
+		}
+	}
+	
+	protected abstract void principal(Context contexto);
+
+<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+		String tipoPermissao = (corrente.ehUsuario() || corrente.ehDispositivo() ?"private":"protected");
+%>
+	
+	@Deprecated
+	<%= tipoPermissao %> void sincroniza<%= corrente.getNomeParaClasse() %>(Context contexto) {
+		ServicoRemoto<<%= corrente.getNomeParaClasse() %>> servicoRemoto = (ServicoRemoto<<%= corrente.getNomeParaClasse() %>>)FabricaServico.getInstancia().get<%= corrente.getNomeParaClasse() %>Servico(FabricaServico.TIPO_WSJSON);
+		ServicoLocal<<%= corrente.getNomeParaClasse() %>> servicoLocal = (ServicoLocal<<%= corrente.getNomeParaClasse() %>>) FabricaServico.getInstancia().get<%= corrente.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		try {
+			// Upload das mudancas
+			List<<%= corrente.getNomeParaClasse() %>> listaSinc = servicoLocal.listaSincronizadaAlteracao(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= corrente.getNomeParaClasse() %>: " + listaSinc.size() + " >> ");
+			if (listaSinc!=null && !listaSinc.isEmpty()) {
+				servicoRemoto.listaSincronizadaAlteracao(listaSinc,contexto);
+				servicoLocal.limpaSinc(listaSinc); // coloquei por causa do dispositivo
+				listaSinc = null;
+			}
+			// Download da lista
+			List<<%= corrente.getNomeParaClasse() %>> lista = servicoRemoto.listaSincronizada(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= corrente.getNomeParaClasse() %>: " + lista.size() + " << ");
+			servicoLocal.dropCreate(contexto);
+			servicoLocal.insertAll(lista, contexto);
+			lista = null;
+			
+		/*
+		<%
+		// Existe um problema aqui, caso a entidade tenha duas entidades Dependentes !!!!
+		List<RelacionamentoWrapper> listaDep = corrente.obtemListaDependente();
+		for (RelacionamentoWrapper relac : listaDep) {
+			if (relac!=null) {
+			%>
+			// Dependente
+			ServicoRemoto<<%= relac.getClasseOposta().getNomeParaClasse() %>> <%= relac.getClasseOposta().getNomeParaClasse() %>RemotoDep = (ServicoRemoto<<%= relac.getClasseOposta().getNomeParaClasse() %>>)FabricaServico.getInstancia().get<%= relac.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_WSJSON);
+			ServicoLocal<<%= relac.getClasseOposta().getNomeParaClasse() %>> <%= relac.getClasseOposta().getNomeParaClasse() %>LocalDep = (ServicoLocal<<%= relac.getClasseOposta().getNomeParaClasse() %>>) FabricaServico.getInstancia().get<%= relac.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+			// Evitar que as alteracoes em itens dependentes fiquem esquecidass no mobile
+			List<<%= relac.getClasseOposta().getNomeParaClasse() %>> lista<%= relac.getClasseOposta().getNomeParaClasse() %>DepSincAlteracao = <%= relac.getClasseOposta().getNomeParaClasse() %>LocalDep.listaSincronizadaDependenteSoAlteracao(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= relac.getClasseOposta().getNomeParaClasse() %>: servicoLocal.listaSincronizadaAlteracao : " + lista<%= relac.getClasseOposta().getNomeParaClasse() %>DepSincAlteracao.size());
+			if (lista<%= relac.getClasseOposta().getNomeParaClasse() %>DepSincAlteracao!=null && !lista<%= relac.getClasseOposta().getNomeParaClasse() %>DepSincAlteracao.isEmpty()) {
+				<%= relac.getClasseOposta().getNomeParaClasse() %>RemotoDep.listaSincronizadaAlteracao(lista<%= relac.getClasseOposta().getNomeParaClasse() %>DepSincAlteracao, contexto);
+			}
+			// Recuperacao do remote para o mobile
+			List<<%= relac.getClasseOposta().getNomeParaClasse() %>> lista<%= relac.getClasseOposta().getNomeParaClasse() %>Dep = <%= relac.getClasseOposta().getNomeParaClasse() %>RemotoDep.listaSincronizada(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= relac.getClasseOposta().getNomeParaClasse() %>: servicoRemoto.listaSincronizada : " + lista<%= relac.getClasseOposta().getNomeParaClasse() %>Dep.size());
+			<%= relac.getClasseOposta().getNomeParaClasse() %>LocalDep.dropCreate(contexto);
+			<%= relac.getClasseOposta().getNomeParaClasse() %>LocalDep.insertAll(lista<%= relac.getClasseOposta().getNomeParaClasse() %>Dep, contexto);
+			<%
+			}
+			%>
+		
+			<%
+			if (relac!=null) {
+				RelacionamentoWrapper relac2 = relac.getClasseOposta().getUnicoDependenteLista();
+				if (relac2!=null) {
+			%>
+			// Dependente Nivel 2
+			ServicoRemoto<<%= relac2.getClasseOposta().getNomeParaClasse() %>> servicoRemotoDep2 = (ServicoRemoto<<%= relac2.getClasseOposta().getNomeParaClasse() %>>)FabricaServico.getInstancia().get<%= relac2.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_WSJSON);
+			ServicoLocal<<%= relac2.getClasseOposta().getNomeParaClasse() %>> servicoLocalDep2 = (ServicoLocal<<%= relac2.getClasseOposta().getNomeParaClasse() %>>) FabricaServico.getInstancia().get<%= relac2.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+			// Evitar que as alteracoes em itens dependentes fiquem esquecidass no mobile
+			List<<%= relac2.getClasseOposta().getNomeParaClasse() %>> listaDep2SincAlteracao = servicoLocalDep2.listaSincronizadaDependenteSoAlteracao(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= relac2.getClasseOposta().getNomeParaClasse() %>: servicoLocal.listaSincronizadaAlteracao : " + listaDep2SincAlteracao.size());
+			if (listaDep2SincAlteracao!=null && !listaDep2SincAlteracao.isEmpty()) {
+				servicoRemotoDep2.listaSincronizadaAlteracao(listaDep2SincAlteracao, contexto);
+			}
+			// Recuperacao do remote para o mobile
+			List<<%= relac2.getClasseOposta().getNomeParaClasse() %>> lista<%= relac2.getClasseOposta().getNomeParaClasse() %>Dep2 = servicoRemotoDep2.listaSincronizada(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= relac2.getClasseOposta().getNomeParaClasse() %>: servicoRemoto.listaSincronizada : " + lista<%= relac2.getClasseOposta().getNomeParaClasse() %>Dep2.size());
+			servicoLocalDep2.dropCreate(contexto);
+			servicoLocalDep2.insertAll(lista<%= relac2.getClasseOposta().getNomeParaClasse() %>Dep2, contexto);
+			<%
+				}
+			}
+		} // Final do for
+			%>
+		*/
+		} catch (Exception e) {
+			DCLog.e(DCLog.SINCRONIZACAO_SINCRONIZADOR, this, e);
+		}
+	}
+	
+<% if (!corrente.ehUsuario() && !corrente.ehDispositivo()) { %>
+	@Deprecated
+	protected void sincroniza<%= corrente.getNomeParaClasse() %>_Usuario(Context contexto) {
+		ServicoRemoto<<%= corrente.getNomeParaClasse() %>> servicoRemoto = (ServicoRemoto<<%= corrente.getNomeParaClasse() %>>)FabricaServico.getInstancia().get<%= corrente.getNomeParaClasse() %>Servico(FabricaServico.TIPO_WSJSON);
+		ServicoLocal<<%= corrente.getNomeParaClasse() %>> servicoLocal = (ServicoLocal<<%= corrente.getNomeParaClasse() %>>) FabricaServico.getInstancia().get<%= corrente.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		// Upload das mudancas
+		try {
+			List<<%= corrente.getNomeParaClasse() %>> listaSinc = servicoLocal.listaSincronizadaAlteracao(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= corrente.getNomeParaClasse() %>: " + listaSinc.size() + " >> ");
+			if (listaSinc!=null && !listaSinc.isEmpty()) {
+				servicoRemoto.listaSincronizadaAlteracao(listaSinc,contexto);
+				servicoLocal.limpaSinc(listaSinc);
+				listaSinc = null;
+			}
+			// Download da lista
+			List<<%= corrente.getNomeParaClasse() %>> lista = servicoRemoto.listaSincronizadaUsuario(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= corrente.getNomeParaClasse() %>: " + lista.size() + " << ");
+			servicoLocal.dropCreate(contexto);
+			servicoLocal.insertAll(lista, contexto);
+			lista = null;
+		<%
+		List<RelacionamentoWrapper> listaDep2  = corrente.obtemListaDependente();
+		for (RelacionamentoWrapper relac : listaDep2) {
+			if (relac!=null) {
+			%>
+			// Dependente
+			ServicoRemoto<<%= relac.getClasseOposta().getNomeParaClasse() %>> <%= relac.getClasseOposta().getNomeParaClasse() %>RemotoDep = (ServicoRemoto<<%= relac.getClasseOposta().getNomeParaClasse() %>>)FabricaServico.getInstancia().get<%= relac.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_WSJSON);
+			ServicoLocal<<%= relac.getClasseOposta().getNomeParaClasse() %>> <%= relac.getClasseOposta().getNomeParaClasse() %>LocalDep = (ServicoLocal<<%= relac.getClasseOposta().getNomeParaClasse() %>>) FabricaServico.getInstancia().get<%= relac.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+			if (listaSinc.isEmpty()) {
+				List<<%= relac.getClasseOposta().getNomeParaClasse() %>> listaLocal<%= relac.getClasseOposta().getNomeParaClasse() %> = <%= relac.getClasseOposta().getNomeParaClasse() %>LocalDep.listaSincronizadaAlteracao(contexto);
+				DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= relac.getClasseOposta().getNomeParaClasse() %>>: servicoLocal : " + listaLocal<%= relac.getClasseOposta().getNomeParaClasse() %>.size());
+				if (listaLocal<%= relac.getClasseOposta().getNomeParaClasse() %>!=null && !listaLocal<%= relac.getClasseOposta().getNomeParaClasse() %>.isEmpty()) {
+					<%= relac.getClasseOposta().getNomeParaClasse() %>RemotoDep.listaSincronizadaAlteracao(listaLocal<%= relac.getClasseOposta().getNomeParaClasse() %>,contexto);
+					<%= relac.getClasseOposta().getNomeParaClasse() %>LocalDep.limpaSinc(listaLocal<%= relac.getClasseOposta().getNomeParaClasse() %>);
+				}
+			}
+			List<<%= relac.getClasseOposta().getNomeParaClasse() %>> lista<%= relac.getClasseOposta().getNomeParaClasse() %>Dep = <%= relac.getClasseOposta().getNomeParaClasse() %>RemotoDep.listaSincronizadaUsuario(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= relac.getClasseOposta().getNomeParaClasse() %>: servicoRemoto : " + lista<%= relac.getClasseOposta().getNomeParaClasse() %>Dep.size());
+			<%= relac.getClasseOposta().getNomeParaClasse() %>LocalDep.dropCreate(contexto);
+			<%= relac.getClasseOposta().getNomeParaClasse() %>LocalDep.insertAll(lista<%= relac.getClasseOposta().getNomeParaClasse() %>Dep, contexto);
+			<%
+			}
+			%>
+			<%
+			if (relac!=null) {
+				RelacionamentoWrapper relac2 = relac.getClasseOposta().getUnicoDependenteLista();
+				if (relac2!=null) {
+			%>
+			// Dependente Nivel 2
+			ServicoRemoto<<%= relac2.getClasseOposta().getNomeParaClasse() %>> <%= relac2.getClasseOposta().getNomeParaClasse() %>RemotoDep2 = (ServicoRemoto<<%= relac2.getClasseOposta().getNomeParaClasse() %>>)FabricaServico.getInstancia().get<%= relac2.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_WSJSON);
+			ServicoLocal<<%= relac2.getClasseOposta().getNomeParaClasse() %>> <%= relac2.getClasseOposta().getNomeParaClasse() %>LocalDep2 = (ServicoLocal<<%= relac2.getClasseOposta().getNomeParaClasse() %>>) FabricaServico.getInstancia().get<%= relac2.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+			List<<%= relac2.getClasseOposta().getNomeParaClasse() %>> lista<%= relac2.getClasseOposta().getNomeParaClasse() %>Dep2 = <%= relac2.getClasseOposta().getNomeParaClasse() %>RemotoDep2.listaSincronizadaUsuario(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= relac2.getClasseOposta().getNomeParaClasse() %>: servicoRemoto : " + lista<%= relac2.getClasseOposta().getNomeParaClasse() %>Dep2.size());
+			<%= relac2.getClasseOposta().getNomeParaClasse() %>LocalDep2.dropCreate(contexto);
+			<%= relac2.getClasseOposta().getNomeParaClasse() %>LocalDep2.insertAll(lista<%= relac2.getClasseOposta().getNomeParaClasse() %>Dep2, contexto);
+			<%
+				}
+			}
+		} // Final do for
+		%>
+		} catch (Exception e) {
+			DCLog.e(DCLog.SINCRONIZACAO_SINCRONIZADOR, this, e);
+		}
+	}
+<% } %>
+
+<%
+	}
+%>
+
+	// ------------- Sincronismo Versão 2 ---------------------
+	
+	<%
+	Iterator<ClasseWrapper> itera = classes.iterator();
+	while (itera.hasNext()) {
+		ClasseWrapper corrente = itera.next();
+		String tipoPermissao = (corrente.ehUsuario() || corrente.ehDispositivo() ?"private":"protected");
+	%>
+	protected void sincroniza<%= corrente.getNomeParaClasse() %>(Context contexto, boolean forcaAtualizacao) {
+		ServicoRemoto<<%= corrente.getNomeParaClasse() %>> servicoRemoto = (ServicoRemoto<<%= corrente.getNomeParaClasse() %>>)FabricaServico.getInstancia().get<%= corrente.getNomeParaClasse() %>Servico(FabricaServico.TIPO_WSJSON);
+		ServicoLocal<<%= corrente.getNomeParaClasse() %>> servicoLocal = (ServicoLocal<<%= corrente.getNomeParaClasse() %>>) FabricaServico.getInstancia().get<%= corrente.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		boolean teveMudanca = false;
+		// Upload das mudancas
+		try {
+			List<<%= corrente.getNomeParaClasse() %>> listaSinc = servicoLocal.listaSincronizadaAlteracao(contexto);
+			DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= corrente.getNomeParaClasse() %>: " + listaSinc.size() + " >> ");
+			if (listaSinc!=null && !listaSinc.isEmpty()) {
+				servicoRemoto.listaSincronizadaAlteracao(listaSinc,contexto);
+				servicoLocal.limpaSinc(listaSinc);
+				teveMudanca = true;
+			}
+			// Download da lista
+			if (forcaAtualizacao || teveMudanca) { 
+				DaoSincronismo daoSinc = servicoLocal.getDaoSincronismo();
+				int tamLista = servicoRemoto.listaSincronizadaDao(daoSinc, contexto);
+				DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,"<%= corrente.getNomeParaClasse() %>: " + tamLista +  " << ");
+			}
+		} catch (Exception e) {
+			DCLog.e(DCLog.SINCRONIZACAO_SINCRONIZADOR, this, e);
+		}
+		System.gc();
+	}
+	<%
+	}
+	%>
+	// ------------------------------------------------------------
+}

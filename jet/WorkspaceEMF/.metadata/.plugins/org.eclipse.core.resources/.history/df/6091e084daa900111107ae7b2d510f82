@@ -1,0 +1,71 @@
+<%@ jet package="jet.csdn35.mvc" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="DisplayPageView" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+@model <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>
+
+@{
+    ViewBag.Title = "";
+}
+<%
+if (!classe.isAssociativa()) {
+%>
+<h2>@Model.<%= classe.getIdentificadorW().getNomePropriedade() %></h2>
+<%
+}
+%>
+
+<%
+Iterator<RelacionamentoWrapper> it1 = classe.obtemListaDependente().iterator();
+while (it1.hasNext()) {
+	RelacionamentoWrapper relac = it1.next();
+%>
+<div id="<%= relac.getClasseOposta().getNomeParaClasse() %>Conteudo"></div>
+<div class="<%= relac.getClasseOposta().getNomeParaClasse() %>Cria ButtonLink">Criar Novo</div>
+<div id="<%= relac.getClasseOposta().getNomeParaClasse() %>Dialog"></div>
+<%
+}
+%>
+
+<%
+it1 = classe.obtemListaDependente().iterator();
+while (it1.hasNext()) {
+	RelacionamentoWrapper relac = it1.next();
+%>
+<script type="text/javascript">
+    $( function() {
+        $("#<%= relac.getClasseOposta().getNomeParaClasse() %>Dialog").dialog({
+            autoOpen: false, width: 600, height: 400, modal: true,
+            buttons: {
+                "Salvar": function () {
+                    if ($("#<%= relac.getClasseOposta().getNomeParaClasse() %>Form").validate().form()) {
+                       $.post("@Url.Action("CriaEditaRetornaLista", "<%= relac.getClasseOposta().getNomeParaClasse() %>")",
+                        $("#<%= relac.getClasseOposta().getNomeParaClasse() %>Form").serialize(),
+                        function (data) {
+                            $("#<%= relac.getClasseOposta().getNomeParaClasse() %>Dialog").dialog("close");
+                            $("#<%= relac.getClasseOposta().getNomeParaClasse() %>Conteudo").html(data);
+                            Carrega<%= relac.getClasseOposta().getNomeParaClasse() %>();
+                        });
+                    }
+                },
+                "Sair": function () { $(this).dialog("close"); }
+            }
+        });
+        $(".<%= relac.getClasseOposta().getNomeParaClasse() %>Cria").click(function () {
+            $("#<%= relac.getClasseOposta().getNomeParaClasse() %>Dialog").html("")
+                .dialog("option", "title", "Cria Novo")
+                .load("@ViewData["DiretorioVirtual"]/<%= relac.getClasseOposta().getNomeParaClasse() %>/Novo", function () { $("#<%= relac.getClasseOposta().getNomeParaClasse() %>Dialog").dialog("open"); });
+        });
+        Carrega<%= relac.getClasseOposta().getNomeParaClasse() %>();
+    })
+    function Carrega<%= relac.getClasseOposta().getNomeParaClasse() %>() {
+         $("#<%= relac.getClasseOposta().getNomeParaClasse() %>Conteudo").load("@Url.Action("ListaCorrente", "<%= relac.getClasseOposta().getNomeParaClasse() %>")?<%= relac.getNomePropriedadeEntidadeOposta() %>=@Model.<%= classe.getChaveW().getNomePropriedade() %>");
+    }
+</script>
+<%
+}
+%>

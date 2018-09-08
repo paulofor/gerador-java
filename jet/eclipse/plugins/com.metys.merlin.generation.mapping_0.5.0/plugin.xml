@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.metys.com/merlin/generation/mappingmodel.ecore"
+            class="com.metys.merlin.generation.mappingmodel.MappingModelPackage"/>
+      <package
+            uri="http://www.metys.com/merlin/generation/mappingmodel/mapping.ecore"
+            class="com.metys.merlin.generation.mappingmodel.mapping.MappingPackage"/>
+      <package
+            uri="http://www.metys.com/merlin/generation/mappingmodel/rules.ecore"
+            class="com.metys.merlin.generation.mappingmodel.rules.RulesPackage"/>            
+   </extension>
+</plugin>

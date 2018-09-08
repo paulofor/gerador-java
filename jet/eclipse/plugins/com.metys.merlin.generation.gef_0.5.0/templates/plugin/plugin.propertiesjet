@@ -1,0 +1,57 @@
+<%
+/**
+ * Copyright (c) 2005 Joel Cheuoua & Contributors
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Merlin project nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+%>
+<%@ jet package="com.metys.merlin.generation.gef.compiledtemplates.plugin" imports="java.util.* com.metys.merlin.generation.gef.genmodel.* org.eclipse.emf.codegen.ecore.genmodel.*" class="PluginProperties" %>
+<%
+%>
+<%GenGEFModel genGEFModel = (GenGEFModel) argument; GenModel genModel= genGEFModel.getGenModel();%>
+<%@ include file="../Header.jetinc"%>
+
+# ====================================================================
+# To code developer:
+#   Do NOT change the properties between this line and the
+#   "%%% END OF TRANSLATED PROPERTIES %%%" line.
+#   Make a new property name, append to the end of the file and change
+#   the code to use the new property.
+# ====================================================================
+
+# ====================================================================
+# %%% END OF TRANSLATED PROPERTIES %%%
+# ====================================================================
+
+pluginName = <%=genGEFModel.getName()%> GEF Editor
+providerName = www.example.org
+
+<%for (Iterator i = genGEFModel.getGenEditors().iterator(); i.hasNext(); ) { GenEditor genEditor = (GenEditor)i.next();%>
+_UI_<%=genEditor.getName()%>_label = <%=genEditor.getName()%> Model Graphical Editor
+_UI_<%=genEditor.getName()%>_EditorFilenameExtension = <%=genEditor.getName().toLowerCase()%>
+<%}%>

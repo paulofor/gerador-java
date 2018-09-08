@@ -1,0 +1,14 @@
+LogEntry.0=START_INSTALL_LOG
+LogEntry.1=BUNDLE K:\GeradorJava\jet\eclipse\plugins\org.jboss.tools.ws.core_1.0.1.v200910211631N-H194-GA.jar1305849774812.tmp
+LogEntry.2=BUNDLE K:\GeradorJava\jet\eclipse\plugins\org.jboss.tools.ws.creation.core_1.0.1.v200910211631N-H194-GA.jar1305849774812.tmp
+LogEntry.3=BUNDLE K:\GeradorJava\jet\eclipse\plugins\org.jboss.tools.ws.creation.ui_1.0.1.v200910211631N-H194-GA.jar1305849774828.tmp
+LogEntry.4=BUNDLE K:\GeradorJava\jet\eclipse\plugins\org.jboss.tools.ws.ui_1.0.1.v200910211631N-H194-GA.jar1305849774828.tmp
+LogEntry.5=FEATURE K:\GeradorJava\jet\eclipse\features\org.jboss.tools.ws.feature_1.0.1.v200910211631N-H194-GA\feature1305849774843.xml
+LogEntry.6=ALL_FEATURES_INSTALLED
+LogEntry.7=RENAME K:\GeradorJava\jet\eclipse\features\org.jboss.tools.ws.feature_1.0.1.v200910211631N-H194-GA\feature1305849774843.xml
+LogEntry.8=RENAME K:\GeradorJava\jet\eclipse\plugins\org.jboss.tools.ws.core_1.0.1.v200910211631N-H194-GA.jar1305849774812.tmp
+LogEntry.9=RENAME K:\GeradorJava\jet\eclipse\plugins\org.jboss.tools.ws.creation.core_1.0.1.v200910211631N-H194-GA.jar1305849774812.tmp
+LogEntry.10=RENAME K:\GeradorJava\jet\eclipse\plugins\org.jboss.tools.ws.creation.ui_1.0.1.v200910211631N-H194-GA.jar1305849774828.tmp
+LogEntry.11=RENAME K:\GeradorJava\jet\eclipse\plugins\org.jboss.tools.ws.ui_1.0.1.v200910211631N-H194-GA.jar1305849774828.tmp
+LogEntry.12=END_INSTALL_LOG
+eof=eof

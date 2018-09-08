@@ -1,0 +1,811 @@
+<%@ jet package="jet.android.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DBHelper" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+<%
+	AtributoWrapper atributoW = new AtributoWrapperAndroid();
+	AtributoWrapper chaveW = new AtributoWrapperAndroid();
+	chaveW.setBase(classe.getChave());
+	
+%>
+package <%= conf.getNamespace() %>.dao.base;
+
+import java.util.ArrayList;
+import java.util.List;
+import br.com.digicom.Constants;
+import br.com.digicom.dao.DBHelperBase;
+import br.com.digicom.dao.MontadorDaoComposite;
+import br.com.digicom.dao.MontadorDaoI;
+import br.com.digicom.modelo.ObjetoSinc;
+import br.com.digicom.modelo.DCIObjetoDominio;
+import br.com.digicom.dao.DaoException;
+import br.com.digicom.log.DCLog;
+import br.com.digicom.dao.DaoSincronismo;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
+import android.util.Log;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.modelo.vo.<%= classe.getNomeParaClasse() %>Vo;
+import <%= conf.getNamespace() %>.modelo.vo.FabricaVo;
+import <%= conf.getNamespace() %>.dao.*;
+import <%= conf.getNamespace() %>.dao.montador.*;
+import <%= conf.getNamespace() %>.dao.datasource.DataSourceAplicacao;
+
+public abstract class <%= classe.getNomeParaClasse() %>DBHelperBase extends DBHelperBase
+	implements DaoSincronismo // coloquei aqui para evitar impacto de arquitetura
+{
+
+    private static final String DB_NAME = "w_alert";
+    public static final String DB_TABLE = "<%= classe.getNomeParaTabela() %>";
+    public static final String DB_TABLE_SINC = "<%= classe.getNomeParaTabela() %>_sinc";
+    public static final int DB_VERSION = 3;
+
+    protected static final String CLASSNAME = <%= classe.getNomeParaClasse() %>DBHelperBase.class.getSimpleName();
+    protected static final String[] COLS = new String[] { 
+    <% 
+    Iterator<AtributoEntidade> iterador = classe.getListaAtributoEntidade().iterator(); 
+    String virgula = "";
+    while (iterador.hasNext()) {
+     	atributoW.setBase(iterador.next());
+    %>
+        <%= virgula %>"<%= atributoW.getNomeCampoTabela() %>"
+    <%
+    	if (virgula.equals("")) virgula = ",";
+    }
+    %>
+    <%
+	Iterator<RelacionamentoWrapper> iteradorRel1 = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+	while (iteradorRel1.hasNext()) {
+		RelacionamentoWrapper relCorrente = iteradorRel1.next();
+	%>
+		, "<%= relCorrente.getNomeCampoTabela() %>"
+	<%
+	}
+	%>
+    };
+
+	protected static final String[] COLS_SINC = new String[] { 
+    <% 
+    iterador = classe.getListaAtributoEntidade().iterator(); 
+    virgula = "";
+    while (iterador.hasNext()) {
+     	atributoW.setBase(iterador.next());
+    %>
+        <%= virgula %>"<%= atributoW.getNomeCampoTabela() %>"
+    <%
+    	if (virgula.equals("")) virgula = ",";
+    }
+    %>
+    <%
+	iteradorRel1 = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+	while (iteradorRel1.hasNext()) {
+		RelacionamentoWrapper relCorrente = iteradorRel1.next();
+	%>
+		, "<%= relCorrente.getNomeCampoTabela() %>"
+	<%
+	}
+	%>	, "operacao_sinc"
+    };
+
+    protected SQLiteDatabase db;
+    protected final DBOpenHelper dbOpenHelper;
+
+	@Override
+	protected MontadorDaoI criaMontadorPadrao() {
+		return new <%= classe.getNomeParaClasse() %>Montador();
+	}
+	
+	protected String getSqlIndices() {
+		return "";
+	}
+	protected String getSqlCreate(){
+		return  "CREATE TABLE "
+        + <%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE + " ("
+        <% 
+        iterador = classe.getListaAtributoEntidade().iterator(); 
+        virgula = "";
+        while (iterador.hasNext()) {
+        	atributoW.setBase(iterador.next());
+        %>
+        + " <%= virgula %> <%= atributoW.getNomeCampoTabela() %> <%= atributoW.getTipoSqlite() %> "
+        <%
+        	if (virgula.length()==0) virgula = ",";
+        }
+        %>
+        <%
+		iteradorRel1 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iteradorRel1.hasNext()) {
+			RelacionamentoWrapper relCorrente = iteradorRel1.next();
+		%>
+		+ " , <%= relCorrente.getNomeCampoTabela() %> INTEGER "
+		<%
+		}
+		%>
+		+ getSqlIndices()
+        + ");";
+	}
+
+	<% if (classe.ehUsuario() || classe.ehDispositivo()) { %>
+	public <%= classe.getNomeParaClasse() %> getCorrente() {
+		String sql = " select " + camposOrdenados() + " from " + DB_TABLE +
+				" limit 1";
+		return (<%= classe.getNomeParaClasse() %>) this.geObjetoSql(sql);
+	}
+	<% } %>
+
+	public static final String DB_CREATE_SINCRONIZADA = "CREATE TABLE IF NOT EXISTS "
+        + <%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC + " ("
+        <% 
+        iterador = classe.getListaAtributoEntidade().iterator(); 
+        virgula = "";
+        while (iterador.hasNext()) {
+        	atributoW.setBase(iterador.next());
+        %>
+        + " <%= virgula %> <%= atributoW.getNomeCampoTabela() %> <%= atributoW.getTipoSqliteSinc() %> "
+        <%
+        	if (virgula.length()==0) virgula = ",";
+        }
+        %>
+        <%
+		iteradorRel1 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iteradorRel1.hasNext()) {
+			RelacionamentoWrapper relCorrente = iteradorRel1.next();
+		%>
+		+ " , <%= relCorrente.getNomeCampoTabela() %> INTEGER "
+		<%
+		}
+		%>
+        + ", operacao_sinc TEXT);";
+
+
+    public static final String DB_CREATE = "CREATE TABLE IF NOT EXISTS "
+        + <%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE + " ("
+        <% 
+        iterador = classe.getListaAtributoEntidade().iterator(); 
+        virgula = "";
+        while (iterador.hasNext()) {
+        	atributoW.setBase(iterador.next());
+        %>
+        + " <%= virgula %> <%= atributoW.getNomeCampoTabela() %> <%= atributoW.getTipoSqlite() %> "
+        <%
+        	if (virgula.length()==0) virgula = ",";
+        }
+        %>
+        <%
+		iteradorRel1 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iteradorRel1.hasNext()) {
+			RelacionamentoWrapper relCorrente = iteradorRel1.next();
+		%>
+		+ " , <%= relCorrente.getNomeCampoTabela() %> INTEGER "
+		<%
+		}
+		%>
+        + ");";
+    
+    private static final String DB_DELETE_ALL = "DELETE FROM " + DB_TABLE;
+    private static final String DB_DROP = "DROP TABLE IF EXISTS " + DB_TABLE;
+    private static final String DB_DROP_SINCRONIZADA = "DROP TABLE IF EXISTS " + DB_TABLE_SINC;
+    
+    private static class DBOpenHelper extends SQLiteOpenHelper {
+
+       
+
+        public DBOpenHelper(final Context context) {
+            super(context, <%= classe.getNomeParaClasse() %>DBHelperBase.DB_NAME, null, <%= classe.getNomeParaClasse() %>DBHelperBase.DB_VERSION);
+        }
+
+        @Override
+        public void onCreate(final SQLiteDatabase db) {
+            try {
+                db.execSQL(DB_CREATE);
+            } catch (SQLException e) {
+                Log.e(Constants.LOGTAG, <%= classe.getNomeParaClasse() %>DBHelperBase.CLASSNAME, e);
+            }
+        }
+
+        @Override
+        public void onOpen(final SQLiteDatabase db) {
+            super.onOpen(db);
+        }
+
+        @Override
+        public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS " + <%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE);
+            onCreate(db);
+        }
+    }
+
+    //
+    // end inner classes
+    //
+    
+    // Versao Nova
+ 	public <%= classe.getNomeParaClasse() %>DBHelperBase() {
+    	this.dbOpenHelper = null;
+    	setDataSource(DataSourceAplicacao.getInstancia());
+    }
+    
+   
+	
+	protected ContentValues montaValores(final DCIObjetoDominio valor) {
+		<%= classe.getNomeParaClasse() %> item = (<%= classe.getNomeParaClasse() %>) valor;
+		ContentValues valores = new ContentValues();
+        <% 
+        Iterator<AtributoTotalI> iteradorTotal = classe.getListaAtributoTotal().iterator(); 
+        while (iteradorTotal.hasNext()) {
+	        AtributoTotalI atributo = iteradorTotal.next();
+	        if (atributo.ehData()) {  
+	        	if (atributo.ehHora()) {  %>
+	 	putValorDataHora(valores,"<%= atributo.getNomeCampoTabela() %>",item.get<%= atributo.getNomePropriedade() %>());
+        		<% } else { %>
+       	putValorData(valores,"<%= atributo.getNomeCampoTabela() %>",item.get<%= atributo.getNomePropriedade() %>());
+        		<% }  
+        	} else { %>
+       	putValor(valores,"<%= atributo.getNomeCampoTabela() %>",item.get<%= atributo.getNomePropriedade() %>());
+       	
+            <% } 
+        }
+        %>
+        return valores;
+	}
+
+
+    // **** Chamadas Diretas Objeto Banco de Dados
+    private void registraErroChamadaDireta(Exception e) {
+    	Log.e(Constants.LOGTAG, <%= classe.getNomeParaClasse() %>DBHelperBase.CLASSNAME, e);
+    }
+   
+    public final void insert(final <%= classe.getNomeParaClasse() %> item) {
+	    try {
+	        getDb().insert(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE, null, montaValores(item));
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+    public final void update(final <%= classe.getNomeParaClasse() %> item) {
+	    try {
+	        getDb().update(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE, montaValores(item), "<%= chaveW.getNomeCampoTabela() %>=" + item.get<%= chaveW.getNomePropriedade() %>(), null);
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+     // Nao pode ser final o parametro para retornar o objeto com seu Id
+    public final void insertSinc(<%= classe.getNomeParaClasse() %> item) {
+        try {
+        	item.set<%= classe.getChaveW().getNomePropriedade() %>((int)getMaxId() + 1);
+        	DCLog.d(DCLog.DATABASE_ADM, this, "insertSinc: " + item.debug());
+	        long id = getDb().insert(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE, null, montaValores(item));
+    	    ((ObjetoSinc)item).setOperacaoSinc("I");
+        	getDb().insert(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC, null, montaValoresSinc(item));
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+     public final void updateSinc(final <%= classe.getNomeParaClasse() %> item) {
+        try {
+	        DCLog.d(DCLog.DATABASE_ADM, this, "updateSinc: " + item.debug());
+	        getDb().update(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE, montaValores(item), "<%= classe.getChaveW().getNomeCampoTabela() %>=" + item.get<%= classe.getChaveW().getNomePropriedade() %>(), null);
+	        ((ObjetoSinc)item).setOperacaoSinc("A");
+	        <%= classe.getNomeParaClasse() %> atual = this.getSincById(item.getId());
+	        if (atual==null) {
+	        	getDb().insert(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC, null, montaValoresSinc(item));
+	        } else {
+	        	if ("I".equals(((ObjetoSinc)atual).getOperacaoSinc()))
+	        		((ObjetoSinc)item).setOperacaoSinc("I");
+	        	getDb().update(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC, montaValoresSinc(item), "<%= classe.getChaveW().getNomeCampoTabela() %>=" + item.get<%= classe.getChaveW().getNomePropriedade() %>(), null);
+	        }
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+    protected final void delete(final long id) {
+        try {
+			getDb().delete(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE, "<%= chaveW.getNomeCampoTabela() %>=" + id, null);
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+    /*
+    private void deleteSinc(final long id) {
+        try {
+			getDb().delete(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC, "<%= chaveW.getNomeCampoTabela() %>=" + id, null);
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+	*/
+    public void limpaSinc(final <%= classe.getNomeParaClasse() %> item) {
+    	try {
+			getDb().delete(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC, "<%= chaveW.getNomeCampoTabela() %>=" + item.getId(), null);
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+    
+    public void deleteSinc(final <%= classe.getNomeParaClasse() %> item) {
+    	try {
+	        DCLog.dStack(DCLog.DATABASE_ADM, this, "deleteSinc: " + item.debug());
+	        delete(item.getId());
+	        ((ObjetoSinc)item).setOperacaoSinc("D");
+        	getDb().insert(<%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC, null, montaValoresSinc(item));
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+   
+    
+	public void criaTabelaSincronizacao() {
+	    try {
+			getDb().execSQL(DB_CREATE_SINCRONIZADA);
+		<%
+		RelacionamentoWrapper relacDep = classe.getUnicoDependenteLista();
+		if (relacDep!=null) {
+		%>
+			// Dependente
+			//getDb().execSQL(<%= relacDep.getClasseOposta().getNomeParaClasse() %>DBHelperBase.DB_CREATE_SINCRONIZADA);
+			<% 
+			RelacionamentoWrapper relac2 = relacDep.getClasseOposta().getUnicoDependenteLista();
+			if (relac2!=null) {
+			%>
+			// Dependente2
+			//getDb().execSQL(<%= relac2.getClasseOposta().getNomeParaClasse() %>DBHelperBase.DB_CREATE_SINCRONIZADA);
+			<%
+			}
+			%>
+		<%
+		}
+		%>
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+	}
+    public void criaTabela() {
+        try {
+	        getDb().execSQL(DB_CREATE);
+	    <%
+		relacDep = classe.getUnicoDependenteLista();
+		if (relacDep!=null) {
+		%>
+			// Dependente
+			//getDb().execSQL(<%= relacDep.getClasseOposta().getNomeParaClasse() %>DBHelperBase.DB_CREATE);
+			<% 
+			RelacionamentoWrapper relac2 = relacDep.getClasseOposta().getUnicoDependenteLista();
+			if (relac2!=null) {
+			%>
+			// Dependente2
+			//getDb().execSQL(<%= relac2.getClasseOposta().getNomeParaClasse() %>DBHelperBase.DB_CREATE);
+			<%
+			}
+			%>
+		<%
+		}
+		%>
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+    public void deleteAll() {
+        try {
+	        getDb().execSQL(DB_DELETE_ALL);
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+    public void dropTable() {
+        try {
+	        getDb().execSQL(DB_DROP);
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+    }
+  
+    public void dropTableSincronizacao() {
+        try {
+        	getDb().execSQL(DB_DROP_SINCRONIZADA);
+	    } catch (SQLiteCantOpenDatabaseException e) {
+	    	registraErroChamadaDireta(e);
+	    }
+     }
+
+	// *** Chamadas Indireta ( via Digicom - Base )	
+    public <%= classe.getNomeParaClasse() %> getById(final long id) {
+    	setMontador(null); // A consulta anterior pode ter usado um MontadorDaoComposite
+    	return (<%= classe.getNomeParaClasse() %>) getItemQuery(true, <%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE, <%= classe.getNomeParaClasse() %>DBHelperBase.COLS, "<%= chaveW.getNomeCampoTabela() %> = " + id + "", null, null, null, null,null);
+    }
+    
+    // Esta com orderBy que pode ser bom para exibicoes em tela
+    // mas nao e bom para sincronizacao, pensar em ter um metodo para tela e outro para sinc.
+    public List<<%= classe.getNomeParaClasse() %>> getAll() {
+    	setMontador(null); // A consulta anterior pode ter usado um MontadorDaoComposite
+    	return getListaQuery(DB_TABLE, COLS, null, null, null, null, null);
+    }
+    public List<<%= classe.getNomeParaClasse() %>> getAllTela() {
+    	setMontador(null); // A consulta anterior pode ter usado um MontadorDaoComposite
+    	return getListaQuery(DB_TABLE, COLS, null, null, null, null, orderByColuna());
+    }
+    
+    private <%= classe.getNomeParaClasse() %> getByRowId(final long id) {
+    	setMontador(null); // A consulta anterior pode ter usado um MontadorDaoComposite
+    	return (<%= classe.getNomeParaClasse() %>) getItemQuery(true, <%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE, <%= classe.getNomeParaClasse() %>DBHelperBase.COLS, "ROWID = " + id + "", null, null, null, null,null);
+    }
+    private <%= classe.getNomeParaClasse() %> getSincById(final long id) {
+    	setMontador(null); // A consulta anterior pode ter usado um MontadorDaoComposite
+    	return (<%= classe.getNomeParaClasse() %>) getItemQuerySinc(true, <%= classe.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC, <%= classe.getNomeParaClasse() %>DBHelperBase.COLS_SINC, "<%= chaveW.getNomeCampoTabela() %> = " + id + "", null, null, null, null,null);
+    }
+    
+    
+    public long getMaxId() {
+		String sql = "select max(<%= classe.getChaveW().getNomeCampoTabela() %>) from " + DB_TABLE;
+		return this.getNumeroSql(sql);
+	}
+	protected String orderByColuna() {
+    	return null;
+    }
+	<%
+	Iterator<RelacionamentoWrapper> iteradorRel = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel.hasNext()) {
+		RelacionamentoWrapper relCorrente = iteradorRel.next();
+		
+	%>
+	<%
+	if (!classe.isAssociativa()) {
+	%>
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(Context contexto, long id) throws DaoException{
+		return getListaQuery(DB_TABLE, COLS, "<%= relCorrente.getNomeCampoTabela() %> = " + id, null, null, null, null);
+	}
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id) throws DaoException{
+		return getListaQuery(DB_TABLE, COLS, "<%= relCorrente.getNomeCampoTabela() %> = " + id, null, null, null, null);
+	}
+	<% } else { 
+		RelacionamentoWrapper relOutro = classe.outroRel(relCorrente);
+	%>
+	// Classe e relacionamento
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(Context contexto, long id) throws DaoException{
+		String sql = "select " + camposOrdenados() + 
+				" , " + <%= relOutro.getClasseOposta().getNomeParaClasse() %>DBHelperBase.camposOrdenados() +
+				" from " + DB_TABLE + " " +
+				this.innerJoin<%= relOutro.getClasseOposta().getNomeParaClasse() %>_<%= relOutro.getNomeRelacionamento() %>() +
+				" where <%= relCorrente.getNomeCampoTabela() %> = " + id;
+		MontadorDaoComposite montador = new MontadorDaoComposite();
+		montador.adicionaMontador(new <%= classe.getNomeParaClasse() %>Montador(), null);
+		montador.adicionaMontador(new <%= relOutro.getClasseOposta().getNomeParaClasse() %>Montador(), "<%= relOutro.getClasseOposta().getNomeParaClasse() %>_<%= relOutro.getNomeRelacionamento() %>");
+		setMontador(montador);
+		return this.getListaSqlListaInterna(sql);
+			
+	}
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id) throws DaoException{
+		String sql = "select " + camposOrdenados() + 
+				" , " + <%= relOutro.getClasseOposta().getNomeParaClasse() %>DBHelperBase.camposOrdenados() +
+				" from " + DB_TABLE + " " +
+				this.innerJoin<%= relOutro.getClasseOposta().getNomeParaClasse() %>_<%= relOutro.getNomeRelacionamento() %>() +
+				" where <%= relCorrente.getNomeCampoTabela() %> = " + id;
+		MontadorDaoComposite montador = new MontadorDaoComposite();
+		montador.adicionaMontador(new <%= classe.getNomeParaClasse() %>Montador(), null);
+		montador.adicionaMontador(new <%= relOutro.getClasseOposta().getNomeParaClasse() %>Montador(), "<%= relOutro.getClasseOposta().getNomeParaClasse() %>_<%= relOutro.getNomeRelacionamento() %>");
+		setMontador(montador);
+		return this.getListaSqlListaInterna(sql);
+			
+	}
+	public List<<%= relOutro.getClasseOposta().getNomeParaClasse() %>> get<%= relOutro.getClasseOposta().getNomeParaClasse() %>Por<%= relCorrente.getNome() %>(Context contexto, long id) throws DaoException{
+		String sql = "select " + <%= relOutro.getClasseOposta().getNomeParaClasse() %>DBHelperBase.camposOrdenados() +
+				" from " + DB_TABLE + " " +
+				this.innerJoin<%= relOutro.getClasseOposta().getNomeParaClasse() %>_<%= relOutro.getNomeRelacionamento() %>() +
+				" where <%= relCorrente.getNomeCampoTabela() %> = " + id;
+		setMontador(new <%= relOutro.getClasseOposta().getNomeParaClasse() %>Montador());
+		List<<%= relOutro.getClasseOposta().getNomeParaClasse() %>> saida = this.getListaSql(sql);
+		setMontador(null);
+		return saida;
+	}
+	<% } %>
+	<%
+	}
+	%>
+  
+  	<%
+	if (classe.isAssociativa()) {
+	List<RelacionamentoWrapper> rels = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper rel1 = rels.get(0);
+	RelacionamentoWrapper rel2 = rels.get(1);
+	%>
+	public <%= classe.getNomeParaClasse() %> getPor<%= rel1.getClasseOposta().getNomeParaClasse() %><%= rel2.getClasseOposta().getNomeParaClasse() %>(long idXXXX, long idYYYYY) {
+		return null;
+	}
+	<%
+	}
+	%>
+  
+  
+  	<%
+	Iterator<RelacionamentoWrapper> itSemChave = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (itSemChave.hasNext()) {
+	RelacionamentoWrapper relac = itSemChave.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	AtributoWrapper chaveOposta = classeOposta.getChaveW();
+	%>
+	/*
+	public <%= classe.getNomeParaClasse() %> obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(long id) {
+		string sql;
+		sql = "select " + camposOrdenados() +
+			" from " + tabelaSelect() +
+			innerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() + 
+			" where <%= classeOposta.getChaveW().getNomeCampoTabela() %> = " + id;
+		return (<%= classe.getNomeParaClasse() %>) getObjeto(sql);
+	}
+	*/
+	public static String innerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " inner join " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + " on " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + DB_TABLE + ".<%= classe.getChaveW().getNomeCampoTabela() %> ";  
+	}
+	public static String innerJoinSinc<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " inner join " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC + " on " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + DB_TABLE_SINC + ".<%= classe.getChaveW().getNomeCampoTabela() %> ";  
+	}
+	public static String outerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " left outer join " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + " on " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + DB_TABLE + ".<%= classe.getChaveW().getNomeCampoTabela() %> ";  
+	}
+	public static String outerJoinSinc<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " left outer join " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC + " on " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC + ".<%= relac.getNomeCampoTabelaEntidadeOposta() %> = " + DB_TABLE_SINC + ".<%= classe.getChaveW().getNomeCampoTabela() %> ";  
+	}
+ 	<%
+		}
+	%>
+	
+	
+	// Relacionamento onde esse objeto é chave estrangeira de outro. ????
+	<%
+	Iterator<RelacionamentoWrapper> iterador2 = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador2.hasNext()) {
+	RelacionamentoWrapper relac = iterador2.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	AtributoWrapper chaveOposta = classeOposta.getChaveW();
+	%>
+	private boolean _obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = false;
+	public void setObtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		_obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = true;
+	}
+	protected String outterJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " left outer join " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + " on " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + ".<%= chaveOposta.getNomeCampoTabela() %> = " + DB_TABLE + ".<%= relac.getNomeCampoTabela() %> ";  
+	}
+	public boolean atualiza<%= relac.getNome() %>(long <%= classe.getChaveW().getNomeVariavel() %>, long <%= relac.getNomeVariavel() %>) {
+		String sql;
+      	sql = "update " + DB_TABLE + 
+      	" set <%= relac.getNomeCampoTabela() %>  = " + <%= relac.getNomeVariavel() %> +
+        " where <%= classe.getChaveW().getNomeCampoTabela() %> = " +  <%= classe.getChaveW().getNomeVariavel() %>;
+       	//this.executaSql(sql);
+       	return true;
+	}
+	public <%= classe.getNomeParaClasse() %> obtemPorIds<%= relac.getNome() %>(long <%= classe.getChaveW().getNomeVariavel() %>, long <%= relac.getNomeVariavel() %>) {
+       	String sql;
+		sql = "select " + camposOrdenados() + " from " + DB_TABLE +
+			  "where " +
+			  " <%= relac.getNomeCampoTabela() %> = " + <%= relac.getNomeVariavel() %> + " and " +
+			  " <%= classe.getChaveW().getNomeCampoTabela() %> = " + <%= classe.getChaveW().getNomeVariavel() %>;
+		return (<%= classe.getNomeParaClasse() %>) this.geObjetoSql(sql);
+	}
+	
+	<% if (!relac.ehAuto()) { %>
+	public static String innerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " inner join " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + " on " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + ".<%= chaveOposta.getNomeCampoTabela() %> = " + DB_TABLE + ".<%= relac.getNomeCampoTabela() %> ";  
+	}
+	public static String outerJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " left outer join " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + " on " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE + ".<%= chaveOposta.getNomeCampoTabela() %> = " + DB_TABLE + ".<%= relac.getNomeCampoTabela() %> ";  
+	}
+	public static String innerJoinSinc<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " inner join " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC + " on " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC + ".<%= chaveOposta.getNomeCampoTabela() %> = " + DB_TABLE_SINC + ".<%= relac.getNomeCampoTabela() %> ";  
+	}
+	public static String outerJoinSinc<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return " left outer join " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC + " on " + <%= classeOposta.getNomeParaClasse() %>DBHelperBase.DB_TABLE_SINC + ".<%= chaveOposta.getNomeCampoTabela() %> = " + DB_TABLE_SINC + ".<%= relac.getNomeCampoTabela() %> ";  
+	}
+	<% } %>
+ 	<%
+		}
+	%>
+	// ********************************************************************	
+	
+	
+	public static String camposOrdenados() 
+	{
+		return <%
+		Iterator<AtributoTotalI> iterador10 = classe.getListaAtributoTotal().iterator();
+		boolean primeiro = true;
+		while (iterador10.hasNext()) {
+		AtributoTotalI atributo = iterador10.next();
+		String campo = classe.getNomeParaTabela() + "." + atributo.getNomeCampoTabela();
+		if (primeiro) {
+		%>" <%= campo %> " 
+		<% } else { %>+ " ,<%= campo %> " 
+		<%
+		}
+		primeiro = false;
+		}
+		%>;
+	}
+	public static String camposOrdenadosSinc() 
+	{
+		return <%
+		Iterator<AtributoTotalI> iterador11 = classe.getListaAtributoTotal().iterator();
+		primeiro = true;
+		while (iterador11.hasNext()) {
+		AtributoTotalI atributo = iterador11.next();
+		String campo = classe.getNomeParaTabela() + "_sinc." + atributo.getNomeCampoTabela();
+		if (primeiro) {
+		%>" <%= campo %> " 
+		<% } else { %>+ " ,<%= campo %> " 
+		<%
+		}
+		primeiro = false;
+		}
+		%>
+		+ " ,<%= classe.getNomeParaTabela() %>_sinc.operacao_sinc "
+		;
+	}
+	public static String camposOrdenadosAlias(String nomeTabela) 
+	{
+		return <%
+		Iterator<AtributoTotalI> iteradorAtt = classe.getListaAtributoTotal().iterator();
+		primeiro = true;
+		while (iteradorAtt.hasNext()) {
+		AtributoTotalI atributo = iteradorAtt.next();
+		String campo = "nomeTabela + \"." + atributo.getNomeCampoTabela();
+		if (atributo.getTipoOriginal().compareTo("Tempo")==0)
+			campo = " \"DATE_FORMAT(\" + " + campo + ",'%H:%i')";
+		if (atributo.getTipoOriginal().compareTo("Data")==0)
+			campo = " \"DATE_FORMAT(\" + " + campo + ",'%d-%m-%Y')";
+		if (atributo.getTipoOriginal().compareTo("DTemp")==0)
+			campo = " \"DATE_FORMAT(\" + " + campo + ",'%d-%m-%Y %H:%i:%s')";
+		if (primeiro) {
+		%> <%= campo %> " 
+		<% } else { %>+ " , " + <%= campo %> " 
+		<%
+		}
+		primeiro = false;
+		}
+		%>;
+	}
+	
+	protected String camposOrdenadosJoin()
+    {
+        String saida = camposOrdenados();
+        <%
+		Iterator<RelacionamentoWrapper> iterador3 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador3.hasNext()) {
+		RelacionamentoWrapper relac = iterador3.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		saida += (this._obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>?" , " +<%= classeOposta.getNomeParaClasse() %>DBHelperBase.camposOrdenados():"");<%
+		}
+		%>
+        return saida;
+    }
+    
+        
+    public void limpaObtem()
+    {
+        <%
+		Iterator<RelacionamentoWrapper> iterador7 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador7.hasNext()) {
+		RelacionamentoWrapper relac = iterador7.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		_obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = false;<%
+		}
+		%>
+    }
+    
+	protected String outterJoinAgrupado()
+    {
+        String saida = " ";
+        <%
+		Iterator<RelacionamentoWrapper> iterador4 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador4.hasNext()) {
+		RelacionamentoWrapper relac = iterador4.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		saida += (this._obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>? outterJoin<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() + " ":"");<%
+		}
+		%>
+        return saida;
+    }
+    protected MontadorDaoI getMontadorAgrupado()
+    {
+        MontadorDaoComposite montador = new MontadorDaoComposite();
+        montador.adicionaMontador(new <%= classe.getNomeParaClasse() %>Montador(), null);
+        <%
+		Iterator<RelacionamentoWrapper> iterador5 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador5.hasNext()) {
+		RelacionamentoWrapper relac = iterador5.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		if (this._obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>)
+            montador.adicionaMontador(new <%= classeOposta.getNomeParaClasse() %>Montador(), "<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>");<%
+		}
+		%>
+         return montador;
+    }
+	
+    
+   	// Poderia passar para classe abstrata.
+    public final List<<%= classe.getNomeParaClasse() %>> getAllSinc() throws DaoException {
+    	this.setMontador(null);
+    	List<<%= classe.getNomeParaClasse() %>> saida = null;
+    	try {
+    		saida = this.getAllSincImpl();
+    	} catch (SQLException e) {
+    		if (e.getMessage().indexOf("")!=-1) {
+    			saida = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+    		}
+    		DCLog.e(DCLog.DATABASE_ERRO, this, e);
+    		this.criaTabelaSincronizacao(); // Faltando dependentes.
+    		DCLog.d(DCLog.SINCRONIZACAO_DAO, this, "Criando tabela ( falta dependentes ) " + e.getMessage());
+    	}
+    	if (saida==null) {
+    		saida = getListaQuerySinc(DB_TABLE_SINC, COLS_SINC, null, null, null, null, null);
+    		DCLog.d(DCLog.SINCRONIZACAO_DAO, this, "getListaQuerySinc() -> " + saida.size() + " elementos.");
+    	} else {
+    		DCLog.d(DCLog.SINCRONIZACAO_DAO, this, "getAllSincImpl() -> " + saida.size() + " elementos.");
+    	}
+    	return saida;
+	}
+	
+	// Poderia passar para classe abstrata.
+    public final List<<%= classe.getNomeParaClasse() %>> getAllSincSoAlteracao() throws DaoException {
+    	List<<%= classe.getNomeParaClasse() %>> saida = null;
+    	try {
+    		saida = this.getAllSincImpl();
+    		saida = null; // Melhorar aqui !!!!
+    	} catch (SQLException e) {
+    		if (e.getMessage().indexOf("")!=-1) {
+    			saida = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+    		}
+    		DCLog.e(DCLog.DATABASE_ERRO, this, e);
+    		this.criaTabelaSincronizacao(); // Faltando dependentes.
+    		DCLog.d(DCLog.SINCRONIZACAO_DAO, this, "Criando tabela ( falta dependentes ) " + e.getMessage());
+    	}
+    	if (saida==null) {
+    		saida = getListaQuerySinc(DB_TABLE_SINC, COLS_SINC, "operacao_sinc='A'", null, null, null, null);
+    		DCLog.d(DCLog.SINCRONIZACAO_DAO, this, "getListaQuerySinc() -> " + saida.size() + " elementos.");
+    	} else {
+    		DCLog.d(DCLog.SINCRONIZACAO_DAO, this, "getAllSincImpl() -> " + saida.size() + " elementos.");
+    	}
+    	return saida;
+	}
+	
+	public final List<<%= classe.getNomeParaClasse() %>> getAllSincImpl() throws DaoException {
+   		String sql = "select " + camposOrdenadosSinc()   
+   			+ " from " + this.DB_TABLE_SINC;
+   		<%= classe.getNomeParaClasse() %>Montador montador = new <%= classe.getNomeParaClasse() %>Montador(true); // sinc ligado
+   		this.setMontador(montador);
+   		List<<%= classe.getNomeParaClasse() %>> saida = this.getListaSql(sql);
+   		return saida;
+   	}
+   	
+	public long getQtdeSinc() {
+		String sql = "select count(*) from " + DB_TABLE_SINC;
+		return this.getNumeroSql(sql);
+	}
+	public boolean tabelaSincVazia() {
+		return (this.getQtdeSinc() == 0);
+	}
+	
+	// DaoSincronizacao
+	@Override
+	public final void insere(DCIObjetoDominio obj) {
+		this.insert((<%= classe.getNomeParaClasse() %>) obj);
+	}
+	@Override
+	public final void dropCreate() {
+		this.dropTable();
+		this.criaTabela();
+	}
+}

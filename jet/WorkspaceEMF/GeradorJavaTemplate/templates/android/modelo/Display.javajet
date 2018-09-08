@@ -1,0 +1,23 @@
+<%@ jet package="jet.android.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="Display" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo.display.impl;
+
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import android.view.View;
+import br.com.digicom.modelo.DisplayI;
+import br.com.digicom.modelo.ObjetoDisplay;
+
+public class <%= classe.getNomeParaClasse() %>Display extends ObjetoDisplay<<%= classe.getNomeParaClasse() %>> implements DisplayI<<%= classe.getNomeParaClasse() %>> { 
+  
+  	public <%= classe.getNomeParaClasse() %>Display(<%= classe.getNomeParaClasse() %> item) {
+		super(item);
+	} 
+  	
+  	
+  }

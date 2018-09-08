@@ -1,0 +1,335 @@
+<%@ jet package="jet.java.service" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="RegraColecaoBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.regracolecao;
+
+
+
+import java.util.*;
+import br.com.digicom.lib.*;
+import br.com.digicom.lib.dao.*;
+
+
+import <%= conf.getNamespace() %>.dao.*;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.regracolecao.filtro.*;
+
+
+public abstract class <%= classe.getNomeParaClasse() %>RegraColecao {
+	
+	public <%= classe.getNomeParaClasse() %>RegraColecao() {
+		_filtro = null;
+	}
+
+	public List ListaCorrente(DaoConexao conexao) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		List saida = dao.ListaCorrente();
+		return saida;
+		/*
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		List saida = null;
+		<%= classe.getNomeParaClasse() %>Filtro filtroWork = getFiltro();
+		if (filtroWork.getCodigoLinhaProdutoEstaEm() != -1) {
+			saida = dao.ListaPorLinhaProdutoEstaEm(filtroWork
+					.getCodigoLinhaProdutoEstaEm());
+			return saida;
+		}
+		saida = dao.ListaCorrenteAgrupada();
+		return saida;
+		*/
+	}
+
+	private <%= classe.getNomeParaClasse() %>Filtro _filtro;
+
+	public <%= classe.getNomeParaClasse() %>Filtro getFiltro() {
+		if (_filtro == null)
+			_filtro = new <%= classe.getNomeParaClasse() %>Filtro();
+		return _filtro;
+	}
+
+	public void setFiltro(<%= classe.getNomeParaClasse() %>Filtro dado) {
+		_filtro = dado;
+	}
+
+	private <%= classe.getNomeParaClasse() %>Filtro[] _listaEntrada;
+	@Deprecated
+	protected <%= classe.getNomeParaClasse() %>Filtro[] getListaEntrada() {
+		return _listaEntrada;
+	}
+	@Deprecated
+	public void setListaEntrada(final <%= classe.getNomeParaClasse() %>Filtro[] dado) {
+		_listaEntrada = dado;
+	}
+	private List<<%= classe.getNomeParaClasse() %>> _listaItem;
+	protected List<<%= classe.getNomeParaClasse() %>> getListaEntradaItem() {
+		return _listaItem;
+	}
+	public void setListaEntradaItem(final List<<%= classe.getNomeParaClasse() %>> dado) {
+		_listaItem = dado;
+	}
+	private List _listaGenerica;
+	protected List getListaEntradaGenerica() {
+		return _listaGenerica;
+	}
+	public void setListaEntradaGenerica(final List dado) {
+		_listaGenerica = dado;
+	}
+<%
+	Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra.hasNext()) {
+	RegraColecao regra = iteradorRegra.next();
+	if (regra.getAtivoJava()) {
+		String tipoRetorno = null;
+		String param = null;
+		String paramConn = null;
+		if (regra.getRetornaColecao()) tipoRetorno = "List<" + classe.getNomeParaClasse() + ">";
+		else tipoRetorno = classe.getNomeParaClasse();
+		if (regra.getRecebeColecao()) { 
+			param = "List<" + classe.getNomeParaClasse() + "> lista";
+			paramConn = "List<" + classe.getNomeParaClasse() + "> lista, DaoConexao conexao";
+		} else {
+			param = "";
+			paramConn = "DaoConexao conexao";
+		}
+%>
+	public final <%= tipoRetorno %> <%= regra.getNome() %>() throws DaoException {
+		<%= tipoRetorno %> saida;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		preparaDaoParaConexao(dao);
+		DaoConexao conexao = null;
+		conexao = dao.criaConexao();
+		saida = <%= regra.getNome() %>(conexao);
+		dao.liberaConexao(conexao);
+		return saida;
+	}
+	public abstract <%= tipoRetorno %> <%= regra.getNome() %>(final DaoConexao conexao)
+			throws DaoException;
+<%
+	}
+	}
+%>
+
+
+
+
+	public static final <%= classe.getNomeParaClasse() %>Dao getDao() {
+		return DBB.getInstancia().get<%= classe.getNomeParaClasse() %>Dao();
+	}
+	protected final <%= classe.getNomeParaClasse() %>Dao getDao(final DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		return dao;
+	}
+
+	protected void preparaDaoParaConexao(final <%= classe.getNomeParaClasse() %>Dao dao) throws DaoException {
+	}
+
+	public List ListaFiltro() throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		DaoConexao conexao = dao.criaConexao();
+		dao.setConexao(conexao);
+		List saida = null;
+		saida = dao.ListaFiltro(getFiltro());
+		dao.liberaConexao(conexao);
+		return saida;
+	}
+	public List ListaFiltro(DaoConexao conexao) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		List saida = dao.ListaFiltro(getFiltro());
+		return saida;
+	}
+
+	public List ListaFiltroSimples() throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		DaoConexao conexao = dao.criaConexao();
+		dao.setConexao(conexao);
+		List saida = null;
+		saida = dao.ListaFiltroSimples(getFiltro());
+		dao.liberaConexao(conexao);
+		return saida;
+	}
+
+	public List ListaFiltroSimples(DaoConexao conexao) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		List saida = dao.ListaFiltroSimples(getFiltro());
+		return saida;
+	}
+
+	public <%= classe.getNomeParaClasse() %> PreInsercao(<%= classe.getNomeParaClasse() %> item) {
+		return item;
+	}
+
+	public <%= classe.getNomeParaClasse() %> PreAlteracao(<%= classe.getNomeParaClasse() %> item) {
+		return item;
+	}
+
+	public <%= classe.getNomeParaClasse() %> obtemPorChave(long chave) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		DaoConexao conexao = dao.criaConexao();
+		dao.setConexao(conexao);
+		<%= classe.getNomeParaClasse() %> saida = obtemPorChave(chave, conexao);
+		dao.liberaConexao(conexao);
+		return saida;
+	}
+
+	public <%= classe.getNomeParaClasse() %> obtemPorChave(long chave, DaoConexao conexao)
+			throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		<%= classe.getNomeParaClasse() %> saida = dao.obtemPorChave(chave);
+		return saida;
+	}
+
+	public DaoConexao CriaConexao() throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		DaoConexao conexao = dao.criaConexao();
+		return conexao;
+	}
+
+	public void LiberaConexao(DaoConexao conexao) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.liberaConexao(conexao);
+	}
+
+	public List ListaCorrente() throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		DaoConexao conexao = null;
+		List saida = null;
+		conexao = dao.criaConexao();
+		saida = ListaCorrente(conexao);
+		dao.liberaConexao(conexao);
+		return saida;
+	}
+
+
+	public <%= classe.getNomeParaClasse() %> excluiItem(<%= classe.getNomeParaClasse() %> item) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		DaoConexao conexao = null;
+		<%= classe.getNomeParaClasse() %> saida = null;
+		conexao = dao.criaConexao();
+		saida = excluiItem(item, conexao);
+		dao.liberaConexao(conexao);
+		return saida;
+	}
+	public <%= classe.getNomeParaClasse() %> excluiItem(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		dao.excluiItem(item);
+		return item;
+	}
+	
+
+	public <%= classe.getNomeParaClasse() %> alteraItem(<%= classe.getNomeParaClasse() %> item) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		DaoConexao conexao = null;
+		<%= classe.getNomeParaClasse() %> saida = null;
+		conexao = dao.criaConexao();
+		saida = alteraItem(item, conexao);
+		dao.liberaConexao(conexao);
+		return saida;
+	}
+	public <%= classe.getNomeParaClasse() %> alteraItem(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		dao.alteraItem(item);
+		return item;
+	}
+	
+	public <%= classe.getNomeParaClasse() %> insereItemLoad(<%= classe.getNomeParaClasse() %> item) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		DaoConexao conexao = null;
+		<%= classe.getNomeParaClasse() %> saida = null;
+		conexao = dao.criaConexao();
+		saida = insereItemLoad(item, conexao);
+		dao.liberaConexao(conexao);
+		return saida;
+	}
+	public <%= classe.getNomeParaClasse() %> insereItemLoad(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		dao.insereItemLoad(item);
+		return item;
+	}
+	
+	
+	<% if (!classe.isAssociativa()) { %>
+	<%
+	Iterator<RelacionamentoWrapper> iteradorRel1 = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+	while (iteradorRel1.hasNext()) {
+		RelacionamentoWrapper relCorrente1 = iteradorRel1.next();
+	%>
+	// Tratamento de objetos que possuem FK nesse objeto para objetos nao associativos
+	public List getPor<%= relCorrente1.getNome() %>(long id) throws DaoException {
+		// Existe no DAO
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		DaoConexao conn = dao.criaConexao();
+		dao.setConexao(conn);
+		return dao.ListaPor<%= relCorrente1.getClasseOposta().getNomeParaClasse() %><%= relCorrente1.getNomeRelacionamento() %>(id);
+	}
+	public boolean excluiPor<%= relCorrente1.getNome() %>(long id) throws DaoException{
+		// Existe no DAO
+       	return true;
+	}
+	public List getPor<%= relCorrente1.getNome() %>(long id, DaoConexao conn) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao(conn);
+		return dao.ListaPor<%= relCorrente1.getClasseOposta().getNomeParaClasse() %><%= relCorrente1.getNomeRelacionamento() %>(id);
+	}
+	<%
+	}
+	} else { 
+	%>
+	
+		
+	<%
+	List<RelacionamentoWrapper> lista = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper rel1 = lista.get(0);
+	RelacionamentoWrapper rel2 = lista.get(1);
+	if (rel1.getClasseOposta().getId()!= rel2.getClasseOposta().getId()) {
+	%>
+	public void criaRelSeNaoExiste(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) throws DaoException {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao(conexao);
+		<%= classe.getNomeParaClasse() %> obj = dao.obtemPorRel(item.get<%= rel1.getNomePropriedade() %>(), item.get<%= rel2.getNomePropriedade() %>());
+		if (obj==null) {
+			dao.insereItem(item);
+		}
+	}
+	<%
+	}
+	%>
+	
+	// Tratamento de objetos que possuem FK nesse objeto para objetos associativos
+	<%
+	Iterator<RelacionamentoWrapper> iteradorRel2 = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel2.hasNext()) {
+		RelacionamentoWrapper relCorrente2 = iteradorRel2.next();
+		RelacionamentoWrapper relOutro = classe.outroRel(relCorrente2);
+	%>
+	//public List getPor<%= relCorrente2.getNome() %>(long id) throws DaoException{ // Padrao
+	public List ListaPor<%= relCorrente2.getClasseOposta().getNomeParaClasse() %><%= relCorrente2.getNomeRelacionamento() %>(long id, DaoConexao conexao) throws DaoException{ // Combinar com Interface
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao(conexao);
+		List saida = null;
+		saida = dao.ListaPor<%= relCorrente2.getClasseOposta().getNomeParaClasse() %><%= relCorrente2.getNomeRelacionamento() %>(id);
+		return saida;
+	}
+	public boolean excluiPor<%= relCorrente2.getNome() %>(long id) throws DaoException{
+		// Existe no DAO
+       	return true;
+	}
+	<%
+	}
+	%>
+	
+	<%
+	}
+	%>
+	
+}

@@ -1,0 +1,206 @@
+<%
+/**
+ * Copyright (c) 2005 Joel Cheuoua & Contributors
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Merlin project nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+%>
+<%@ jet package="com.metys.merlin.generation.gef.compiledtemplates.editor" imports="com.metys.merlin.generation.gef.genmodel.* com.metys.merlin.generation.gef.genmodel.util.GenModelHelper java.util.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.ecore.genmodel.*" class="Editor" %>
+<%GenEditor genEditor = (GenEditor) argument; GenModel genModel = genEditor.getGenGEFModel().getGenModel();%>
+<%@ include file="../Header.jetinc"%>
+package <%=genEditor.getPackageName()%>;
+
+<%genModel.markImportLocation(stringBuffer);%>
+
+/**
+ * The <%=genEditor.getName()%> GEF editor.
+ * <!-- begin-user-doc -->
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public class <%=genEditor.getName()%> extends <%=genModel.getImportedName("com.metys.merlin.generation.gef.editor.GEFEditor")%> {
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected void createComponentsDrawerEntries(<%=genModel.getImportedName("org.eclipse.gef.palette.PaletteContainer")%> container) {
+<%if (!genEditor.getGenPaletteComponentsFactories().isEmpty()) {%>  	
+  	<%=genModel.getImportedName("org.eclipse.gef.palette.PaletteDrawer")%> drawer = null;
+    <%=genModel.getImportedName("org.eclipse.gef.palette.CombinedTemplateCreationEntry")%> combined = null;
+    <%=genModel.getImportedName("org.eclipse.emf.ecore.EClass")%> eClass = null;
+<%for (Iterator i=genEditor.getGenPaletteComponentsFactories().iterator(); i.hasNext();) { GenPaletteComponentsFactory genPaletteComponentsFactory = (GenPaletteComponentsFactory)i.next();%>		    		
+		drawer = new PaletteDrawer("<%=genPaletteComponentsFactory.getName()==null ? "<Components>" : genPaletteComponentsFactory.getName()%>", null);        
+<%for (Iterator parts=genPaletteComponentsFactory.getGenNodeParts().iterator(); parts.hasNext();) { GenNodeEditPart genEditPart = (GenNodeEditPart)parts.next(); GenPackage genPackage = GenModelHelper.getGenPackage(genModel, genEditPart.getEcoreClass().getEPackage());%>
+		eClass = <%=genPackage.getImportedPackageInterfaceName()%>.eINSTANCE.get<%=GenModelHelper.getGenClass(genModel, genEditPart.getEcoreClass()).getClassifierAccessorName()%>();
+		combined = new CombinedTemplateCreationEntry(
+  		"<%=genEditPart.getEcoreClass().getName()%>",
+  		"Create a new <%=genEditPart.getEcoreClass().getName()%>",
+  		eClass,
+  		new <%=genModel.getImportedName("com.metys.merlin.generation.gef.dnd.EObjectTemplateCreationFactory")%>(eClass),
+  			<%=genModel.getImportedName("org.eclipse.jface.resource.ImageDescriptor")%>.createFromURL(<%=genModel.getImportedName(genModel.getQualifiedEditPluginClassName())%>.getPlugin().getBundle().getEntry("icons/full/obj16/<%=genEditPart.getEcoreClass().getName()%>.gif")),
+  			ImageDescriptor.createFromURL(<%=genModel.getImportedName(genModel.getQualifiedEditPluginClassName())%>.getPlugin().getBundle().getEntry("icons/full/obj16/<%=genEditPart.getEcoreClass().getName()%>.gif")));
+  	drawer.add(combined);	
+<%} //for%>
+		if (!drawer.getChildren().isEmpty())
+			container.add(drawer);
+<%} //for%>
+<%} //if%>
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected void createClassConnectionEntries(<%=genModel.getImportedName("org.eclipse.gef.palette.PaletteContainer")%> container) {
+<%if (!genEditor.getGenPaletteConnectionsFactories().isEmpty()) {%>
+    <%=genModel.getImportedName("org.eclipse.gef.palette.PaletteStack")%> paletteStack = null;
+    <%=genModel.getImportedName("org.eclipse.gef.palette.ConnectionCreationToolEntry")%> tool = null;
+    <%=genModel.getImportedName("org.eclipse.emf.ecore.EClass")%> eClass = null;
+<%for (Iterator i=genEditor.getGenPaletteConnectionsFactories().iterator(); i.hasNext();) { GenPaletteConnectionsFactory genPaletteConnectionsFactory = (GenPaletteConnectionsFactory)i.next();%>
+		paletteStack = new PaletteStack("<%=genPaletteConnectionsFactory.getName()==null ? "<Components>" : genPaletteConnectionsFactory.getName()%>", 
+        "<%=genPaletteConnectionsFactory.getName()==null ? "<Components>" : genPaletteConnectionsFactory.getName()%>",
+        ImageDescriptor.createFromURL(<%=genModel.getImportedName("com.metys.merlin.generation.gef.GefPlugin")%>.getPlugin().getBundle().getEntry("icons/group16.gif")));
+<%for (Iterator parts=genPaletteConnectionsFactory.getGenLinkParts().iterator(); parts.hasNext();) { GenLinkEditPart genEditPart = (GenLinkEditPart)parts.next(); EClass ecoreClass = genEditPart.getEcoreClass(); GenClass genClass = GenModelHelper.getGenClass(genModel, ecoreClass);GenPackage genPackage = genClass.getGenPackage();%>
+		eClass = <%=genPackage.getImportedPackageInterfaceName()%>.eINSTANCE.get<%=genClass.getClassifierAccessorName()%>();
+		tool = new ConnectionCreationToolEntry(
+			"<%=genClass.getClassifierAccessorName()%>",
+			"Creating <%=genClass.getClassifierAccessorName()%> connection",
+			new <%=genModel.getImportedName("com.metys.merlin.generation.gef.dnd.EObjectLinkTemplateCreationFactory")%>(eClass,
+				<%=GenModelHelper.getGenFeature(genModel, genEditPart.getSourceReference()).getQualifiedFeatureAccessorName()%>(),
+				<%=GenModelHelper.getGenFeature(genModel, genEditPart.getTargetReference()).getQualifiedFeatureAccessorName()%>()),
+			ImageDescriptor.createFromURL(<%=genModel.getImportedName("com.metys.merlin.generation.gef.GefPlugin")%>.getPlugin().getBundle().getEntry("icons/classLink.gif")),
+			ImageDescriptor.createFromURL(<%=genModel.getImportedName("com.metys.merlin.generation.gef.GefPlugin")%>.getPlugin().getBundle().getEntry("icons/classLink.gif")));
+		paletteStack.add(tool);
+<%} //for%>
+    if (!paletteStack.getChildren().isEmpty())
+      container.add(paletteStack);    
+<%} //for%>
+<%} //if%>
+  }
+  
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected void createReferenceConnectionEntries(<%=genModel.getImportedName("org.eclipse.gef.palette.PaletteContainer")%> container) {
+<%if (!genEditor.getGenPaletteComponentsFactories().isEmpty()) {%>  
+    <%=genModel.getImportedName("org.eclipse.gef.palette.ConnectionCreationToolEntry")%> tool = null;
+<%HashSet processedReferences = new HashSet();%>
+<%for (Iterator i=genEditor.getGenPaletteComponentsFactories().iterator(); i.hasNext();) { GenPaletteComponentsFactory genPaletteComponentsFactory = (GenPaletteComponentsFactory)i.next();%>
+<%for (Iterator parts=genPaletteComponentsFactory.getGenNodeParts().iterator(); parts.hasNext();) { GenNodeEditPart genEditPart = (GenNodeEditPart)parts.next(); EClass ecoreClass = genEditPart.getEcoreClass();%>
+<%for (Iterator references=ecoreClass.getEAllReferences().iterator(); references.hasNext();) { EReference ref = (EReference)references.next(); GenFeature genReference = GenModelHelper.getGenFeature(genModel, ref);%>
+<%if (genReference.isContainer() || genReference.isContains() || processedReferences.contains(genReference)) continue; processedReferences.add(genReference);%>
+		tool = new ConnectionCreationToolEntry(
+  		"<%=genReference.getGenClass().getName()%> 2 <%=genReference.getEcoreFeature().getEType().getName()%>",
+  		"Creating <%=genReference.getCapName()%> connection",
+  		new <%=genModel.getImportedName("com.metys.merlin.generation.gef.dnd.EReferenceLinkTemplateCreationFactory")%>(<%=genReference.getQualifiedFeatureAccessorName()%>()),
+  			ImageDescriptor.createFromURL(<%=genModel.getImportedName("com.metys.merlin.generation.gef.GefPlugin")%>.getPlugin().getBundle().getEntry("icons/referenceLink.gif")),
+  			ImageDescriptor.createFromURL(<%=genModel.getImportedName("com.metys.merlin.generation.gef.GefPlugin")%>.getPlugin().getBundle().getEntry("icons/referenceLink.gif")));
+  	container.add(tool);
+<%} //for%>		
+<%} //for%>		    
+<%} //for%>
+<%} //if%>
+  }  
+  
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected <%=genModel.getImportedName("java.util.Map")%> getTransitionClasses() {
+<% if (GenModelHelper.getGenLinkEditParts(genEditor.getGenEditPartFactory().getGenEditParts()).isEmpty()) {%>
+		return <%=genModel.getImportedName("java.util.Collections")%>.EMPTY_MAP;
+<%} else {%>
+  	<%=genModel.getImportedName("java.util.Map")%> transitionClasses = new <%=genModel.getImportedName("java.util.HashMap")%>();
+  	<%=genModel.getImportedName("java.util.List")%> refList = new <%=genModel.getImportedName("java.util.ArrayList")%>();
+<%for (Iterator i=GenModelHelper.getGenLinkEditParts(genEditor.getGenEditPartFactory().getGenEditParts()).iterator(); i.hasNext();) { GenLinkEditPart genEditPart = (GenLinkEditPart)i.next(); EClass ecoreClass = genEditPart.getEcoreClass(); GenClass genClass = GenModelHelper.getGenClass(genModel, ecoreClass);GenPackage genPackage = genClass.getGenPackage();%>
+		refList.clear();
+		refList.add(<%=GenModelHelper.getGenFeature(genModel, genEditPart.getSourceReference()).getQualifiedFeatureAccessorName()%>());
+		refList.add(<%=GenModelHelper.getGenFeature(genModel, genEditPart.getTargetReference()).getQualifiedFeatureAccessorName()%>());
+		transitionClasses.put(<%=genPackage.getImportedPackageInterfaceName()%>.eINSTANCE.get<%=genClass.getClassifierAccessorName()%>(),
+			refList);
+<%} //for%>
+		return transitionClasses;
+<%} //if%>
+  }
+  
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected <%=genModel.getImportedName("org.eclipse.gef.EditPartFactory")%> createEditPartFactory() {
+  	return new <%=genModel.getImportedName(genEditor.getGenEditPartFactory().getPackageName() + "." + genEditor.getGenEditPartFactory().getName())%>(createAdapterFactory(), modelResource);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected void configureGraphicalViewer() {
+    getGraphicalViewer().getControl().setBackground(<%=genModel.getImportedName("org.eclipse.draw2d.ColorConstants")%>.listBackground);
+    getGraphicalViewer().setRootEditPart(new <%=genModel.getImportedName("org.eclipse.gef.editparts.ScalableFreeformRootEditPart")%>());
+    getGraphicalViewer().setEditPartFactory(createEditPartFactory());
+    getGraphicalViewer().setKeyHandler(new <%=genModel.getImportedName("org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler")%>(getGraphicalViewer()).setParent(getCommonKeyHandler()));
+
+    <%=genModel.getImportedName("org.eclipse.gef.ContextMenuProvider")%> provider 
+      = new <%=genModel.getImportedName("com.metys.merlin.generation.gef.editor.GEFEditorContextMenuProvider")%>(getGraphicalViewer(), getActionRegistry());
+    getGraphicalViewer().setContextMenu(provider);
+    getSite().registerContextMenu("<%=genEditor.getName() + ".gef.editor.contextmenu"%>", //$NON-NLS-1$
+        provider, getGraphicalViewer());
+  }
+  
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected <%=genModel.getImportedName("org.eclipse.emf.common.notify.AdapterFactory")%> createAdapterFactory() {
+    <%=genModel.getImportedName("java.util.List")%> factories = new <%=genModel.getImportedName("java.util.ArrayList")%>();
+		factories.add(new <%=genModel.getImportedName("org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory")%>());
+<%for (Iterator i = genModel.getAllGenPackagesWithClassifiers().iterator(); i.hasNext(); ) { GenPackage aGenPackage = (GenPackage)i.next();%>
+  <%if (aGenPackage.getGenModel().hasEditSupport()) {%>
+		factories.add(new <%=aGenPackage.getImportedItemProviderAdapterFactoryClassName()%>());
+  <%}%>
+<%}%>
+<%for (Iterator i = genModel.getAllUsedGenPackagesWithClassifiers().iterator(); i.hasNext(); ) { GenPackage aGenPackage = (GenPackage)i.next();%>
+  <%if (aGenPackage.getGenModel().hasEditSupport()) {%>
+		factories.add(new <%=aGenPackage.getImportedItemProviderAdapterFactoryClassName()%>());
+  <%}%>
+<%}%>
+		factories.add(new <%=genModel.getImportedName("org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory")%>());
+		adapterFactory = new <%=genModel.getImportedName("org.eclipse.emf.edit.provider.ComposedAdapterFactory")%>(factories);
+    return adapterFactory;
+  }
+}
+<%genModel.emitSortedImports();%>

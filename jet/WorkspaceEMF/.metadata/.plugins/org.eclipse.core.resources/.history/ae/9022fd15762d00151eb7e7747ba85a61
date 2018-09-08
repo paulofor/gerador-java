@@ -1,0 +1,211 @@
+<%@ jet package="jet.android.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="TelaQuadroListaBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.tela.quadro.base;
+
+import <%= conf.getNamespace() %>.app.R;
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.servico.FabricaServico;
+import <%= conf.getNamespace() %>.servico.<%= classe.getNomeParaClasse() %>Servico;
+import <%= conf.getNamespace() %>.view.adapter.<%= classe.getNomeParaClasse() %>ListAdapter;
+import <%= conf.getNamespace() %>.modelo.vo.FabricaVo;
+import <%= conf.getNamespace() %>.servico.<%= classe.getNomeParaClasse() %>Servico;
+
+import java.util.List;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.ListView;
+import android.widget.Button;
+import br.com.digicom.multimidia.AudioRecurso;
+import br.com.digicom.quadro.BaseListFragment;
+import br.com.digicom.quadro.IQuadroListaEdicao;
+import br.com.digicom.activity.DigicomContexto;
+import br.com.digicom.log.DCLog;
+
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.app.DialogFragment;
+import br.com.digicom.quadro.IFragment;
+import br.com.digicom.quadro.IFragmentEdicao;
+import android.util.Log;
+import br.com.digicom.modelo.DCIObjetoDominio;
+import br.com.digicom.layout.ResourceObj;
+import android.widget.BaseAdapter;
+import br.com.digicom.animacao.TrocaQuadro;
+
+public abstract class <%= classe.getNomeParaClasse() %>QuadroListaBase extends BaseListFragment implements IQuadroListaEdicao {
+
+	public final static String ITEM_CLICK = "<%= classe.getNomeParaClasse() %>ItemClick";
+
+	<%= classe.getNomeParaClasse() %>ListAdapter adapt = null;
+	private Button btnCriaItem = null;
+	
+	<%= classe.getNomeParaClasse() %>Servico servico = null;
+	
+	
+	public BaseAdapter getAdapter() {
+		return adapt;
+	}
+	
+	@Override
+	protected void inicializaItensTelaBase() {
+		btnCriaItem = (Button) getTela().findViewById(R.id.btnCria<%= classe.getNomeParaClasse() %>);
+	}
+	@Override
+	protected void inicializaListenersBase() {
+		btnCriaItem.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				chamaCriaItem();
+			}
+		});
+	}
+	
+
+	
+	
+	
+	@Override
+	protected void inicializaServicos() {
+		servico = FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+	}
+
+	
+	@Override
+	public void onToqueLongoTela(DCIObjetoDominio obj) {
+		IFragmentEdicao quadro = criaQuadroTrata();
+		quadro.setItem(obj);
+		quadro.setAlteracao();
+		alteraQuadro(quadro);
+	}
+
+	
+	@Override
+	public void audioRawConcluido(AudioRecurso audioRecurso) {
+	}
+
+	protected String getPalavraChave() {
+		return ITEM_CLICK;
+	}
+
+	@Override
+	public void onAlteraQuadro() {
+	}
+	
+
+	public void onStart() {
+		super.onStart();
+		preencheLista(); // Talvez nao precise fazer isso sempre já que existe o adapt.notifyDataSetChanged
+	    // Ao se conhecer melhor o ciclo de vida dos fragments pensar em otimizar esse trecho
+		// evitar processar algo que não muda e evitar não processar algo que muda.
+		// Fazendo um algoritmo que sirva para fragments de smartphone, que fica um por tela
+		// Quanto de tablet que pode ficar mais de um
+		// Decidir ate 28-06-2014
+	}
+	
+	@Override
+	protected ResourceObj getLayoutTela() {
+		ResourceObj recurso = new ResourceObj(R.layout.lista_<%= classe.getNomeParaTabela() %>,"R.layout.lista_<%= classe.getNomeParaTabela() %>");
+		return recurso;
+	}
+	// Dois metodos com mesmo objetivo. Excluir até 21-07-2015 ( 3 meses )
+	// TelaListaUsoBase, TelaQuadroListaBase, ViewBase
+	@Override
+	@Deprecated
+	public ResourceObj getRecurso() {
+		return this.getLayoutTela();
+	}
+	
+	// Delegando a criação de objeto ao inicializaItemTela na camada servico
+	public final void chamaCriaItem() {
+		IFragmentEdicao quadro = criaQuadroTrata();
+		//<%= classe.getNomeParaClasse() %> nova = servico.inicializaItemTela(getContext());
+		<%= classe.getNomeParaClasse() %> nova = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+		//nova = insereObjetoPrincipal(nova);
+		nova = servico.inicializaItemTela(nova,getContext());
+		quadro.setItem(nova);
+		quadro.setInsercao();
+		
+	}
+	
+	protected boolean getDialog() {
+		return false;
+	}
+	
+	
+	
+	protected <%= classe.getNomeParaClasse() %> criaNova() {
+		return servico.inicializaItemTela(getContext());
+		//throw new UnsupportedOperationException("Fazer override de criaNova em <%= classe.getNomeParaClasse() %>QuadroLista retornando new <%= classe.getNomeParaClasse() %> com inicialização de listas internas se necessario");
+		/* Exemplo - Criar inicializando dados e listas internas 
+		protected SerieTreino criaNova() {
+			SerieTreino nova = FabricaVo.criaSerieTreino();
+			nova.setDataInicial(UtilDatas.getTimestampAtual());
+			List<ItemSerie> lista = new ArrayList<ItemSerie>();
+			nova.setListaItemSerie_Possui(lista);
+			return nova;
+		}
+		*/
+	}
+	protected IFragmentEdicao criaQuadroTrata() {
+		throw new UnsupportedOperationException("Fazer override de criaQuadroTrata em <%= classe.getNomeParaClasse() %>QuadroLista retornando new <%= classe.getNomeParaClasse() %>QuadroTrata ou verificar se nao esta sendo chamada via super");
+	}
+
+	@Override
+	public void onToqueTela(DCIObjetoDominio obj) {
+	}
+
+	@Override
+	protected void inicializaItensTela() {
+	}
+
+	@Override
+	protected void inicializaListeners() {
+	}
+
+	protected void preencheLista() {
+        //ListView lista = (ListView) getActivity().findViewById(R.id.listViewPrincipal);
+        <%= classe.getNomeParaClasse() %>Servico servico = FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+        DigicomContexto dContexto = getContext();
+        List<<%= classe.getNomeParaClasse() %>> lista = getListaCorrente(dContexto.getContext(),servico);
+        DCLog.d(DCLog.SERVICO_QUADRO_LISTA, this, "preencheLista : List<<%= classe.getNomeParaClasse() %>> -> " + lista.size() + " itens");
+        // Pode ser necessario um adapter customizado (diferenciar o editar e usar)
+        adapt =  getAdapter(lista, dContexto);
+        adapt.setRaiz(this);
+        setListAdapter(adapt);
+        adapt.notifyDataSetChanged();
+	}
+	
+	protected <%= classe.getNomeParaClasse() %>ListAdapter getAdapter(List<<%= classe.getNomeParaClasse() %>> lista,DigicomContexto dContexto) {
+		return new <%= classe.getNomeParaClasse() %>ListAdapter(lista,dContexto.getContext());
+	}
+	
+	protected List<<%= classe.getNomeParaClasse() %>> getListaCorrente(Context contexto,<%= classe.getNomeParaClasse() %>Servico servico) {
+		List<<%= classe.getNomeParaClasse() %>> saida = servico.getAllTela(contexto);
+		return saida;
+	}
+	
+	
+	// Tive que manter para que se possa criar Dialogs caso seja necessário.
+	// Pode ser feito de outra forma mas acho essa mais simples. Avaliar !!! ( 18-10-2015)
+	protected final void alteraQuadro(IFragment quadro) {
+		if (getDialog())
+			TrocaQuadro.getInstancia().criaDialog(quadro,this);
+		else
+			TrocaQuadro.getInstancia().alteraQuadroPrincipal(quadro);
+	}
+	
+	
+
+}

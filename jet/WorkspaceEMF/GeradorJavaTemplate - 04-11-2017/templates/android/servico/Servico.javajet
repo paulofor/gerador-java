@@ -1,0 +1,142 @@
+<%@ jet package="jet.android.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="Servico" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+package  <%= conf.getNamespace() %>.servico;
+
+import java.util.List;
+import <%= conf.getNamespace() %>.modelo.*;
+import br.com.digicom.modelo.DCIObjetoDominio;
+import android.content.Context;
+import br.com.digicom.activity.DigicomContexto;
+import <%= conf.getNamespace() %>.servico.filtro.<%= classe.getNomeParaClasse() %>Filtro;
+import br.com.digicom.video.DigicomVideoView;
+//import <%= conf.getNomePacoteDaoBase() %>.<%= classe.getNomeParaClasse() %>DBHelper;
+//import <%= conf.getNomePacoteServicoInterface() %>.<%= classe.getNomeParaClasse() %>Servico;
+import br.com.digicom.log.DCLog;
+
+public abstract class <%= classe.getNomeParaClasse() %>Servico {
+
+/*
+	protected Context ctx = null;
+	public void setContext(Context context) {
+		ctx = context;
+	}
+*/
+	// Alterar para o Impl ? ( Decidir ate 29-05-2014 )
+	private DigicomVideoView video = null;
+	public void setVideo(DigicomVideoView video) {
+		this.video = video;
+	}
+	
+
+
+	protected void reproduzVideo(String arquivo, int posIni, int posFim) {
+		DCLog.d(DigicomVideoView.TAG, this, ": Arquivo:" + arquivo);
+		try {
+			if (video==null) throw new Exception("video=null");
+			video.setVideoPath(arquivo);
+			video.start();
+			video.requestFocus();
+		} catch (Exception e) {
+			DCLog.e(DigicomVideoView.TAG, this, e);
+		}
+	}
+
+	private <%= classe.getNomeParaClasse() %>Filtro filtro = null;
+	public <%= classe.getNomeParaClasse() %>Filtro getFiltro() {
+		if (filtro==null) {
+			filtro = new <%= classe.getNomeParaClasse() %>Filtro();
+		}
+		return filtro;
+	}
+
+	public abstract <%= classe.getNomeParaClasse() %> getById(long id, Context contexto);
+	public abstract <%= classe.getNomeParaClasse() %> getById(long id);
+	public abstract List<<%= classe.getNomeParaClasse() %>> getAll(Context contexto);
+	public abstract List<<%= classe.getNomeParaClasse() %>> getAllTela(Context contexto);
+	public List<<%= classe.getNomeParaClasse() %>> listaSincronizada(Context contexto) {
+		return null;
+	}
+	<% if (classe.ehUsuario() || classe.ehDispositivo()) { %>
+	public abstract <%= classe.getNomeParaClasse() %> getCorrente();
+	<% } %>
+	public abstract void insertAll(List<<%= classe.getNomeParaClasse() %>> lista, Context contexto);
+	public abstract void insertSincAll(List<<%= classe.getNomeParaClasse() %>> lista, Context contexto);
+	
+	// Itens Tela
+	public abstract <%= classe.getNomeParaClasse() %> inicializaItemTela(DigicomContexto contexto);
+	public abstract <%= classe.getNomeParaClasse() %> inicializaItemTela(<%= classe.getNomeParaClasse() %> itemTela, DigicomContexto contexto);
+	public abstract void finalizaItemTela(<%= classe.getNomeParaClasse() %> itemTela, boolean insercao, DigicomContexto contexto);
+	public abstract void processaItemTela(<%= classe.getNomeParaClasse() %> itemTela, DigicomContexto contexto);
+	
+	public abstract <%= classe.getNomeParaClasse() %> ultimoInicializado();
+	public abstract void dropCreate(Context contexto);
+	public abstract void alteraParaSincronizacao(<%= classe.getNomeParaClasse() %> item);
+	public abstract void insereParaSincronizacao(<%= classe.getNomeParaClasse() %> item);
+	public abstract void excluiParaSincronizacao(<%= classe.getNomeParaClasse() %> item);
+	public abstract void criaTabelaSincronizacao();
+	<%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper relCorrente = iterador.next();
+	%>
+	public abstract List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(Context contexto, long id);
+	public abstract List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(Context contexto, long id, int qtde);
+	public abstract List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id);
+	public abstract List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id, int qtde);
+	<%
+	}
+	%>
+	
+	
+<%
+	Iterator<RegraColecao> iteradorRegra2 = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra2.hasNext()) {
+	RegraColecao regra = iteradorRegra2.next();
+	if (regra.getAtivoFlex()) {
+		String tipoRetorno = null;
+		String param = null;
+		String paramConn = null;
+		if (regra.getRetornaColecao()) tipoRetorno = "List<" + classe.getNomeParaClasse() + ">";
+		else tipoRetorno = classe.getNomeParaClasse();
+		if (regra.getRecebeColecao()) { 
+			param = "DigicomContexto contexto , List<" + classe.getNomeParaClasse() + "> lista";
+			paramConn = "lista, conexao";
+		} else {
+			param = "DigicomContexto contexto ";
+			paramConn = "conexao";
+		}
+%>
+	public abstract <%= tipoRetorno %> <%= regra.getNome() %>(<%= param %>);
+<%
+	}
+	}
+%>
+
+
+<%
+	if (classe.isAssociativa()) {
+%>
+	public abstract void atualizaRelacionamento(List<DCIObjetoDominio> inclusao, List<DCIObjetoDominio> exclusao);
+<%
+	List<RelacionamentoWrapper> lista = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper relCorrente2 = lista.get(0);
+	RelacionamentoWrapper relOutro = lista.get(1);
+	if (relOutro.getClasseOposta().getId()!= relCorrente2.getClasseOposta().getId()) {
+	%>
+	public abstract void atualizaRelacionamento(<%= relCorrente2.getClasseOposta().getNomeParaClasse() %> item, List<DCIObjetoDominio> listaEscolhidos);
+	public abstract void atualizaRelacionamento(<%= relOutro.getClasseOposta().getNomeParaClasse() %> item, List<DCIObjetoDominio> listaEscolhidos);
+	public abstract boolean comparaRelacionamentoComItem(Object item, Object relacionamento);
+	<%
+	} // autorel
+	} // associativa
+%>
+
+
+}

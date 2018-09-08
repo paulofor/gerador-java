@@ -1,0 +1,35 @@
+<%@ jet package="jet.csdn35.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="DerivadaBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.modelo.derivadas {
+
+using System.Collections.Generic;
+using <%= conf.getNamespace() %>.modelo;
+using System.Collections;
+
+public abstract class <%= classe.getNomeParaClasse() %>DerivadaBase{
+
+	<%
+	ProcValorWrapper procValor = new ProcValorWrapperCs();
+	Iterator<ProcValor> iterador = classe.getListaProcValor().iterator();
+	while (iterador.hasNext()) {
+		procValor.setProcValor(iterador.next());
+	%>
+	public abstract <%= procValor.getTipo() %> <%= procValor.getNomePropriedade() %> {get;set;} 
+	<% if (procValor.ehPercentual()) { %>
+	public string <%= procValor.getNomePropriedade() %>Tela 
+	{
+		get { return "" + <%= procValor.getNomePropriedade() %>; }
+	}
+	<% }
+	}
+	%>
+
+}
+
+}

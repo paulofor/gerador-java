@@ -1,0 +1,37 @@
+<%@ jet package="jet.android.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="Derivada" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo.derivada.impl;
+
+import  <%= conf.getNamespace() %>.modelo.derivada.*;
+import  <%= conf.getNamespace() %>.modelo.*;
+import org.json.JSONObject;
+import org.json.JSONException;
+
+public class <%= classe.getNomeParaClasse() %>Derivada implements <%= classe.getNomeParaClasse() %>DerivadaI{ 
+  
+  	private <%= classe.getNomeParaClasse() %> principal;
+  
+  	/*
+  	public <%= classe.getNomeParaClasse() %>Derivada(JSONObject json) throws JSONException{
+		super(json);
+  	} 
+  	public <%= classe.getNomeParaClasse() %>Derivada() {
+		super();
+  	}
+  	*/
+  	
+  	public <%= classe.getNomeParaClasse() %>Derivada(<%= classe.getNomeParaClasse() %> item) {
+  		principal = item;
+  	}
+  	
+  	@Override
+	public String getTituloTela() {
+		return "<%= classe.getNomeParaClasse() %>Derivada sem getTituloTela()";
+	}
+}

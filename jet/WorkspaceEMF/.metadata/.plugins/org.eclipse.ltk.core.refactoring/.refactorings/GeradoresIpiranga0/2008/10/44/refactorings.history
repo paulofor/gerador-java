@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 1 elements(s) to &apos;GeradoresIpiranga0/src/aplicacao&apos;&#x0D;&#x0A;- Original project: &apos;GeradoresIpiranga0&apos;&#x0D;&#x0A;- Destination element: &apos;GeradoresIpiranga0/src/aplicacao&apos;&#x0D;&#x0A;- Original element: &apos;aplicacao.Gerador.java&apos;" description="Copy compilation unit" destination="/src&lt;aplicacao" element1="/src&lt;aplicacao{Gerador.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" log="/src&lt;aplicacao{Gerador.java&#x09;true&#x09;true&#x09;GeradorParaServiceImpl.java" policy="org.eclipse.jdt.ui.copyResources" stamp="1225477731502" units="1" version="1.0"/>
+</session>

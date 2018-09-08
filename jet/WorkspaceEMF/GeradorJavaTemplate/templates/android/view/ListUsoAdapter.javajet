@@ -1,0 +1,23 @@
+<%@ jet package="jet.android.view" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ListUsoAdapter" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.view.adapter.listauso;
+
+import java.util.List;
+import br.com.digicom.activity.DigicomContexto;
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.view.adapter.listauso.base.<%= classe.getNomeParaClasse() %>ListUsoAdapterBase;
+
+
+public class <%= classe.getNomeParaClasse() %>ListUsoAdapter extends <%= classe.getNomeParaClasse() %>ListUsoAdapterBase {
+	
+	public <%= classe.getNomeParaClasse() %>ListUsoAdapter(List<<%= classe.getNomeParaClasse() %>> lista, DigicomContexto context) {
+		super(lista, context);
+	}
+	
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 1 elements(s) to &apos;GeradoresIpiranga0/src/uml&apos;&#x0D;&#x0A;- Original project: &apos;GeradoresIpiranga0&apos;&#x0D;&#x0A;- Destination element: &apos;GeradoresIpiranga0/src/uml&apos;&#x0D;&#x0A;- Original element: &apos;uml.HandlerXmi.java&apos;" description="Copy compilation unit" destination="/src&lt;uml" element1="/src&lt;uml{HandlerXmi.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" log="/src&lt;uml{HandlerXmi.java&#x09;true&#x09;true&#x09;HandlerXmiGenerico.java" policy="org.eclipse.jdt.ui.copyResources" stamp="1231852057168" units="1" version="1.0"/>
+</session>

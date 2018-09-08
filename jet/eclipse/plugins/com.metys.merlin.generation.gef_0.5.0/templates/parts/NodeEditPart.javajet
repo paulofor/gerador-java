@@ -1,0 +1,158 @@
+<%
+/**
+ * Copyright (c) 2005 Joel Cheuoua & Contributors
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Merlin project nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+%>
+<%@ jet package="com.metys.merlin.generation.gef.compiledtemplates.parts" imports="com.metys.merlin.generation.gef.genmodel.* com.metys.merlin.generation.gef.genmodel.util.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.ecore.genmodel.*" class="NodeEditPart" %>
+<%GenNodeEditPart genEditPart = (GenNodeEditPart) argument; EClass ecoreClass = genEditPart.getEcoreClass(); EPackage ecorePackage = (EPackage) ecoreClass.getEPackage(); GenModel genModel = genEditPart.getGenGEFModel().getGenModel(); GenClass genClass = GenModelHelper.getGenClass(genModel, ecoreClass);%>
+<%@ include file="../Header.jetinc"%>
+package <%=genEditPart.getPackageName()%>;
+
+<%genModel.markImportLocation(stringBuffer);%>
+
+/**
+ * <!-- begin-user-doc -->
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public <%if (ecoreClass.isAbstract()) {%>abstract <%}%>class <%=ecoreClass.getName()%>EditPart<%=GenModelHelper.getNodeEditPartExtendsLitteral(genModel, genEditPart)%>{
+	
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+	public <%=ecoreClass.getName()%>EditPart(<%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ENode")%> model, <%=genModel.getImportedName("org.eclipse.emf.common.notify.AdapterFactory")%> adapterFactory) {
+		super(model, adapterFactory);
+	}
+	
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+	public <%=genClass.getImportedClassName()%> get<%=ecoreClass.getName()%>() {
+		return (<%=genClass.getImportedClassName()%>)getENode().getEObject();
+	}
+	
+  /**
+   * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated   
+   */
+  protected <%=genModel.getImportedName("org.eclipse.draw2d.IFigure")%> createFigure() {
+<%if (genEditPart.getGenFigure() == null || "com.metys.merlin.generation.gef.figures.ENodeFigure".equals(genEditPart.getGenFigure().getFigureClass())) {%>
+    <%=genModel.getImportedName("org.eclipse.draw2d.Label")%> l = new Label(getImage());
+    l.setLabelAlignment(<%=genModel.getImportedName("org.eclipse.draw2d.PositionConstants")%>.CENTER);
+	return new <%=genModel.getImportedName("com.metys.merlin.generation.gef.figures.ENodeFigure")%>(l);
+<%} else {%>
+	<%=genModel.getImportedName(genEditPart.getGenFigure().getFigureClass())%> figure = new <%=genModel.getImportedName(genEditPart.getGenFigure().getFigureClass())%>();
+	return figure; 
+<%}%>
+  }
+
+  /**
+   * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getContentPane()
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated   
+   */
+	public IFigure getContentPane() {
+<%if (genEditPart.getGenFigure() == null || "com.metys.merlin.generation.gef.figures.ENodeFigure".equals(genEditPart.getGenFigure().getFigureClass())) {%>
+    return ((<%=genModel.getImportedName("com.metys.merlin.generation.gef.figures.ENodeFigure")%>) getFigure()).getContentPane();
+<%} else {%>
+	return getFigure(); 
+<%}%>
+  }
+
+  /**
+   * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#refreshVisuals()
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+	public void refreshVisuals() {
+<%if (genEditPart.getGenFigure() == null || "com.metys.merlin.generation.gef.figures.ENodeFigure".equals(genEditPart.getGenFigure().getFigureClass())) {%>
+    String name = getENode().getName();
+    if (name == null || name.trim().length() == 0)
+      name = getLabelProvider().getText(getENode().getEObject());
+    <%=genModel.getImportedName("org.eclipse.draw2d.Label")%> l = (Label) ((<%=genModel.getImportedName("com.metys.merlin.generation.gef.figures.ENodeFigure")%>) getFigure()).getHeader();
+    l.setText(name);
+
+    <%=genModel.getImportedName("org.eclipse.draw2d.geometry.Point")%> loc = getENode().getLocation();
+    <%=genModel.getImportedName("org.eclipse.draw2d.geometry.Dimension")%> size = new Dimension((int) getENode().getWidth(), (int) getENode().getHeight());
+    <%=genModel.getImportedName("org.eclipse.draw2d.geometry.Rectangle")%> r = new Rectangle(loc, size);
+
+	if (getParent() instanceof <%=genModel.getImportedName("org.eclipse.gef.GraphicalEditPart")%>)
+    	((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), r);
+<%} else {%>
+	// TODO : Implements the figure's visual refresh here.
+	// Ensure that you remove @generated or mark it @generated NOT
+	<%=genModel.getImportedName(genEditPart.getGenFigure().getFigureClass())%> figure = (<%=genModel.getImportedName(genEditPart.getGenFigure().getFigureClass())%>) getFigure();
+	<%=genModel.getImportedName("org.eclipse.draw2d.geometry.Point")%> loc = getENode().getLocation();
+    int w = (int) getENode().getWidth() == 0 ? 30 : (int) getENode().getWidth();
+    int h = (int) getENode().getHeight() == 0 ? 30 : (int) getENode().getHeight();
+    <%=genModel.getImportedName("org.eclipse.draw2d.geometry.Dimension")%> size = new Dimension(w, h);
+    
+    figure.setFill(true);
+    figure.setLocation(loc);
+    figure.setSize(size);
+<%}%>
+  }
+
+<% if (!genClass.isAbstract()) {%>
+  /**
+   * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
+   * <!-- begin-user-doc --> 
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected void createEditPolicies() {
+<%if (genEditPart.isContainerEditPolicy()) {%>
+		// Node Container & Layout Edit Policy
+    installEditPolicy(<%=genModel.getImportedName("org.eclipse.gef.EditPolicy")%>.LAYOUT_ROLE, new <%=genModel.getImportedName(genEditPart.getPackageName() + ".policies." + genEditPart.getName() + "LayoutEditPolicy")%>());
+<%}%>
+<%if (genEditPart.isComponentEditPolicy()) {%>
+		// Node Component Edit Policy
+	installEditPolicy(<%=genModel.getImportedName("org.eclipse.gef.EditPolicy")%>.COMPONENT_ROLE, new <%=genModel.getImportedName(genEditPart.getPackageName() + ".policies." + genEditPart.getName() + "ComponentEditPolicy")%>());
+<%}%>
+<%if (genEditPart.isDirectEditPolicy()) {%>
+		// Node Direct Edit Policy
+	installEditPolicy(<%=genModel.getImportedName("org.eclipse.gef.EditPolicy")%>.DIRECT_EDIT_ROLE, new <%=genModel.getImportedName(genEditPart.getPackageName() + ".policies." + genEditPart.getName() + "DirectEditPolicy")%>());
+<%}%>
+<%if (genEditPart.isGraphicalEditPolicy()) {%>
+		// Node Graphical Node Edit Policy
+    installEditPolicy(<%=genModel.getImportedName("org.eclipse.gef.EditPolicy")%>.GRAPHICAL_NODE_ROLE, new <%=genModel.getImportedName(genEditPart.getPackageName() + ".policies." + genEditPart.getName() + "GraphicalNodeEditPolicy")%>());
+<%}%>
+  }
+<%}%>
+}
+<%genModel.emitSortedImports();%>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="com.metys.merlin.generation.doc"
+   name="%pluginName"
+   version="0.5.0"
+   provider-name="%providerName">
+
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="book.xml"
+            primary="true">
+      </toc>
+   </extension>
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc_Concepts.xml">
+      </toc>
+   </extension>
+
+</plugin>

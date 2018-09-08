@@ -1,0 +1,19 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* " 
+class="EjbCNHome" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseFuncionalidade classe = (ClasseFuncionalidade) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= classe.getPacoteEjb() %>;
+
+import java.rmi.RemoteException;
+
+import javax.ejb.CreateException;
+import javax.ejb.EJBHome;
+
+public interface <%= classe.getNomeParaClasse() %>CNHome extends EJBHome {
+    <%= classe.getNomeParaClasse() %>CN create() throws RemoteException, CreateException;
+}
+

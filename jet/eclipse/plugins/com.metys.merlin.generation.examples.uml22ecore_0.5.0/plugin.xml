@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="com.metys.merlin.tools.examples.Wizard.category.ID"
+            name="Samples"
+            parentCategory="com.metys.merlin.tools.Wizard.category.ID">
+      </category>
+      <wizard
+            name="Ecore From UML2"
+            icon="icons/sample.gif"
+            category="com.metys.merlin.tools.Wizard.category.ID/com.metys.merlin.tools.examples.Wizard.category.ID"
+            class="com.metys.merlin.generation.examples.uml22ecore.wizards.UML22EcoreSampleWizard"
+            id="com.metys.merlin.generation.examples.uml22ecore.wizards.UML22EcoreSampleWizard">
+      </wizard>
+   </extension>
+
+</plugin>

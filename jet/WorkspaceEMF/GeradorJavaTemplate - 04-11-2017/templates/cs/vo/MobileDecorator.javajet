@@ -1,0 +1,53 @@
+<%@ jet package="jet.cs.vo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="MobileDecorator" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+
+using <%= conf.getNamespace() %>.modelo;
+
+namespace <%= conf.getNamespace() %>.modelo.mobile
+{
+	/// <summary>
+	/// Summary description for TipoFornecedorDecorator.
+	/// </summary>
+	public class <%= classe.getNomeParaClasse() %>Decorator: MobileDecoratorI
+	{
+		private <%= classe.getNomeParaClasse() %> principal;
+		public <%= classe.getNomeParaClasse() %>Decorator(<%= classe.getNomeParaClasse() %> dado)
+		{
+			principal = dado;
+		}
+		public string Json 
+		{
+			get 
+			{
+				return "{" +
+<%
+	AtributoWrapper atributoW = new AtributoWrapperCs();
+	Iterator<AtributoEntidade> iterador = classe.getListaAtributoEntidade().iterator();
+	String virgula = "";
+	while (iterador.hasNext()) {
+		atributoW.setBase(iterador.next());
+%>
+				" <%= virgula %>\"<%= atributoW.getNomeCampoTabela() %>\":\"" + principal.<%= atributoW.getNomePropriedade() %> + "\"" +
+<%
+		if (virgula.equals("")) virgula = ",";
+	}
+	Iterator<RelacionamentoWrapper> iteradorRel = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel.hasNext()) {
+		RelacionamentoWrapper relCorrente = iteradorRel.next();
+	%>
+				" ,\"<%= relCorrente.getNomeCampoTabela() %>\":\"" + principal.<%= relCorrente.getNomePropriedade() %> + "\"" +
+	<%
+	}
+	%>			"}";
+			}
+		}
+		
+	}
+}

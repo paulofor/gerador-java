@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension-point id="merlin_templates_models" name="JETTemplateModels" schema="schema/templatesmodels.exsd"/>
+
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.metys.com/merlin/generation/templates.ecore"
+            class="com.metys.merlin.generation.templates.JETTemplatePackage">
+      </package>
+      <package
+      		uri="http://www.metys.com/merlin/generation/templates/jetmapping.ecore"
+      		class="com.metys.merlin.generation.templates.jetmapping.JETMappingPackage">
+      </package>      		
+   </extension>
+
+</plugin>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.metys.merlin.generation"
+      label="%featureName"
+      version="0.5.0"
+      provider-name="%providerName"
+      os="win32"
+      ws="win32"
+      nl="en_US"
+      arch="x86">
+   <install-handler/>
+
+   <description url="%descriptionURL">
+      %description
+   </description>
+
+   <copyright url="[Enter Copyright URL here.]">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.emf.edit"/>
+      <import plugin="org.eclipse.emf.mapping"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.emf.ecore.edit"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.emf.codegen.ecore"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.emf.codegen.ecore.ui"/>
+      <import plugin="org.eclipse.pde"/>
+      <import plugin="org.eclipse.pde.ui"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.emf.mapping.ecore2ecore"/>
+      <import plugin="org.eclipse.emf.mapping.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.emf.mapping.ecore2ecore.editor"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.emf.common.ui"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.uml2"/>
+      <import plugin="org.eclipse.pde.core"/>
+   </requires>
+
+   <plugin
+         id="com.metys.merlin.generation.templates.ui"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+   <plugin
+         id="com.metys.merlin.generation.doc"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+   <plugin
+         id="com.metys.merlin.generation.mapping"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+   <plugin
+         id="com.metys.merlin.generation.mapping.ui"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+   <plugin
+         id="com.metys.merlin.generation.gef"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+   <plugin
+         id="com.metys.merlin.generation.gef.ui"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+   <plugin
+         id="com.metys.merlin.generation.templates"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+   <plugin
+         id="com.metys.merlin.generation.examples.uml22ecore"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+   <plugin
+         id="com.metys.merlin.generation.examples.uml2codegen"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+</feature>

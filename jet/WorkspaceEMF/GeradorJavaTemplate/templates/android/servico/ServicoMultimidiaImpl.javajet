@@ -1,0 +1,16 @@
+<%@ jet package="jet.android.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ServicoMultimidiaImpl" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.servico.multimidia.impl;
+
+import <%= conf.getNamespace() %>.servico.multimidia.base.<%= classe.getNomeParaClasse() %>ServicoMultimidiaBase;
+
+public class <%= classe.getNomeParaClasse() %>ServicoMultimidia extends  <%= classe.getNomeParaClasse() %>ServicoMultimidiaBase { 
+	
+
+}

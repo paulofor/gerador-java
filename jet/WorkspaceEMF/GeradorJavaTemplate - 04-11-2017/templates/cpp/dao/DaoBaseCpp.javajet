@@ -1,0 +1,31 @@
+<%@ jet package="jet.cpp.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cpp.* gerapp.modelo.* " 
+class="DaoBaseCpp" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapperCpp classe = (ClasseWrapperCpp) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+#include "StdAfx.h"
+#include "<%= classe.getNomeParaClasse() %>Dao.h"
+
+C<%= classe.getNomeParaClasse() %>DaoBase::C<%= classe.getNomeParaClasse() %>DaoBase(void)
+{
+}
+
+C<%= classe.getNomeParaClasse() %>DaoBase::~C<%= classe.getNomeParaClasse() %>DaoBase(void)
+{
+}
+
+CDaoConexao* C<%= classe.getNomeParaClasse() %>DaoBase::criaConexao()
+{
+	return nullptr;
+}
+
+void C<%= classe.getNomeParaClasse() %>DaoBase::setConexao(CDaoConexao* conn) 
+{
+}
+
+void C<%= classe.getNomeParaClasse() %>DaoBase::liberaConexao(CDaoConexao* conn) 
+{
+}

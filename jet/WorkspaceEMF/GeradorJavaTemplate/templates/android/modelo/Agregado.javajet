@@ -1,0 +1,178 @@
+<%@ jet package="jet.android.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="Agregado" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.modelo.agregado;
+
+import java.util.List;
+import java.util.ArrayList;
+import br.com.digicom.log.DCLog;
+import <%= conf.getNamespaceExtendido() %>.modelo.*;
+
+
+public class <%= classe.getNomeParaClasse() %>Agregado implements <%= classe.getNomeParaClasse() %>AgregadoI
+{
+
+	private final int QTDE_LOG_LAZY_LOADER = 4;
+	/*
+	private <%= classe.getNomeParaClasse() %>Carregador carregador = null;
+	private <%= classe.getNomeParaClasse() %>Carregador getCarregador() {
+		if (carregador==null) {
+			carregador = new <%= classe.getNomeParaClasse() %>Carregador();
+		}
+		return carregador;
+	}
+	
+	public void setConexaoCarregador(DaoConexao conexao) {
+		getCarregador().setConexao(conexao);
+		<%
+		Iterator<RelacionamentoWrapper> iterador2 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador2.hasNext()) {
+		RelacionamentoWrapper relac = iterador2.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>if (vo.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> != null)
+			vo.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>.setConexaoCarregador(conexao);
+		<%
+		}
+     	%>
+	}
+	*/
+	
+	private <%= classe.getNomeParaClasse() %> vo;
+	public <%= classe.getNomeParaClasse() %>Agregado(<%= classe.getNomeParaClasse() %> item) {
+		vo = item;
+	}
+	
+	<%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+	while (iterador.hasNext()) {
+	RelacionamentoWrapper relac = iterador.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+	
+	private <%= classeOposta.getNomeParaClasse() %> <%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+	public void set<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> valor)
+	{	
+		vo.set<%= relac.getNomePropriedade() %>(0);
+		<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = valor;
+	} 
+	public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() 
+	{	
+		
+		if (<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>==null &&
+				vo.get<%= relac.getNomePropriedade() %>LazyLoader() !=0)
+		{
+			<%= classeOposta.getNomeParaClasse() %>Servico srv = FabricaServico.getInstancia().get<%= classeOposta.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+			<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = srv.getById(vo.get<%= relac.getNomePropriedade() %>LazyLoader());
+			DCLog.dStack(DCLog.LAZY_LOADER, this, "<%= classe.getNomeParaClasse() %>.get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()",QTDE_LOG_LAZY_LOADER);
+  		}
+		return <%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+	} 
+	<% if (classe.getId()==classeOposta.getId()) {%>
+	/*  AutoRelacionamento
+	<% } %>
+	public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> value)
+	{	
+		<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = value;
+	} 
+	public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()
+	{	
+		return <%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+	} 
+	<% if (classe.getId()==classeOposta.getId()) {%>
+	*/
+	<% } %>
+	<%
+	}
+ 	%>
+ 	
+ 	<%
+	Iterator<RelacionamentoWrapper> iterador1x1 = classe.obtemListaUmPraUm().iterator();
+	while (iterador1x1.hasNext()) {
+	RelacionamentoWrapper relac = iterador1x1.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+	private <%= classeOposta.getNomeParaClasse() %> <%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+	public void set<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> value) 
+	{	
+		<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = value;
+	} 
+	public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() 
+	{	
+		return <%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+	} 
+	<%
+	}
+ 	%>
+ 	
+ 	
+ 	<%
+	Iterator<RelacionamentoWrapper> iteradorN = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (iteradorN.hasNext()) {
+	RelacionamentoWrapper relac = iteradorN.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+	public boolean existeLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		return lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>!= null; 
+	}
+	private List<<%= classeOposta.getNomeParaClasse() %>> lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+	private boolean daoLista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = false;
+	public void setLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(List<<%= classeOposta.getNomeParaClasse() %>> value)
+	{	
+		lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = value;
+	}
+	public void setLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>ByDao(List<<%= classeOposta.getNomeParaClasse() %>> value)
+	{	
+		lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = value;
+		daoLista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = (value!=null);
+	}  
+	public List<<%= classeOposta.getNomeParaClasse() %>> getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()
+	{	
+		// SEMPRE BUSCANDO NO SQLITE
+		// ligando o LazyLoader
+		if (!daoLista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>)
+        {
+        <%= classeOposta.getNomeParaClasse() %>Servico srv = FabricaServico.getInstancia().get<%= classeOposta.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = srv.getPor<%= relac.getNomeRelacionamentoOposto() %><%= classe.getNomeParaClasse() %>(vo.getId());
+		DCLog.dStack(DCLog.LAZY_LOADER, this, "<%= classe.getNomeParaClasse() %>.getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()",QTDE_LOG_LAZY_LOADER);
+        }
+        //if (lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>==null) {
+		//	DCLog.d(DCLog.ITEM_NULL, this, "<%= classe.getNomeParaClasse() %>.getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() está null");
+		//}
+		return lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+	} 
+	public List<<%= classeOposta.getNomeParaClasse() %>> getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>Original()
+	{	
+		return lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+	} 
+	public List<<%= classeOposta.getNomeParaClasse() %>> getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(int qtde)
+	{	
+        <%= classeOposta.getNomeParaClasse() %>Servico srv = FabricaServico.getInstancia().get<%= classeOposta.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = srv.getPor<%= relac.getNomeRelacionamentoOposto() %><%= classe.getNomeParaClasse() %>(vo.getContexto().getContext(), vo.getId());
+		DCLog.dStack(DCLog.LAZY_LOADER, this, "<%= classe.getNomeParaClasse() %>.getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()",QTDE_LOG_LAZY_LOADER);
+		return lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+	} 
+	public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> value) 
+	{	
+		criaVaziaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>.add(value);
+		daoLista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = true;
+	} 
+	public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()
+	{	
+		return lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>.get(lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>.size()-1);
+	} 
+	public void criaVaziaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		if (lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> == null)
+        {
+        	lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = new ArrayList<<%= classeOposta.getNomeParaClasse() %>>();
+        }
+	}
+	<%
+	}
+	%>
+}

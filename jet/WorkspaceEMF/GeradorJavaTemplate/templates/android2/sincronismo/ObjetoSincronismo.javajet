@@ -1,0 +1,76 @@
+<%@ jet package="jet.android2.sincronismo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ObjetoSincronismo" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.remoto;
+
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+
+import <%= conf.getNamespaceExtendido() %>.data.contract.AplicacaoContract;
+import <%= conf.getNamespaceExtendido() %>.data.contract.<%= classe.getNomeParaClasse() %>Contract;
+import <%= conf.getNamespaceExtendido() %>.framework.log.DCLog;
+
+public class <%= classe.getNomeParaClasse() %>Sincronismo {
+	
+<% if (classe.ehDispositivo()) { %>
+	// Versao tradicional sempre com atualizacao local.
+    public void sincroniza(Context contexto, boolean forcaAtualizacao) {
+        sincroniza(contexto,forcaAtualizacao,true,true);
+    }
+<% } else { %>
+<% } %>
+    public void sincroniza(Context contexto, boolean forcaAtualizacao, boolean delete, boolean atualizaLocal) {
+    	String codigoAplicacao = AplicacaoContract.getCodigoAplicacaoSinc();
+ 	 	<%= classe.getNomeParaClasse() %>Remote servicoRemoto = new  <%= classe.getNomeParaClasse() %>Remote(); // fazer estatico ?
+        try {
+             ContentResolver resolver = contexto.getContentResolver();
+             Cursor cursor = resolver.query(<%= classe.getNomeParaClasse() %>Contract.buildAllSinc(), <%= classe.getNomeParaClasse() %>Contract.COLS_SINC, null, null, null);
+             int tam = cursor.getCount();
+             if (cursor.getCount() > 0 ) {
+                  servicoRemoto.listaSincronizadaAlteracao(cursor, contexto);
+                  DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR, this, "<%= classe.getNomeParaClasse() %>: " + tam +  " >> ");
+                  resolver.delete(<%= classe.getNomeParaClasse() %>Contract.buildDeleteAllSinc(),null,null);
+             }
+             if ((atualizaLocal) && (forcaAtualizacao || (tam>0))) {
+                 int tamLista = 0;
+                 tamLista = servicoRemoto.listaSincronizadaDao(contexto,delete,codigoAplicacao);
+                 DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR, this, "<%= classe.getNomeParaClasse() %>: " + tamLista +  " << ");
+             }
+        } catch (Exception e) {
+         	 DCLog.e(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,e);
+             e.printStackTrace();
+        }
+    }
+    
+    // Chama outro metodo de DAO - Fazendo apenas updates. Ex: InteresseProduto
+    public void sincronizaAtualizaPorId(Context contexto, boolean forcaAtualizacao, boolean delete, boolean atualizaLocal) {
+    	String codigoAplicacao = AplicacaoContract.getCodigoAplicacaoSinc();
+ 	 	<%= classe.getNomeParaClasse() %>Remote servicoRemoto = new  <%= classe.getNomeParaClasse() %>Remote(); // fazer estatico ?
+        try {
+             ContentResolver resolver = contexto.getContentResolver();
+             Cursor cursor = resolver.query(<%= classe.getNomeParaClasse() %>Contract.buildAllSinc(), <%= classe.getNomeParaClasse() %>Contract.COLS_SINC, null, null, null);
+             int tam = cursor.getCount();
+             if (cursor.getCount() > 0 ) {
+                  servicoRemoto.listaSincronizadaAlteracao(cursor, contexto);
+                  DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR, this, "<%= classe.getNomeParaClasse() %>: " + tam +  " >> ");
+                  resolver.delete(<%= classe.getNomeParaClasse() %>Contract.buildDeleteAllSinc(),null,null);
+             }
+             if ((atualizaLocal) && (forcaAtualizacao || (tam>0))) {
+                 int tamLista = 0;
+                 tamLista = servicoRemoto.listaSincronizadaDaoAtualizaPorId(contexto,delete,codigoAplicacao);
+                 DCLog.d(DCLog.SINCRONIZACAO_SINCRONIZADOR, this, "<%= classe.getNomeParaClasse() %>: " + tamLista +  " << ");
+             }
+        } catch (Exception e) {
+         	 DCLog.e(DCLog.SINCRONIZACAO_SINCRONIZADOR,this,e);
+             e.printStackTrace();
+        }
+        
+    }
+}

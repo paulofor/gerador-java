@@ -1,0 +1,26 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ModeloI" %>
+<%
+EClass eClass = (EClass) argument;
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+AttributeWrapper atributo = new AttributeWrapper();
+%>
+package <%= classe.getPacoteModeloI() %>;
+
+import <%= classe.getPacoteReferencias() %>.ObjetoI;
+<% if (classe.possuiAtributos()) { %>import <%= classe.getPacoteDerivadaI() %>.<%= classe.getNomeDerivadaI() %>;<% } %>
+
+import <%= classe.getPacoteAssembledI() %>.<%=classe.getNomeAssembledI() %>;
+<%= (classe.existeTipoData()?"import java.util.Date;":"") %>
+
+public interface <%= classe.getNomeModeloI() %> extends <% if (classe.getSuperTipo()!=null) {%> <%= classe.getSuperTipo().getNomeModeloI() %> <% } else { %> ObjetoI <% } %> , <%=classe.getNomeAssembledI() %> <% if (classe.possuiAtributos()) { %> , <%= classe.getNomeDerivadaI() %> <% } %>  
+{
+
+<%for (EAttribute item : eClass.getEAttributes()) {%>
+<% atributo.setAtributo(item); %>
+    public <%= atributo.getTipo() %> <%= atributo.getGetter() %>();
+    public void <%= atributo.getSetter() %>(<%= atributo.getTipo() %> <%= item.getName() %>);
+<%}%>
+} 

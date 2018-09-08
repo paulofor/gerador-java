@@ -1,0 +1,71 @@
+<%@ jet package="jet.android.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="PrincipalActivityBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.app.base;
+
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.view.View;
+import br.com.digicom.quadro.IFragment;
+import br.com.digicom.activity.BaseFragmentActivity;
+import br.com.digicom.R;
+import android.app.ActionBar;
+import <%= conf.getNamespace() %>.app.Sincronizador;
+//import <%= conf.getNamespace() %>.app.R;
+import <%= conf.getNamespace() %>.dao.datasource.DataSourceAplicacao;
+import <%= conf.getNamespace() %>.modelo.Usuario;
+import <%= conf.getNamespace() %>.modelo.vo.FabricaVo;
+import <%= conf.getNamespace() %>.servico.FabricaServico;
+import <%= conf.getNamespace() %>.servico.UsuarioServico;
+import android.os.Bundle;
+import br.com.digicom.activity.BaseNavigatorActivity;
+
+
+import android.support.v4.app.FragmentManager;
+
+
+// Nao passei para a arquitetura porque existem
+// muitas referencias a objetos R.* da aplicação alem de
+// referencia a DataSource tambem da aplicacao.
+public abstract class PrincipalActivityBase extends BaseNavigatorActivity {
+
+	
+	public void posOnCreate(Bundle savedInstanceState) {
+		DataSourceAplicacao.criaInstancia(getApplication());
+       	// Rever o processo de sincronizacao ate 02/06/2014
+       	if (sincronizaInicio())
+       		sincroniza();  
+       	this.inicializaServicos();
+       	/*
+       	 	getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                IFragment fragment = (IFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_principal);;
+                if (fragment!=null && getActionBar()!=null) getActionBar().setTitle(fragment.getTituloTela());
+            }
+        });
+        */
+	}
+ 
+	protected boolean sincronizaInicio() {
+		return true;
+	}
+	
+	protected void sincroniza() {
+		Sincronizador sinc = new Sincronizador();
+		sinc.setContexto(getApplication());
+		sinc.start();
+		try {
+			sinc.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

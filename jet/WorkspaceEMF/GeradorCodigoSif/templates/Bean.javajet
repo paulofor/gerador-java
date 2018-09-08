@@ -1,0 +1,16 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* br.com.probid.gerador.execucao.wrappers.* br.com.probid.gerador.interfaces.* " 
+class="Bean" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNomePacoteModel() %>.bean;
+
+import <%= conf.getNomePacoteModel() %>.bean.base.beanBase<%= classe.getNomeBasico() %>;
+
+public class bean<%= classe.getNomeBasico() %> extends beanBase<%= classe.getNomeBasico() %>{ 
+  
+}
+

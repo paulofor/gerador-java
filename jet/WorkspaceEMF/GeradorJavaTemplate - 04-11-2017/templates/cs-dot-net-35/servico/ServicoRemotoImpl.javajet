@@ -1,0 +1,38 @@
+<%@ jet package="jet.csdn35.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="ServicoRemotoImpl" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using <%= conf.getNamespace() %>.modelo;
+
+using <%= conf.getNamespace() %>.servico.remoto.basico;
+
+namespace <%= conf.getNamespace() %>.servico.remoto {
+
+	public class <%= classe.getNomeParaClasse() %>ServicoRemotoImpl : <%= classe.getNomeParaClasse() %>ServicoRemotoBase {
+<%
+	Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra.hasNext()) {
+	RegraColecao regra = iteradorRegra.next();
+	if (regra.getAtivoCs()) {
+		String tipoRetorno = null;
+		if (regra.getRetornaColecao()) tipoRetorno = "List<" + classe.getNomeParaClasse() + ">";
+		else tipoRetorno = classe.getNomeParaClasse();
+	
+%>
+		public override <%= tipoRetorno %> <%= regra.getNome() %>() {
+			throw new Exception("Metodo nao implementado");
+		}
+<%
+	}
+	}
+%>
+	
+	}
+}

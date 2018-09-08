@@ -1,0 +1,20 @@
+<%@ jet package="jet.csdn35.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="DataSourceAplicacao" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using br.com.digicom.lib.dao;
+
+namespace <%= conf.getNamespace() %>.dao.datasource
+{
+	public class DataSourceAplicacao : MySqlDataSource
+	{
+		public DataSourceAplicacao() : base("localhost","sisacao2", "sisacaoweb","aspnet")
+		{
+			
+		}
+	}
+}

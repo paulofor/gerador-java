@@ -1,0 +1,46 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ActionEditar" %>
+<%
+%>
+<%EClass eClass = (EClass) argument;
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+ReferenceWrapper referencia = null;
+
+%>
+package <%= classe.getPacoteActionEditar() %>;
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import <%= classe.getPacoteServiceI() %>.<%= classe.getNomeServiceI() %>;
+import <%= classe.getPacoteServiceI() %>.ServiceLocator;
+import <%= classe.getPacoteFormBean() %>.<%= classe.getNomeFormBean() %>;
+
+
+<%= "/*" %>
+<%= "* Classe gerada automaticamente, nao realizar alteracoes " %>
+<%= "*/" %>
+public abstract class <%= classe.getNomeActionEditar() %> extends Action{
+
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+	    HttpServletRequest request, HttpServletResponse response)
+	    throws Exception {
+
+		<%= classe.getNomeServiceI() %> servico = ServiceLocator.get<%= classe.getNomeServiceI() %>();	
+		<%= classe.getNomeFormBean() %> formBean = (<%= classe.getNomeFormBean() %>) form;
+		return execute(servico,formBean,mapping,request,response);
+		
+    }
+    
+    protected abstract ActionForward execute(<%= classe.getNomeServiceI() %> servico, <%= classe.getNomeFormBean() %> formBean, ActionMapping mapping, HttpServletRequest request, HttpServletResponse response) throws Exception;
+    
+} 
+

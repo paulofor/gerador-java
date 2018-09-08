@@ -1,0 +1,19 @@
+<%@ jet package="jet.cpp.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cpp.* gerapp.modelo.* " 
+class="DaoH" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapperCpp classe = (ClasseWrapperCpp) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+#pragma once
+#include "<%= classe.getNomeParaClasse() %>DaoBase.h"
+#include "estruturaobjeto.h"
+
+class C<%= classe.getNomeParaClasse() %>Dao : public C<%= classe.getNomeParaClasse() %>DaoBase
+{
+public:
+	C<%= classe.getNomeParaClasse() %>Dao(void);
+	~C<%= classe.getNomeParaClasse() %>Dao(void);
+
+};

@@ -1,0 +1,38 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* br.com.probid.gerador.execucao.wrappers.* " 
+class="Form" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package br.org.fplf.form;
+
+import br.org.fplf.bean.FabricaBean;
+import br.org.fplf.bean.bean<%= classe.getNomeBasico() %>;
+import org.apache.struts.action.ActionForm;
+import java.util.Vector;
+
+public class form<%= classe.getNomeBasico() %> extends ActionForm {
+
+	private bean<%= classe.getNomeBasico() %> item;
+	
+	public bean<%= classe.getNomeBasico() %> getItem() {
+		if (item==null) item = FabricaBean.criaBean<%= classe.getNomeBasico() %>();
+		return item;
+    }
+    public void setItem(bean<%= classe.getNomeBasico() %> item) {
+    	this.item = item;
+    }
+    
+    private Vector<bean<%= classe.getNomeBasico() %>> lista;
+	
+	public Vector<bean<%= classe.getNomeBasico() %>> getLista() {
+		if (lista==null) lista = new Vector<bean<%= classe.getNomeBasico() %>>();
+		return lista;
+    }
+    public void setLista(Vector<bean<%= classe.getNomeBasico() %>> lista) {
+    	this.lista = lista;
+    }
+}
+

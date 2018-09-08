@@ -1,0 +1,116 @@
+package jet.android2.tela;
+
+import java.util.*;
+import gerapp.app.*;
+import jet.wrappers.base.*;
+import jet.wrappers.android.*;
+import gerapp.modelo.*;
+
+public class DetalheBaseActivity
+{
+  protected static String nl;
+  public static synchronized DetalheBaseActivity create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    DetalheBaseActivity result = new DetalheBaseActivity();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = "";
+  protected final String TEXT_2 = NL + "package ";
+  protected final String TEXT_3 = ".tela.base.activity;" + NL + "" + NL + "import android.database.Cursor;" + NL + "import android.net.Uri;" + NL + "import android.os.Bundle;" + NL + "import android.support.v4.app.LoaderManager;" + NL + "import android.support.v4.content.Loader;" + NL + "import android.support.v7.app.ActionBar;" + NL + "import android.support.v7.app.AppCompatActivity;" + NL + "import android.support.v7.widget.Toolbar;" + NL + "import android.widget.TextView;" + NL + "import android.content.SharedPreferences;" + NL + "" + NL + "import ";
+  protected final String TEXT_4 = ".data.contract.";
+  protected final String TEXT_5 = "Contract;" + NL + "import ";
+  protected final String TEXT_6 = ".framework.dao.MontadorDaoI;" + NL + "import ";
+  protected final String TEXT_7 = ".framework.data.DCCursorLoader;" + NL + "import ";
+  protected final String TEXT_8 = ".framework.tela.ResourceObj;" + NL + "import ";
+  protected final String TEXT_9 = ".modelo.";
+  protected final String TEXT_10 = ";" + NL + "import ";
+  protected final String TEXT_11 = ".framework.data.MontadorDaoComposite;" + NL + "" + NL + "" + NL + "public abstract class ";
+  protected final String TEXT_12 = "DetalheBaseActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {" + NL + "" + NL + "    private static final int DETAIL_LOADER = 0;" + NL + "    private long id";
+  protected final String TEXT_13 = " = 0;" + NL + "    " + NL + "    protected Toolbar toolbar = null;" + NL + "" + NL + "\tprotected ResourceObj resourceObj = getLayoutDetalheResource();" + NL + "  " + NL + "\t@Override" + NL + "\tprotected final void onCreate(Bundle savedInstanceState) {" + NL + "        super.onCreate(savedInstanceState);" + NL + "        setContentView(resourceObj.getCodigo());" + NL + "\t    SharedPreferences pref = getPreferences(0);" + NL + " \t\tBundle extra = getIntent().getExtras();" + NL + "   \t\ttry {" + NL + "            this.id";
+  protected final String TEXT_14 = " = extra.getInt(Constantes.";
+  protected final String TEXT_15 = "_ID);" + NL + "        } catch (Exception e) {" + NL + "            id";
+  protected final String TEXT_16 = " = pref.getLong(this.getClass().getSimpleName(), 0);" + NL + "        }" + NL + "  " + NL + "        if (id";
+  protected final String TEXT_17 = "==0) {" + NL + "            throw new RuntimeException(\"Nao recebeu o Id";
+  protected final String TEXT_18 = "\");" + NL + "        }" + NL + "        SharedPreferences.Editor edt = pref.edit();" + NL + "        edt.putLong(this.getClass().getSimpleName(), id";
+  protected final String TEXT_19 = ");" + NL + "        edt.commit();" + NL + "        this.getSupportLoaderManager().initLoader(DETAIL_LOADER, null, this);" + NL + "        toolbar = (Toolbar) findViewById(getIdToolbar());" + NL + "        setSupportActionBar(toolbar);" + NL + "        //getSupportActionBar().setDisplayHomeAsUpEnabled(true); Por causa da anima??o" + NL + "        " + NL + "        complementaOnCreate(id";
+  protected final String TEXT_20 = ");" + NL + "        preparaTransicao();" + NL + "" + NL + "       " + NL + "    }" + NL + "" + NL + "    protected abstract ResourceObj getLayoutDetalheResource();" + NL + "" + NL + " \tprotected void preparaTransicao() {" + NL + "    }" + NL + "" + NL + "    @Override" + NL + "    public Loader<Cursor> onCreateLoader(int id, Bundle args) {" + NL + "        Uri uri = ";
+  protected final String TEXT_21 = "Contract.build";
+  protected final String TEXT_22 = "Uri(id";
+  protected final String TEXT_23 = ");" + NL + "        uri = completaUri(uri);" + NL + "        return new DCCursorLoader(this,uri,null,null,null,null);" + NL + "    }" + NL + "    protected Uri completaUri(Uri uri) {" + NL + "        return uri;" + NL + "    }" + NL + "    " + NL + "    @Override" + NL + "    public void onLoaderReset(Loader<Cursor> loader) {" + NL + "" + NL + "    }" + NL + "    @Override" + NL + "    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {" + NL + "        data.moveToFirst();" + NL + "        String nome = data.getString(getConstColunaNomeTitulo());" + NL + "        ActionBar actionBar = this.getSupportActionBar();" + NL + "        actionBar.setTitle(nome);" + NL + "        " + NL + "        MontadorDaoI montadorDao = ";
+  protected final String TEXT_24 = "Contract.getMontadorComposto();" + NL + "        montadorDao = completaMontador((MontadorDaoComposite)montadorDao);";
+  protected final String TEXT_25 = NL + "        ";
+  protected final String TEXT_26 = " item = (";
+  protected final String TEXT_27 = ") montadorDao.getItem(data);" + NL + "        onLoadObject(item);" + NL + "    }" + NL + "    protected MontadorDaoI completaMontador(MontadorDaoComposite montadorDao) {" + NL + "        return montadorDao;" + NL + "    }" + NL + "    " + NL + "\tprotected abstract void onLoadObject(";
+  protected final String TEXT_28 = " item);" + NL + "" + NL + "\tprotected abstract int getConstColunaNomeTitulo();" + NL + "" + NL + "    protected abstract void complementaOnCreate(long id";
+  protected final String TEXT_29 = ");" + NL + "" + NL + "       protected abstract int getIdToolbar();" + NL + "}";
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(TEXT_1);
+    
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append( conf.getNamespaceExtendido() );
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append( conf.getNamespaceExtendido() );
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append( conf.getNamespaceExtendido() );
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append( conf.getNamespaceExtendido() );
+    stringBuffer.append(TEXT_7);
+    stringBuffer.append( conf.getNamespaceExtendido() );
+    stringBuffer.append(TEXT_8);
+    stringBuffer.append( conf.getNamespaceExtendido() );
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_10);
+    stringBuffer.append( conf.getNamespaceExtendido() );
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_13);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_14);
+    stringBuffer.append( classe.getNomeParaConstante() );
+    stringBuffer.append(TEXT_15);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_16);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_17);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_18);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_19);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_20);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_22);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_23);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_24);
+    stringBuffer.append(TEXT_25);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_26);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_27);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_28);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_29);
+    return stringBuffer.toString();
+  }
+}

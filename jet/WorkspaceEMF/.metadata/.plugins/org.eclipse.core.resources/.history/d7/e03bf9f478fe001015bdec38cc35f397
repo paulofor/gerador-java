@@ -1,0 +1,254 @@
+<%@ jet package="jet.android.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DBHelper" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+<%
+	AtributoWrapper atributoW = new AtributoWrapperAndroid();
+	AtributoWrapper chaveW = new AtributoWrapperAndroid();
+	chaveW.setBase(classe.getChave());
+	
+%>
+package <%= conf.getNamespace() %>.dao.base;
+
+import java.util.ArrayList;
+import java.util.List;
+import br.com.digicom.Constants;
+import br.com.digicom.dao.DBHelperBase;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import <%= conf.getNamespace() %>.modelo.vo.<%= classe.getNomeParaClasse() %>;
+
+public class <%= classe.getNomeParaClasse() %>DBHelper extends DBHelperBase{
+
+    public static final String DB_NAME = "w_alert";
+    public static final String DB_TABLE = "<%= classe.getNomeParaTabela() %>";
+    public static final int DB_VERSION = 3;
+
+    private static final String CLASSNAME = <%= classe.getNomeParaClasse() %>DBHelper.class.getSimpleName();
+    private static final String[] COLS = new String[] { 
+    <% 
+    Iterator<AtributoEntidade> iterador = classe.getListaAtributoEntidade().iterator(); 
+    String virgula = "";
+    while (iterador.hasNext()) {
+     	atributoW.setBase(iterador.next());
+    %>
+        <%= virgula %>"<%= atributoW.getNomeCampoTabela() %>"
+    <%
+    	if (virgula.equals("")) virgula = ",";
+    }
+    %>
+    };
+
+    private SQLiteDatabase db;
+    private final DBOpenHelper dbOpenHelper;
+
+    private static final String DB_CREATE = "CREATE TABLE "
+        + <%= classe.getNomeParaClasse() %>DBHelper.DB_TABLE + " ("
+        <% 
+        iterador = classe.getListaAtributoEntidade().iterator(); 
+        virgula = "";
+        while (iterador.hasNext()) {
+        	atributoW.setBase(iterador.next());
+        %>
+        + " <%= virgula %> <%= atributoW.getNomeCampoTabela() %> <%= atributoW.getTipoSqlite() %> "
+        <%
+        	if (virgula.length()==0) virgula = ",";
+        }
+        %>
+        + ");";
+    
+    private static final String DB_DELETE_ALL = "DELETE FROM " + DB_TABLE;
+
+    private static class DBOpenHelper extends SQLiteOpenHelper {
+
+       
+
+        public DBOpenHelper(final Context context) {
+            super(context, <%= classe.getNomeParaClasse() %>DBHelper.DB_NAME, null, <%= classe.getNomeParaClasse() %>DBHelper.DB_VERSION);
+        }
+
+        @Override
+        public void onCreate(final SQLiteDatabase db) {
+            try {
+                db.execSQL(DB_CREATE);
+            } catch (SQLException e) {
+                Log.e(Constants.LOGTAG, <%= classe.getNomeParaClasse() %>DBHelper.CLASSNAME, e);
+            }
+        }
+
+        @Override
+        public void onOpen(final SQLiteDatabase db) {
+            super.onOpen(db);
+        }
+
+        @Override
+        public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS " + <%= classe.getNomeParaClasse() %>DBHelper.DB_TABLE);
+            onCreate(db);
+        }
+    }
+
+    //
+    // end inner classes
+    //
+
+    public <%= classe.getNomeParaClasse() %>DBHelper(final Context context) {
+        this.dbOpenHelper = new DBOpenHelper(context);
+        establishDb();
+    }
+
+    private void establishDb() {
+        if (this.db == null) {
+            this.db = this.dbOpenHelper.getWritableDatabase();
+        }
+    }
+
+    public void cleanup() {
+        if (this.db != null) {
+            this.db.close();
+            this.db = null;
+        }
+    }
+
+	private ContentValues montaValores(final <%= classe.getNomeParaClasse() %> item) {
+		ContentValues valores = new ContentValues();
+        <% 
+        iterador = classe.getListaAtributoEntidade().iterator(); 
+        while (iterador.hasNext()) {
+        	atributoW.setBase(iterador.next());
+        %>
+        putValor(valores,"<%= atributoW.getNomeCampoTabela() %>",item.<%= atributoW.getNomeVariavel() %>);
+        //valores.put("<%= atributoW.getNomeCampoTabela() %>", item.<%= atributoW.getNomeVariavel() %>);
+        <%
+        }
+        %>
+        return valores;
+	}
+
+    public void insert(final <%= classe.getNomeParaClasse() %> item) {
+        this.db.insert(<%= classe.getNomeParaClasse() %>DBHelper.DB_TABLE, null, montaValores(item));
+    }
+
+    public void update(final <%= classe.getNomeParaClasse() %> item) {
+        this.db.update(<%= classe.getNomeParaClasse() %>DBHelper.DB_TABLE, montaValores(item), "<%= chaveW.getNomeCampoTabela() %>=" + item.<%= chaveW.getNomeVariavel() %>, null);
+    }
+
+    public void delete(final long id) {
+        this.db.delete(<%= classe.getNomeParaClasse() %>DBHelper.DB_TABLE, "<%= chaveW.getNomeCampoTabela() %>=" + id, null);
+    }
+
+    public void criaTabela() {
+    	this.db.execSQL(DB_CREATE);
+    }
+     public void deleteAll() {
+    	this.db.execSQL(DB_DELETE_ALL);
+    }
+    public void dropTable() {
+    	this.db.execSQL(DB_DROP);
+    }
+
+    public <%= classe.getNomeParaClasse() %> get(final long id) {
+        Cursor c = null;
+        <%= classe.getNomeParaClasse() %> item = null;
+        try {
+            c = this.db.query(true, <%= classe.getNomeParaClasse() %>DBHelper.DB_TABLE, <%= classe.getNomeParaClasse() %>DBHelper.COLS, "<%= chaveW.getNomeCampoTabela() %> = " + id + "", null, null, null, null,
+                null);
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                item = new <%= classe.getNomeParaClasse() %>();
+                 <% 
+        		iterador = classe.getListaAtributoEntidade().iterator(); 
+        		int i=0;
+		        while (iterador.hasNext()) {
+        			atributoW.setBase(iterador.next());
+		        %>item.<%= atributoW.getNomeVariavel() %> = get<%= atributoW.getMetodoObtemSqlite() %>(c,<%= i++ %>);
+		        <%
+        		}
+		        %>
+                //tipo.idTipoFornecedor = c.getInt(0);
+                //tipo.nome = c.getString(1);
+            }
+        } catch (SQLException e) {
+            Log.v(Constants.LOGTAG, <%= classe.getNomeParaClasse() %>DBHelper.CLASSNAME, e);
+        } finally {
+            if (c != null && !c.isClosed()) {
+                c.close();
+            }
+        }
+        return item;
+    }
+    
+    public List<<%= classe.getNomeParaClasse() %>> getAll() {
+        ArrayList<<%= classe.getNomeParaClasse() %>> ret = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+        Cursor c = null;
+        try {
+            c = this.db.query(<%= classe.getNomeParaClasse() %>DBHelper.DB_TABLE, <%= classe.getNomeParaClasse() %>DBHelper.COLS, null, null, null, null, null);
+            int numRows = c.getCount();
+            c.moveToFirst();
+            for (int i = 0; i < numRows; ++i) {
+                <%= classe.getNomeParaClasse() %> item = new <%= classe.getNomeParaClasse() %>();
+                <% 
+        		iterador = classe.getListaAtributoEntidade().iterator(); 
+        		int x=0;
+		        while (iterador.hasNext()) {
+        			atributoW.setBase(iterador.next());
+		        %>item.<%= atributoW.getNomeVariavel() %> = get<%= atributoW.getMetodoObtemSqlite() %>(c,<%= x++ %>);
+		        <%
+        		}
+		        %>
+                ret.add(item);
+                c.moveToNext();
+            }
+        } catch (SQLException e) {
+            Log.v(Constants.LOGTAG, <%= classe.getNomeParaClasse() %>DBHelper.CLASSNAME, e);
+        } finally {
+            if (c != null && !c.isClosed()) {
+                c.close();
+            }
+        }
+        return ret;
+    }
+
+    /*
+    public List<Location> getAllAlertEnabled() {
+        Cursor c = null;
+        ArrayList<Location> ret = new ArrayList<Location>();
+        try {
+            c = this.db.query(DBHelper.DB_TABLE, DBHelper.COLS, "alertenabled = 1", null, null, null, null);
+            int numRows = c.getCount();
+            c.moveToFirst();
+            for (int i = 0; i < numRows; ++i) {
+                Location location = new Location();
+                location.id = c.getLong(0);
+                location.zip = c.getString(1);
+                location.city = c.getString(2);
+                location.region = c.getString(3);
+                location.lastalert = c.getLong(4);
+                location.alertenabled = c.getInt(5);
+                // don't return special device alert enabled marker location in all list
+                if (!location.zip.equals(DBHelper.DEVICE_ALERT_ENABLED_ZIP)) {
+                    ret.add(location);
+                }
+                c.moveToNext();
+            }
+        } catch (SQLException e) {
+            Log.v(Constants.LOGTAG, DBHelper.CLASSNAME, e);
+        } finally {
+            if (c != null && !c.isClosed()) {
+                c.close();
+            }
+        }
+        return ret;
+    }
+    */
+}

@@ -1,0 +1,27 @@
+<%@ jet package="jet.android2.sincronismo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DataSourceRemoto" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.remoto;
+
+
+public class DataSourceRemoto {
+
+    public static final String SERVER = "digicom.kinghost.net";
+    public static final String APLICACAO = "<%= conf.getNomeAplicacao() %>";
+
+    //public static final String SERVER = "10.0.2.2:63199";
+    //public static final String APLICACAO = null;
+
+
+    public static String getServer() {
+        return SERVER;
+    }
+    public static String getAplicacao() {
+        return APLICACAO;
+    }
+}

@@ -1,0 +1,50 @@
+<%@ jet package="jet.java.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="DBB" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.dao;
+
+import  <%= conf.getNamespace() %>.dao.*;
+
+// versao templates
+
+public  class DBB   {
+
+
+	private static DBB _instancia =  null;
+	public static DBB getInstancia() {
+		if (_instancia==null) _instancia = new DBB();
+		return _instancia;
+	}
+	public DBB() {
+	<%
+	Iterator<ClasseWrapper> iterador1 = classes.iterator();
+	while (iterador1.hasNext()) {
+		ClasseWrapper corrente = iterador1.next();
+	%>
+		_<%= corrente.getNomeParaClasse() %>Dao = null;
+	<%
+	}
+	%>
+	}
+
+<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+%>
+
+	private  <%= corrente.getNomeParaClasse() %>Dao _<%= corrente.getNomeParaClasse() %>Dao;
+	public  <%= corrente.getNomeParaClasse() %>Dao get<%= corrente.getNomeParaClasse() %>Dao() {
+		if (_<%= corrente.getNomeParaClasse() %>Dao==null) _<%= corrente.getNomeParaClasse() %>Dao = new <%= corrente.getNomeParaClasse() %>DaoExtendida();
+		return _<%= corrente.getNomeParaClasse() %>Dao;
+	}
+<%
+}
+%>
+
+}

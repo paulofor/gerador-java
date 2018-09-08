@@ -1,0 +1,55 @@
+<?xml version = "1.0" encoding = "iso-8859-1"?>
+<ejb-jar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd" version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee">
+<enterprise-beans>
+<session>
+<description>Session Bean ( Stateless )</description>
+<display-name>SolicitacaoacertoCN</display-name>
+<ejb-name>SolicitacaoacertoCN</ejb-name>
+<home>com.br.brasilcap.cap.obl.solicitacaoacerto.ejbsession.SolicitacaoacertoCNHome</home>
+<remote>com.br.brasilcap.cap.obl.solicitacaoacerto.ejbsession.SolicitacaoacertoCN</remote>
+<ejb-class>com.br.brasilcap.cap.obl.solicitacaoacerto.ejbsession.SolicitacaoacertoCNBean</ejb-class>
+<session-type>Stateless</session-type>
+<transaction-type>Container</transaction-type>
+<!--
+<resource-ref>
+<res-type>jdbc/oracObl</res-type>
+<res-type>javax.sql.DataSource</res-type>
+<res-auth>Container</res-auth>
+</resource-ref>
+-->
+</session>
+<session>
+<description>Session Bean ( Stateless )</description>
+<display-name>SolicitacaoacertoCD</display-name>
+<ejb-name>SolicitacaoacertoCD</ejb-name>
+<home>com.br.brasilcap.cap.obl.solicitacaoacerto.ejbsession.SolicitacaoacertoCDHome</home>
+<remote>com.br.brasilcap.cap.obl.solicitacaoacerto.ejbsession.SolicitacaoacertoCD</remote>
+<ejb-class>com.br.brasilcap.cap.obl.solicitacaoacerto.ejbsession.SolicitacaoacertoCDBean</ejb-class>
+<session-type>Stateless</session-type>
+<transaction-type>Container</transaction-type>
+<!--
+<resource-ref>
+<res-type>jdbc/oracObl</res-type>
+<res-type>javax.sql.DataSource</res-type>
+<res-auth>Container</res-auth>
+</resource-ref>
+-->
+</session>
+</enterprise-beans>
+<assembly-descriptor>
+<container-transaction>
+<method>
+<ejb-name>SolicitacaoacertoCN</ejb-name>
+<method-name>*</method-name>
+</method>
+<trans-attribute>NotSupported</trans-attribute>
+</container-transaction>
+<container-transaction>
+<method>
+<ejb-name>SolicitacaoacertoCD</ejb-name>
+<method-name>*</method-name>
+</method>
+<trans-attribute>Required</trans-attribute>
+</container-transaction>
+</assembly-descriptor>
+</ejb-jar>

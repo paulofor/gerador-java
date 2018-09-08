@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="jet.cpp.servico.ServicoCpp"/>
+<fullyQualifiedTypeName name="jet.cpp.modelo.ObjetosH"/>
+<fullyQualifiedTypeName name="jet.cs.mysql.MySqlScript"/>
+<fullyQualifiedTypeName name="jet.android.data.FiltroContract"/>
+<fullyQualifiedTypeName name="jet.java.modelo.Carregador"/>
+<fullyQualifiedTypeName name="jet.android2.data.OperacaoEntidade"/>
+<fullyQualifiedTypeName name="jet.android2.modelo.Montador"/>
+<fullyQualifiedTypeName name="jet.android2.modelo.AgregadoInterface"/>
+<fullyQualifiedTypeName name="jet.android2.modelo.Agregado"/>
+<fullyQualifiedTypeName name="jet.android2.tela.FragmentTrataBase"/>
+<fullyQualifiedTypeName name="jet.android2.tela.FragmentExibeBase"/>
+<fullyQualifiedTypeName name="jet.android2.framework.MontadorDaoI"/>
+<fullyQualifiedTypeName name="jet.android2.framework.modelo.DCIObjetoDominio"/>
+<fullyQualifiedTypeName name="jet.android2.framework.dao.DaoException"/>
+<fullyQualifiedTypeName name="jet.android2.framework.dao.MontadorDaoI"/>
+<fullyQualifiedTypeName name="jet.android2.sincronismo.DataSourceRemoto"/>
+<fullyQualifiedTypeName name="jet.android2.res.BuildGradle"/>
+</qualifiedTypeNameHistroy>

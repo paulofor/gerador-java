@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 1 elements(s) to &apos;servico&apos;&#x0D;&#x0A;- Original project: &apos;GeradorJavaTemplate&apos;&#x0D;&#x0A;- Destination element: &apos;servico&apos;&#x0D;&#x0A;- Original element: &apos;RegraObjetoServico.javajet&apos;" description="Copy file" element1="templates/cs-dot-net-35/servico/RegraObjetoServico.javajet" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" log="templates/cs-dot-net-35/servico/RegraObjetoServico.javajet&#x09;true&#x09;true&#x09;RegraObjetoServicoImpl.javajet" policy="org.eclipse.jdt.ui.copyResources" stamp="1336647655163" target="/GeradorJavaTemplate/templates/cs-dot-net-35/servico" units="0" version="1.0"/>
+</session>

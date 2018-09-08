@@ -1,0 +1,476 @@
+<%@ jet package="jet.android.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ServicoSqliteBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+package <%= conf.getNamespace() %>.servico.sqlite.base;
+
+
+import java.util.List;
+import java.util.ArrayList;
+
+import br.com.digicom.servico.WifiServicoI;
+import br.com.digicom.network.WifiListenerReceiver;
+import br.com.digicom.servico.ServicoLocal;
+import br.com.digicom.multimidia.AudioRecurso;
+import br.com.digicom.multimidia.DigicomAudioPlayer;
+import br.com.digicom.activity.DigicomContexto;
+import br.com.digicom.dao.DaoException;
+import br.com.digicom.dao.DaoSincronismo;
+import br.com.digicom.log.DCLog;
+import br.com.digicom.modelo.DCIObjetoDominio;
+import <%= conf.getNamespace() %>.modelo.vo.FabricaVo;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.servico.*;
+import <%= conf.getNamespace() %>.app.TrataErro;
+import android.content.Context;
+import android.util.Log;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import <%= conf.getNamespace() %>.dao.<%= classe.getNomeParaClasse() %>DBHelper;
+import <%= conf.getNamespace() %>.servico.<%= classe.getNomeParaClasse() %>Servico;
+
+public abstract class <%= classe.getNomeParaClasse() %>ServicoSqliteBase extends  <%= classe.getNomeParaClasse() %>Servico 
+	implements ServicoLocal<<%= classe.getNomeParaClasse() %>>, WifiServicoI{
+
+
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> listaSincronizadaAlteracaoV2(Context contexto) {
+		throw new RuntimeException();
+	}
+
+
+	@Override
+	public void insertLocal(<%= classe.getNomeParaClasse() %> item) {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = getDao();
+		dao.insert(item);
+	}
+	
+	
+	public DaoSincronismo getDaoSincronismo() {
+		return (DaoSincronismo) getDao();
+	}
+	
+	
+	// Multimidia
+	// Multimidia
+	DigicomAudioPlayer player = null;
+	protected void reproduzAudioRaw(DigicomContexto ctx, AudioRecurso recurso) {
+		if (player==null)
+			player = new DigicomAudioPlayer();
+		player.reproduzAudioRaw(ctx, recurso);
+	}
+	
+	// Rede
+	// Registra Wifi
+	protected void registraWifi(Context ctx) {
+		WifiListenerReceiver wifi = new WifiListenerReceiver();
+		wifi.setServico(this);
+		wifi.registraReceiver(ctx);
+	}
+	
+	<% if (classe.ehUsuario() || classe.ehDispositivo()) { %>
+	private <%= classe.getNomeParaClasse() %> corrente = null;
+	public <%= classe.getNomeParaClasse() %> getCorrente() {
+		if (corrente==null) {
+			corrente = getDao().getCorrente();
+		}
+		return corrente;
+	}
+	<% } %>
+
+
+	private <%= classe.getNomeParaClasse() %>DBHelper dao = null; 
+	protected <%= classe.getNomeParaClasse() %>DBHelper getDao() {
+		if (dao==null) {
+			dao = new <%= classe.getNomeParaClasse() %>DBHelper();
+		}
+		return dao;
+	}
+	
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> listaSincronizadaAlteracao(Context contexto) {
+		List<<%= classe.getNomeParaClasse() %>> saida = null; 
+		try {
+			saida = getDao().getAllSinc();
+			DCLog.dStack(DCLog.SERVICO_OPERACAO_PADRAO, this, "listaSincronizadaAlteracao : " +  saida.size() + " itens" );
+		} catch (DaoException e) {
+			DCLog.e(DCLog.DATABASE_ERRO, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		return saida;
+	}
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> listaSincronizadaDependenteSoAlteracao(Context contexto) {
+		List<<%= classe.getNomeParaClasse() %>> saida = null; 
+		try {
+			saida = getDao().getAllSincSoAlteracao();
+			DCLog.dStack(DCLog.SERVICO_OPERACAO_PADRAO, this, "listaSincronizadaDependenteSoAlteracao : " +  saida.size() + " itens" );
+		} catch (DaoException e) {
+			DCLog.e(DCLog.DATABASE_ERRO, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		return saida;
+	}
+	
+	
+<%
+	Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra.hasNext()) {
+	RegraColecao regra = iteradorRegra.next();
+	if (regra.getAtivoFlex()) {
+%>
+	//public List<<%= classe.getNomeParaClasse() %>> <%= regra.getNome() %>(Context contexto){}
+<%
+	}
+	}
+%>
+	
+	
+
+
+
+
+	public List<<%= classe.getNomeParaClasse() %>> getAll(Context contexto) {
+		List<<%= classe.getNomeParaClasse() %>> saida = getDao().getAll();
+		DCLog.dStack(DCLog.SERVICO_OPERACAO_PADRAO, this, "getAll : " +  saida.size() + " itens" );
+		//dao.cleanup(); ??? que isso ?
+		return saida;
+	}
+	public List<<%= classe.getNomeParaClasse() %>> getAllTela(Context contexto) {
+		List<<%= classe.getNomeParaClasse() %>> saida = getDao().getAllTela();
+		DCLog.dStack(DCLog.SERVICO_OPERACAO_PADRAO, this, "getAllTela : " +  saida.size() + " itens" );
+		return saida;
+	}
+	public void alteraParaSincronizacao(<%= classe.getNomeParaClasse() %> item) {
+		//DCLog.d(DCLog.DATABASE_ADM, this, "updateSinc:" + item.JSon());
+		getDao().updateSinc(item);
+	}
+	public void excluiParaSincronizacao(<%= classe.getNomeParaClasse() %> item) {
+		getDao().deleteSinc(item);
+	}
+	public void insereParaSincronizacao(<%= classe.getNomeParaClasse() %> item) {
+		//DCLog.d(DCLog.DATABASE_ADM, this, "insertSinc:" + item.JSon());
+		<% if (classe.possuiRelacionamentoUsuario()) { %>
+		UsuarioServico usuarioSrv = FabricaServico.getInstancia().getUsuarioServico(FabricaServico.TIPO_SQLITE);
+		Usuario usuario = usuarioSrv.getCorrente();
+		item.setUsuario_Sincroniza(usuario);
+		<% } %>
+		getDao().insertSinc(item);
+		item.setSomenteMemoria(false);
+	}
+	public void insertAll(List<<%= classe.getNomeParaClasse() %>> lista, Context contexto) {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = getDao();
+		for (int i=0;i<lista.size();i++) {
+			dao.insert(lista.get(i));
+		}
+		//dao.cleanup();
+	}	
+	public void insertSincAll(List<<%= classe.getNomeParaClasse() %>> lista, Context contexto) {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = getDao();
+		for (int i=0;i<lista.size();i++) {
+			getDao().insertSinc(lista.get(i));
+		}
+		//dao.cleanup();
+	}
+	public void criaTabelaSincronizacao() {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = getDao();
+		dao.criaTabelaSincronizacao();
+	}
+	
+	public void CriaSeNaoExiste(Context contexto) {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = getDao();
+		dao.criaTabela();
+		dao.criaTabelaSincronizacao();
+	}	
+	public void dropCreate(Context contexto) {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = getDao();
+		dao.dropTable();
+		dao.criaTabela();
+		if (dao.tabelaSincVazia()) {
+			dao.dropTableSincronizacao();
+			dao.criaTabelaSincronizacao();
+		}
+		//dao.cleanup();
+	}
+		
+	<%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper relCorrente = iterador.next();
+	%>
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(Context contexto, long id) {
+		List<<%= classe.getNomeParaClasse() %>> saida = null; 
+		try {
+			saida = getDao().getPor<%= relCorrente.getNome() %>(contexto, id);
+			DCLog.dStack(DCLog.SERVICO_OPERACAO_PADRAO, this, "getPor<%= relCorrente.getNome() %> : " +  saida.size() + " itens" );
+		} catch (DaoException e) {
+			DCLog.e(DCLog.DATABASE_ERRO, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		return saida;
+	}
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(Context contexto, long id, int qtde) {
+		List<<%= classe.getNomeParaClasse() %>> saida = null; 
+		try {
+			saida = getDao().getPor<%= relCorrente.getNome() %>(contexto, id);
+			DCLog.dStack(DCLog.SERVICO_OPERACAO_PADRAO, this, "getPor<%= relCorrente.getNome() %> : " +  saida.size() + " itens" );
+		} catch (DaoException e) {
+			DCLog.e(DCLog.DATABASE_ERRO, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		return saida;
+	}
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id) {
+		List<<%= classe.getNomeParaClasse() %>> saida = null; 
+		try {
+			saida = getDao().getPor<%= relCorrente.getNome() %>(id);
+			DCLog.dStack(DCLog.SERVICO_OPERACAO_PADRAO, this, "getPor<%= relCorrente.getNome() %> : " +  saida.size() + " itens (<%= classe.getChaveW().getNomeCampoTabela() %>=" + id + ")" );
+		} catch (DaoException e) {
+			DCLog.e(DCLog.DATABASE_ERRO, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		return saida;
+	}
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id, int qtde) {
+		List<<%= classe.getNomeParaClasse() %>> saida = null; 
+		try {
+			saida = getDao().getPor<%= relCorrente.getNome() %>(id);
+			DCLog.dStack(DCLog.SERVICO_OPERACAO_PADRAO, this, "getPor<%= relCorrente.getNome() %> : " +  saida.size() + " itens" );
+		} catch (DaoException e) {
+			DCLog.e(DCLog.DATABASE_ERRO, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		return saida;
+	}
+	<%
+	}
+	%>
+
+	
+	// Servicos Wifi
+	@Override
+	public void entrouWifi() {
+	}
+
+	@Override
+	public void saiuWifi() {
+	}	
+	
+	// Itens Tela itemTela
+	private <%= classe.getNomeParaClasse() %> ultimoInicializado = null;
+	public final <%= classe.getNomeParaClasse() %> inicializaItemTela(DigicomContexto contexto) {
+		ultimoInicializado = inicializaItemTelaImpl(contexto);
+		return ultimoInicializado;
+	}
+	public final <%= classe.getNomeParaClasse() %> inicializaItemTela(<%= classe.getNomeParaClasse() %> itemTela, DigicomContexto contexto) {
+		ultimoInicializado = inicializaItemTelaImpl(itemTela, contexto);
+		return ultimoInicializado;
+	}
+	public final void finalizaItemTela(<%= classe.getNomeParaClasse() %> itemTela, boolean insercao, DigicomContexto contexto){
+		<% if (classe.possuiRelacionamentoUsuario()) { %>
+		if (insercao) {
+			UsuarioServico userSrv = FabricaServico.getInstancia().getUsuarioServico(FabricaServico.TIPO_SQLITE);
+			Usuario user = userSrv.getCorrente();
+			itemTela.setUsuario_Sincroniza(user);
+		}
+		<% } %>
+		finalizaItemTelaImpl(itemTela, insercao, contexto);
+	}
+	public final void processaItemTela(<%= classe.getNomeParaClasse() %> itemTela, DigicomContexto contexto){
+		processaItemTelaImpl(itemTela, contexto);
+	}
+	
+	public final <%= classe.getNomeParaClasse() %> getById(long id, Context contexto) {
+		return getDao().getById(id);
+	}
+	public final <%= classe.getNomeParaClasse() %> getById(long id) {
+		return getDao().getById(id);
+	}
+	
+	@Deprecated
+	protected <%= classe.getNomeParaClasse() %> inicializaItemTelaImpl(DigicomContexto contexto) {
+		throw new UnsupportedOperationException("Fazer override de inicializaItemTelaImpl em <%= classe.getNomeParaClasse() %>ServicoSqliteImpl ");
+	}
+	protected <%= classe.getNomeParaClasse() %> inicializaItemTelaImpl(<%= classe.getNomeParaClasse() %> itemTela, DigicomContexto contexto) {
+		throw new UnsupportedOperationException("Fazer override de inicializaItemTelaImpl em <%= classe.getNomeParaClasse() %>ServicoSqliteImpl ");
+	}
+	protected void finalizaItemTelaImpl(<%= classe.getNomeParaClasse() %> itemTela, boolean insercao, DigicomContexto contexto){
+		throw new UnsupportedOperationException("Fazer override de finalizaItemTelaImpl em <%= classe.getNomeParaClasse() %>ServicoSqliteImpl ");
+	}
+	protected void processaItemTelaImpl(<%= classe.getNomeParaClasse() %> itemTela, DigicomContexto contexto){
+		throw new UnsupportedOperationException("Fazer override de processaItemTelaImpl em <%= classe.getNomeParaClasse() %>ServicoSqliteImpl ");
+	}
+	
+	public <%= classe.getNomeParaClasse() %> ultimoInicializado(){
+		return ultimoInicializado;
+	}
+	
+	// Operacoes de Servico
+	<%
+	Iterator<RegraColecao> iteradorRegra2 = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra2.hasNext()) {
+	RegraColecao regra = iteradorRegra2.next();
+	if (regra.getAtivoFlex()) {
+		String tipoRetorno = null;
+		String param = null;
+		String paramConn = null;
+		String msgLog = null;
+		if (regra.getRetornaColecao()) {
+			tipoRetorno = "List<" + classe.getNomeParaClasse() + ">";
+			msgLog = " saida.size() + \" itens\" ";
+		} else {
+			tipoRetorno = classe.getNomeParaClasse();
+			msgLog = " (saida!=null?saida.toString():\"null\") ";
+		}
+		if (regra.getRecebeColecao()) { 
+			param = "DigicomContexto contexto , List<" + classe.getNomeParaClasse() + "> lista";
+			paramConn = "contexto, lista";
+			
+		} else {
+			param = "DigicomContexto contexto ";
+			paramConn = "contexto";
+			
+		}
+%>
+	public final <%= tipoRetorno %> <%= regra.getNome() %>(<%= param %>) {
+		<%= tipoRetorno %> saida = null;
+		try {
+			saida =  <%= regra.getNome() %>Impl(<%= paramConn %>);
+			DCLog.dStack(DCLog.SERVICO_OPERACAO, this, "<%= regra.getNome() %> : " + <%= msgLog %>);
+		} catch (Exception e) {
+			TrataErro.getInstancia().setErro(e);
+		}
+		return saida;
+	}
+	protected abstract <%= tipoRetorno %> <%= regra.getNome() %>Impl(<%= param %>) throws DaoException;
+<%
+	}
+	}
+%>
+	@Override
+	public void limpaSinc(List lista) {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = getDao();
+		List<<%= classe.getNomeParaClasse() %>> listaItem = lista;
+		for (<%= classe.getNomeParaClasse() %> item : listaItem) {
+			dao.limpaSinc(item);
+		}
+	}
+	
+	
+	<%
+	if (classe.isAssociativa()) {
+	%>
+	public void atualizaRelacionamento(List<DCIObjetoDominio> inclusao, List<DCIObjetoDominio> exclusao) {
+		for (DCIObjetoDominio item : inclusao) {
+		}
+		for (DCIObjetoDominio item : exclusao) {
+		}
+	}
+	<% 
+	Iterator<RelacionamentoWrapper> iteradorRel2 = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel2.hasNext()) {
+		RelacionamentoWrapper relCorrente2 = iteradorRel2.next();
+		RelacionamentoWrapper relOutro = classe.outroRel(relCorrente2);
+		if (relOutro.getClasseOposta().getId()!= relCorrente2.getClasseOposta().getId()) {
+	%>
+	
+	public void atualizaRelacionamento(<%= relOutro.getClasseOposta().getNomeParaClasse() %> item, List<DCIObjetoDominio> listaEscolhidos) {
+		<%= classe.getNomeParaClasse() %> novo = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+		List<<%= classe.getNomeParaClasse() %>> listaBanco = this.getPor<%= relOutro.getNomeRelacionamento() %><%= relOutro.getClasseOposta().getNomeParaClasse() %>(null, item.getId());
+		// lista insercao
+		List<<%= classe.getNomeParaClasse() %>> listaInsercao = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+		for (DCIObjetoDominio obj : listaEscolhidos) {
+			boolean existe = false;
+			for (<%= classe.getNomeParaClasse() %> rel : listaBanco) {
+				if (obj.getId()==rel.get<%= relCorrente2.getNomePropriedade() %>()) {
+					existe = true;
+					break;
+				}
+			}
+			if (!existe) {
+				<%= classe.getNomeParaClasse() %> novoRel = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+				novoRel.set<%= relOutro.getClasseOposta().getNomeParaClasse() %>_<%= relOutro.getNomeRelacionamento() %>(item);
+				novoRel.set<%= relCorrente2.getClasseOposta().getNomeParaClasse() %>_<%= relCorrente2.getNomeRelacionamento() %>((<%= relCorrente2.getClasseOposta().getNomeParaClasse() %>)obj);
+				listaInsercao.add(novoRel);
+			}
+		}
+		// *********************************************************************************************
+		// Lista Exclusao
+		List<<%= classe.getNomeParaClasse() %>> listaExclusao = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+		for (<%= classe.getNomeParaClasse() %> itemBanco : listaBanco) {
+			boolean existe = false;
+			for (DCIObjetoDominio obj : listaEscolhidos) {
+				if (obj.getId()==itemBanco.get<%= relCorrente2.getNomePropriedade() %>()) {
+					existe = true;
+					break;
+				}
+			}
+			if (!existe) {
+				listaExclusao.add(itemBanco);
+			}
+		}
+		//  ***********************************************************************************************
+		DCLog.d(DCLog.SERVICO_TRATAMENTO_DADOS_TELA, this, "ListaInsercao: " + listaInsercao.size());
+		DCLog.d(DCLog.SERVICO_TRATAMENTO_DADOS_TELA, this, "ListaExclusao: " + listaExclusao.size());
+		//  ***********************************************************************************************
+		<%= classe.getNomeParaClasse() %>DBHelper dao = getDao();
+		for (DCIObjetoDominio obj : listaInsercao) {
+			<%= classe.getNomeParaClasse() %> novoRel = (<%= classe.getNomeParaClasse() %>) obj;
+			novoRel.set<%= relOutro.getClasseOposta().getNomeParaClasse() %>_<%= relOutro.getNomeRelacionamento() %>(item);
+			dao.insertSinc(novoRel);
+		}	
+		for (<%= classe.getNomeParaClasse() %> obj : listaExclusao) {
+			dao.deleteSinc(obj);
+		}	
+	}
+	
+<%
+		} // if do auto relacionamento
+	}
+	}
+%>
+<%
+	if (classe.isAssociativa()) {
+	List<RelacionamentoWrapper> listaRel = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper rel1 = listaRel.get(0);
+	RelacionamentoWrapper rel2 = listaRel.get(1);
+%>
+	public boolean comparaRelacionamentoComItem(Object item, Object relacionamento) {
+		boolean saida = false;
+		if (item instanceof <%= rel1.getClasseOposta().getNomeParaClasse() %>) {
+			<%= rel1.getClasseOposta().getNomeParaClasse() %> obj = (<%= rel1.getClasseOposta().getNomeParaClasse() %>) item;
+			<%= classe.getNomeParaClasse() %> rel = (<%= classe.getNomeParaClasse() %>) relacionamento;
+			saida = rel.get<%= rel1.getNomePropriedade() %>()== obj.getId();
+		}
+		if (item instanceof <%= rel2.getClasseOposta().getNomeParaClasse() %>) {
+			<%= rel2.getClasseOposta().getNomeParaClasse() %> obj = (<%= rel2.getClasseOposta().getNomeParaClasse() %>) item;
+			<%= classe.getNomeParaClasse() %> rel = (<%= classe.getNomeParaClasse() %>) relacionamento;
+			saida = rel.get<%= rel2.getNomePropriedade() %>()== obj.getId();
+		}
+		return saida;
+	}
+<%
+	}
+%>
+
+<%
+	RelacionamentoWrapper relUsuario = classe.getRelacionamentoUsuario();
+%>
+
+	@Override
+	public <%= classe.getNomeParaClasse() %> atribuiUsuario(<%= classe.getNomeParaClasse() %> item) {
+		<% if (relUsuario!=null && !classe.ehDispositivo()) {%>
+		UsuarioServico userSrv = FabricaServico.getInstancia().getUsuarioServico(FabricaServico.TIPO_SQLITE);
+		Usuario usuario = userSrv.getCorrente();
+		item.setUsuario_Sincroniza(usuario);
+		<% } %>
+		return item;
+	}
+}

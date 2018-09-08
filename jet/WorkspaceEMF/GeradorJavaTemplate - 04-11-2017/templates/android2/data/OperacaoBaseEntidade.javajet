@@ -1,0 +1,30 @@
+<%@ jet package="jet.android2.data" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="OperacaoBaseEntidade" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.data.contract;
+
+import android.net.Uri;
+
+public abstract class <%= classe.getNomeParaClasse() %>OperacaoBase {
+	
+	
+<%
+ 	for (RegraColecao regra : classe.getListaRegraColecao()) {
+ 	if (regra.getAtivoFlex()) {
+%>
+ 	public final Uri build<%= regra.getNome() %>(<%= classe.getNomeParaClasse() %>Filtro filtro) {
+		String uriStr = <%= classe.getNomeParaClasse() %>Contract.getContentUri().toString() + "/<%= regra.getNome() %>/param?" + filtro.getParam();
+		return Uri.parse(uriStr);
+    }
+<%
+ 	}
+ 	}
+%>
+	
+}

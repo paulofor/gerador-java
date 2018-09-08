@@ -1,0 +1,10 @@
+<%@ jet package="jet.cs.web" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="PageAspx" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+<%= "" + (char) 60 %><%= "" + (char) 37 %><%= "" + (char) 64 %> Page language="c#" Codebehind="<%= classe.getNomeParaClasse() %>Page.aspx.cs" AutoEventWireup="false" Inherits="<%= conf.getNomePacoteAspxClasse() %>.<%= classe.getNomeParaClasse() %>" <%= "" + (char) 37 %><%= "" + (char) 62 %>
+<%= "" + (char) 60 %><%= "" + (char) 37 %><%= "" + (char) 61 %> saida <%= "" + (char) 37 %><%= "" + (char) 62 %>

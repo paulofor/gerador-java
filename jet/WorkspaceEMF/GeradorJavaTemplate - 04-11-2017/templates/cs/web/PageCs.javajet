@@ -1,0 +1,93 @@
+<%@ jet package="jet.cs.web" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="PageCs" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Web;
+using System.Web.SessionState;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using <%= conf.getNamespace() %>.regracolecao;
+using <%= conf.getNamespace() %>.modelo.mobile;
+using <%= conf.getNamespace() %>.web;
+using <%= conf.getNamespace() %>.modelo;
+using System.Collections.Specialized;
+
+namespace <%= conf.getNomePacoteAspxClasse() %>
+{
+	/// <summary>
+	/// Summary description for MobileDados.
+	/// </summary>
+	public class <%= classe.getNomeParaClasse() %>Page : FormBase
+	{
+
+		
+
+		private void montaSaida(ArrayList lista) 
+		{
+			saida = "{\"<%= classe.getNomeParaClasse() %>\" : [";
+			for (int i=0;i<lista.Count;i++) 
+			{
+				MobileDecoratorI mobile = (MobileDecoratorI)lista[i];
+				if (i>0) saida += " , ";
+				saida += mobile.Json;
+				
+			}
+			saida += "]}";
+		}
+		private void montaSaida(<%= classe.getNomeParaClasse() %> item) 
+		{
+			MobileDecoratorI mobile = (MobileDecoratorI) item;
+			saida = "{\"<%= classe.getNomeParaClasse() %>\" : [";
+			saida += mobile.Json;
+			saida += "]}";
+		}
+		
+
+		protected override void executaSaida(object sender, System.EventArgs e) 
+		{
+			
+			<%= classe.getNomeParaClasse() %>RegraColecao regraColecao = FabricaRegra.getInstancia().get<%= classe.getNomeParaClasse() %>RegraColecao();
+			NameValueCollection form = Request.QueryString;
+			String op = form["op"];
+<%
+			Iterator<FiltroColecao> iterador = classe.getListaFiltroColecao().iterator();
+			while (iterador.hasNext()) {
+			FiltroColecao filtro = iterador.next();
+			if (filtro.getIdEntidadeT()==0) {
+%>
+			regraColecao.getFiltro().<%= filtro.getNomeCampoFiltro() %>  = getForm<%= ConverteTipoCs.getTipoFiltro(filtro.getTipoCampoFiltro()) %>("<%= filtro.getNomeCampoFiltro() %>");
+<%
+			}
+			}
+%>
+			if (op=="ListaCorrente")
+				montaSaida(regraColecao.ListaCorrente());
+			
+			<%
+			Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+			while (iteradorRegra.hasNext()) {
+			RegraColecao regra = iteradorRegra.next();
+			if (regra.getAtivoCs()) {
+%>
+			if (op=="<%= regra.getNome() %>")
+				montaSaida(regraColecao.<%= regra.getNome() %>());
+<%
+			}
+			}
+%>	
+			
+		}
+
+		
+	}
+}

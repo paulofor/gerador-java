@@ -1,0 +1,32 @@
+<%@ jet package="jet.cpp.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cpp.* gerapp.modelo.* " 
+class="ServicoCpp" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapperCpp classe = (ClasseWrapperCpp) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+#include "StdAfx.h"
+#include "<%= classe.getNomeParaClasse() %>Servico.h"
+
+C<%= classe.getNomeParaClasse() %>Servico::C<%= classe.getNomeParaClasse() %>Servico(void)
+{
+}
+
+C<%= classe.getNomeParaClasse() %>Servico::~C<%= classe.getNomeParaClasse() %>Servico(void)
+{
+}
+
+<%
+	Iterator<RegraColecao> iteradorRegra2 = classe.getListaRegraColecao().iterator();
+	for (RegraColecao regra : classe.getListaRegraColecao()) {
+		if (regra.getAtivoCpp()) {
+%>
+<%= classe.getNomeEstrutura() %>*  C<%= classe.getNomeParaClasse() %>Servico::<%= regra.getNome() %>Impl(void)
+{
+	return nullptr;
+}
+<%
+		} // if
+	} // for
+%>

@@ -1,0 +1,22 @@
+<%@ jet package="jet.csdn35.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="RegraObjetoServicoImpl" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+using System;
+using <%= conf.getNamespace() %>.modelo;
+using <%= conf.getNamespace() %>.servico.regra.basico;
+
+namespace <%= conf.getNamespace() %>.servico.regra {
+
+
+
+public class <%= classe.getNomeParaClasse() %>RegraImpl : <%= classe.getNomeParaClasse() %>RegraBase{
+
+}
+
+}

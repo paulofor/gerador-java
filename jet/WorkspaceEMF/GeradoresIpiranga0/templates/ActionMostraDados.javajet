@@ -1,0 +1,78 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ActionMostraDados" %>
+<%
+%>
+<%EClass eClass = (EClass) argument;
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+ReferenceWrapper referencia = null;
+
+%>
+package <%= classe.getPacoteActionMostraDados() %>;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import <%= classe.getPacoteActionComum() %>.EditarAction;
+import <%= classe.getPacoteServiceI() %>.<%= classe.getNomeServiceI() %>;
+import <%= classe.getPacoteServiceI() %>.ServiceLocator;
+import <%= classe.getPacoteFormBean() %>.<%= classe.getNomeFormBean() %>;
+
+
+<%= "/*" %>
+<%= "* Classe gerada automaticamente, nao realizar alteracoes " %>
+<%= "*/" %>
+public abstract class <%= classe.getNomeActionMostraDados() %> extends EditarAction{
+
+	protected abstract  ActionErrors TrataCampos(<%= classe.getNomeServiceI() %> servico, <%= classe.getNomeFormBean() %> formBean, HttpServletRequest request);
+
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+	    HttpServletRequest request, HttpServletResponse response)
+	    throws Exception {
+
+		ActionErrors errors = null;
+		ActionForward forward = new ActionForward(); // return value
+
+		try {
+
+	    	<%= classe.getNomeFormBean() %> formBean = (<%= classe.getNomeFormBean() %>) form;
+			<%= classe.getNomeServiceI() %> servico = ServiceLocator.get<%= classe.getNomeServiceI() %>();	
+			errors = TrataCampos(servico, formBean, request);
+
+		} catch (Exception e) {
+
+		    // Report the error using the appropriate name and ID.
+			e.printStackTrace();
+		    errors.add("name", new ActionError("id"));
+
+		}
+
+		// If a message is required, save the specified key(s)
+		// into the request for use by the <struts:errors> tag.
+
+		if (!errors.isEmpty()) {
+	    	saveErrors(request, errors);
+
+		    // Forward control to the appropriate 'failure' URI (change name as desired)
+		    forward = mapping.findForward("erro");
+
+		} else {
+
+		    // Forward control to the appropriate 'success' URI (change name as desired)
+		    forward = mapping.findForward("sucesso");
+
+		}
+
+		// Finish with
+		return (forward);
+
+    }
+} 

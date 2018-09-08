@@ -1,0 +1,106 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="BuilderDao" %>
+<%
+//EClass eClass = (EClass) argument;  
+//ClassWrapper classe = new ClassWrapper();
+//classe.setClasse(eClass);
+ClassWrapper classe = (ClassWrapper) argument;
+AttributeWrapper atributo = new AttributeWrapper();
+ReferenceWrapper referencia = null;
+OperationWrapper operacao = new OperationWrapper();
+%>
+package <%= classe.getPacoteBuilderDao() %>;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import <%= classe.getPacoteUtil() %>.MetodoNaoImplementadoException;
+import <%= classe.getPacoteReferencias() %>.ObjetoI;
+import <%= classe.getPacoteReferencias() %>.BuilderI;
+import <%= classe.getPacoteModeloI() %>.*;
+import <%= classe.getPacoteBuilderDaoImpl() %>.*;
+
+<%= (classe.existeTipoData()?"import java.util.Date;":"") %>
+
+<%= "/*" %>
+<%= "* Classe gerada automaticamente, nao realizar alteracoes " %>
+<%= "*/" %>
+public abstract class <%= classe.getNomeBuilderDao() %> implements BuilderI  {
+	<%
+	if (classe.getSuperTipo()!=null) { 
+	%>
+	private BuilderI ascendente = null;
+	public <%= classe.getNomeBuilderDao() %>() {
+		ascendente = new <%= classe.getSuperTipo().getNomeBuilderDaoImpl() %>();
+	}
+	<% } %>
+	private int fluxo = 0;
+	public int getFluxo() {
+		return fluxo;
+	}
+	public void setFluxo(int novoFluxo) {
+		fluxo = novoFluxo;
+	}
+	
+	public void builder(ResultSet rs, ObjetoI objeto) {
+		<% if (classe.getSuperTipo()!=null) { %>
+		if (fluxo!=FLUXO_DESCENDENTE) {
+			ascendente.setFluxo(FLUXO_ASCENDENTE);
+			ascendente.builder(rs,objeto);
+		}
+		<% } %>
+		<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %> = (<%= classe.getNomeModeloI() %>) objeto;
+		try {
+			preparaBuilder(rs,<%= classe.getNomeVariavel() %>);
+		<%for (EAttribute item : classe.getEAttributes()) {
+			atributo.setAtributo(item); 
+		%>	<%= classe.getNomeVariavel() %>.<%= atributo.getSetter() %>(<%= atributo.getGetter() %>(rs));
+		<%}%>
+			<% 
+			List listaSubclasses = classe.getListaSubclasses();
+			for (int i=0;i<listaSubclasses.size();i++) {
+				ClassWrapper classeFilha = (ClassWrapper) listaSubclasses.get(i);
+			%>
+			if ((fluxo != FLUXO_ASCENDENTE) && (objeto instanceof <%= classeFilha.getNomeModeloI() %>)) {
+				BuilderI builderFilha = new <%= classeFilha.getNomeBuilderDaoImpl() %>();
+				builderFilha.setFluxo(FLUXO_DESCENDENTE);
+				builderFilha.builder(rs, <%= classe.getNomeVariavel() %>);
+			}
+			<%
+			}
+			%>
+			complementaBuilder(rs,<%= classe.getNomeVariavel() %>);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void complementaBuilder(ResultSet rs, <%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws SQLException {
+	}
+	public void preparaBuilder(ResultSet rs, <%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws SQLException {
+	}
+
+
+	<%for (AttributeWrapper item : classe.getListaAtributo()) { 
+		atributo = item;
+	%>
+	public <%= atributo.getTipo()%> <%= atributo.getGetter() %>(ResultSet rs)  throws SQLException {
+		// A implementacao desse metodo deve ser feita em <%= classe.getNomeBuilderDaoImpl() %>
+		<% if (atributo.tipoString()) { %>
+		//return rs.getString("<%= atributo.getNomeBD() %>");
+		<% } %>
+		<% if (atributo.tipoLong()) { %>
+		//return rs.getLong("<%= atributo.getNomeBD() %>");
+		<% } %>
+		<% if (atributo.tipoFloat()) { %>
+		//return rs.getFloat("<%= atributo.getNomeBD() %>");
+		<% } %>
+		<% if (atributo.tipoBoolean()) { %>
+		//if(rs.getString("<%= atributo.getNomeBD() %>").equals("S")) return true;
+		//else return false;
+		<% } %>
+		throw new MetodoNaoImplementadoException("<%= classe.getNomeBuilderDao() %>","<%= atributo.getGetter() %>(ResultSet rs)");
+	}
+	<%}%>
+}

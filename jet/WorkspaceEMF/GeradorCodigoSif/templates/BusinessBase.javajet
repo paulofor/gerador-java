@@ -1,0 +1,133 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* br.com.probid.gerador.execucao.wrappers.* br.com.probid.gerador.interfaces.*" 
+class="BusinessBase" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNomePacoteModel() %>.business.base;
+
+import <%= conf.getNomePacoteModel() %>.business.base.busUtils;
+import <%= conf.getNomePacoteModel() %>.bean.bean<%= classe.getNomeBasico() %>;
+import <%= conf.getNomePacoteModel() %>.dao.dao<%= classe.getNomeBasico() %>;
+import java.sql.Connection;
+import java.util.Vector;
+import java.sql.Timestamp;
+import <%= conf.getNomePacoteModel() %>.bean.*;
+
+public abstract class busBase<%= classe.getNomeBasico() %> extends busUtils {
+
+	public static final String LISTA_TELA = "listaTela<%= classe.getNomeBasico() %>";
+
+	public static dao<%= classe.getNomeBasico() %> getDao() {
+		return new dao<%= classe.getNomeBasico() %>();
+	}
+<%
+	Iterator listaOperacao = classe.getBase().getListaOperacao().iterator();
+	OperacaoWrapper opW = new OperacaoWrapper();
+	while (listaOperacao.hasNext()) {
+		OperacaoI operacao = (OperacaoI) listaOperacao.next();
+		opW.setBase(operacao);
+%>
+	public abstract <%= operacao.getTipoRetorno() %> <%= operacao.getNome() %>(<%= opW.getAssinaturaJava("Connection conn") %>);
+	public <%= operacao.getTipoRetorno() %> <%= operacao.getNome() %>(<%= opW.getAssinaturaJava() %>) {
+		dao<%= classe.getNomeBasico() %> dao = getDao();
+        Connection conn = getConexao();
+        try {
+            <%= (operacao.tipoVoid()?"":"return") %> <%= operacao.getNome() %>(<%= opW.getAssinaturaJavaSemTipo("conn") %>);
+        } finally {
+            commit(conn);
+            fechaConexao(conn);
+        }
+	}
+<%
+	}
+%>
+ 	public bean<%= classe.getNomeBasico() %> obtemPorChave(bean<%= classe.getNomeBasico() %> bean) {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        Connection conn = getConexao();
+        try {
+            return obtemPorChave(bean,conn);
+        } finally {
+            commit(conn);
+            fechaConexao(conn);
+        }
+ 	} 
+  	public bean<%= classe.getNomeBasico() %> obtemPorChave(bean<%= classe.getNomeBasico() %> bean, Connection conn) {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        return dao.obtemPorChave(bean,conn);
+ 	}
+ 	
+ 
+ 
+ 	public int criaListaItens(Vector<bean<%= classe.getNomeBasico() %>> listaBean) {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        Connection conn = getConexao();
+        try {
+            return criaListaItens(listaBean,conn);
+        } finally {
+            commit(conn);
+            fechaConexao(conn);
+        }
+ 	} 
+ 	public int criaListaItens(Vector<bean<%= classe.getNomeBasico() %>> listaBean, Connection conn) {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        return dao.criaListaItens(listaBean,conn);
+ 	} 
+ 	
+
+
+ 	public int criaItem(bean<%= classe.getNomeBasico() %> bean) {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        Connection conn = getConexao();
+        try {
+            return criaItem(bean,conn);
+        } finally {
+            commit(conn);
+            fechaConexao(conn);
+        }
+ 	} 
+ 	public int criaItem(bean<%= classe.getNomeBasico() %> bean,  Connection conn) {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        return dao.criaItem(bean,conn);
+ 	} 
+ 	
+
+
+ 	public void alteraItem(bean<%= classe.getNomeBasico() %> bean) {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        Connection conn = getConexao();
+        try {
+            alteraItem(bean,conn);
+        } finally {
+            commit(conn);
+            fechaConexao(conn);
+        }
+ 	} 
+ 	public void alteraItem(bean<%= classe.getNomeBasico() %> bean, Connection conn) {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        dao.alteraItem(bean,conn);
+ 	} 
+ 	
+ 	
+ 	
+ 	public Vector<bean<%= classe.getNomeBasico() %>> getLista() {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        Connection conn = getConexao();
+        try {
+            return getLista(conn);
+        } finally {
+            commit(conn);
+            fechaConexao(conn);
+        }
+ 	}
+ 	public Vector<bean<%= classe.getNomeBasico() %>> getLista(Connection conn) {
+ 		dao<%= classe.getNomeBasico() %> dao = getDao();
+        return dao.getLista(conn);
+ 	}
+ 	
+ 	 
+ 	  
+}
+

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://servicos" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://servicos" xmlns:intf="http://servicos" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://servicos" xmlns="http://www.w3.org/2001/XMLSchema">
+   <element name="getPalavra">
+    <complexType/>
+   </element>
+   <element name="getPalavraResponse">
+    <complexType>
+     <sequence>
+      <element name="getPalavraReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="getPalavraRequest">
+
+      <wsdl:part element="impl:getPalavra" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getPalavraResponse">
+
+      <wsdl:part element="impl:getPalavraResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="ServicoWeb">
+
+      <wsdl:operation name="getPalavra">
+
+         <wsdl:input message="impl:getPalavraRequest" name="getPalavraRequest"/>
+
+         <wsdl:output message="impl:getPalavraResponse" name="getPalavraResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="ServicoWebSoapBinding" type="impl:ServicoWeb">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="getPalavra">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getPalavraRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getPalavraResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="ServicoWebService">
+
+      <wsdl:port binding="impl:ServicoWebSoapBinding" name="ServicoWeb">
+
+         <wsdlsoap:address location="http://localhost:8080/TesteWebJBoss/services/ServicoWeb"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

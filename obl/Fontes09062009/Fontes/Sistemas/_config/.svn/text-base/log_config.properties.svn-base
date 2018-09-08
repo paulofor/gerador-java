@@ -1,0 +1,44 @@
+###########################################################################################
+##GLOBAL###################################################################################
+glb_LEVEL=DEBUG
+glb_APPENDER=FC
+glb_LAYOUTFILE=%d{dd MM yyyy HH:mm:ss} [%t] %-5p %c %x - %m%n
+glb_LAYOUTCONSOLE=[%t] %-5p %c %x - %m%n
+glb_LAYOUTJMS=%d{dd MM yyyy HH:mm:ss} %-5p %c %x - %m%n
+###########################################################################################
+##BATCH####################################################################################
+bat_LEVEL=DEBUG
+bat_APPENDER=F
+bat_LAYOUTFILE=%d{dd MM yyyy HH:mm:ss} [%t] %-5p %c %x - %m%n
+bat_LAYOUTCONSOLE=[%t] %-5p %c %x - %m%n
+bat_LAYOUTJMS=%d{dd MM yyyy HH:mm:ss} %-5p %c %x - %m%n
+############################################################################################
+##PRM#######################################################################################
+prm_LEVEL=DEBUG
+prm_APPENDER=FC
+prm_LAYOUTFILE=%d{dd MM yyyy HH:mm:ss} [%t] %-5p %c %x - %m%n
+prm_LAYOUTCONSOLE=[%t] %-5p %c %x - %m%n
+prm_LAYOUTJMS=%d{dd MM yyyy HH:mm:ss} %-5p %c %x - %m%n
+
+##ARQ#######################################################################################
+arq_LEVEL=DEBUG
+arq_APPENDER=F
+arq_LAYOUTFILE=%d{dd MM yyyy HH:mm:ss} [%t] %-5p %c %x - %m%n
+arq_LAYOUTCONSOLE=[%t] %-5p %c %x - %m%n
+arq_LAYOUTJMS=%d{dd MM yyyy HH:mm:ss} %-5p %c %x - %m%n
+############################################################################################
+
+##FIN#######################################################################################
+fin_LEVEL=DEBUG
+fin_APPENDER=FC
+fin_LAYOUTFILE=%d{dd MM yyyy HH:mm:ss} [%t] %-5p %c %x - %m%n
+fin_LAYOUTCONSOLE=[%t] %-5p %c %x - %m%n
+fin_LAYOUTJMS=%d{dd MM yyyy HH:mm:ss} %-5p %c %x - %m%n
+
+##OBL#######################################################################################
+obl_LEVEL=DEBUG
+obl_APPENDER=FC
+obl_LAYOUTFILE=%d{dd MM yyyy HH:mm:ss} [%t] %-5p %c %x - %m%n
+obl_LAYOUTCONSOLE=[%t] %-5p %c %x - %m%n
+obl_LAYOUTJMS=%d{dd MM yyyy HH:mm:ss} %-5p %c %x - %m%n
+

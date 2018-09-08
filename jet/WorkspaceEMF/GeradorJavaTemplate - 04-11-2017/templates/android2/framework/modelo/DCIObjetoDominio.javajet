@@ -1,0 +1,17 @@
+<%@ jet package="jet.android2.framework.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DCIObjetoDominio" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.framework.modelo;
+
+import android.content.ContentValues;
+
+public interface DCIObjetoDominio {
+	ContentValues getContentValues();
+    long getIdObj();
+}

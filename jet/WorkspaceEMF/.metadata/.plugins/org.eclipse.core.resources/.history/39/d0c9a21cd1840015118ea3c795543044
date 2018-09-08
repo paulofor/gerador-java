@@ -1,0 +1,88 @@
+<%@ jet package="jet.android2.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ListAdapterBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.template.lista;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import <%= conf.getNamespaceExtendido() %>.template.comum.ItemChoiceManager;
+
+/**
+ * Created by Gerador de Codigo.
+ */
+public abstract class <%= classe.getNomeParaClasse() %>ListAdapterBase extends RecyclerView.Adapter<<%= classe.getNomeParaClasse() %>ListViewHolderBase>{
+
+    protected Cursor mCursor;
+    private Context mContext;
+    private <%= classe.getNomeParaClasse() %>ListAdapterOnClickHandler mClickHandler;
+    private View mEmptyView;
+    private ItemChoiceManager mICM = null;
+
+    public <%= classe.getNomeParaClasse() %>ListAdapterBase(Context context, <%= classe.getNomeParaClasse() %>ListAdapterOnClickHandler dh, View emptyView, int choiceMode) {
+        mContext = context;
+        mClickHandler = dh;
+        mEmptyView = emptyView;
+        //mICM = new ItemChoiceManager(this);
+        //mICM.setChoiceMode(choiceMode);
+    }
+
+
+    @Override
+    public <%= classe.getNomeParaClasse() %>ListViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
+        if ( parent instanceof RecyclerView ) {
+            int layoutId = -1;
+            layoutId = getItemLayoutId();
+            View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+            view.setFocusable(true);
+            <%= classe.getNomeParaClasse() %>ListViewHolderBase saida = getViewHolder(view);
+            saida.setCursor(this.mCursor);
+            saida.setOnClickHandler(this.mClickHandler);
+            return saida;
+        } else {
+            throw new RuntimeException("Not bound to RecyclerView");
+        }
+    }
+
+    protected abstract int getItemLayoutId() ;
+    protected abstract <%= classe.getNomeParaClasse() %>ListViewHolderBase getViewHolder(View v);
+
+
+
+    @Override
+    public int getItemCount() {
+        if ( null == mCursor ) return 0;
+        return mCursor.getCount();
+    }
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        mICM.onRestoreInstanceState(savedInstanceState);
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        mICM.onSaveInstanceState(outState);
+    }
+
+
+    public void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        notifyDataSetChanged();
+        mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+    }
+
+    public static interface <%= classe.getNomeParaClasse() %>ListAdapterOnClickHandler {
+        void onClick(int id, <%= classe.getNomeParaClasse() %>ListViewHolderBase vh);
+    }
+}

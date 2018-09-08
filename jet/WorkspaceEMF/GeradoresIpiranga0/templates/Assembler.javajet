@@ -1,0 +1,74 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="Assembler" %>
+<%
+EClass eClass = (EClass) argument;  
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+AttributeWrapper atributo = new AttributeWrapper();
+ReferenceWrapper referencia = null;
+%>
+package <%= classe.getPacoteAssembler() %>;
+
+import java.util.List;
+import ipiranga.pdsi.framework.modelo.negocio.service.ServiceException;
+import <%= classe.getPacoteModeloI() %>.*;
+import <%= classe.getPacoteServiceI() %>.*;
+import <%= classe.getPacoteAssembledI() %>.<%= classe.getNomeAssembledI() %>;
+
+
+<%= "/*" %>
+<%= "* Classe gerada automaticamente, nao realizar alteracoes " %>
+<%= "*/" %>
+public abstract class <%= classe.getNomeAssembler() %> {
+
+	private ServiceLocator localizador = null;
+	public <%= classe.getNomeAssembler() %>() {
+		localizador = new ServiceLocator();
+	}
+	<%
+Iterator iterador = classe.getReferenceWrappersUnico().iterator();
+while (iterador.hasNext()) {
+	referencia = (ReferenceWrapper) iterador.next();
+%>
+	public void <%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) {
+		<%= referencia.getClasseOposta().getNomeServiceI() %> service = localizador.get<%= referencia.getClasseOposta().getNomeServiceI() %>();
+		<%= referencia.getClasseOposta().getNomeModeloI() %> <%= referencia.getClasseOposta().getNomeVariavel() %> = <%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(<%= classe.getNomeVariavel() %>,service);
+		//((<%= classe.getNomeAssembledI() %>)<%= classe.getNomeVariavel() %>).<%= referencia.getClasseOposta().getSetter() %>(<%= referencia.getClasseOposta().getNomeVariavel() %>);
+		<%= classe.getNomeVariavel() %>.<%= referencia.getClasseOposta().getSetter() %>(<%= referencia.getClasseOposta().getNomeVariavel() %>);
+		
+	}
+	//protected abstract <%= referencia.getClasseOposta().getNomeModeloI() %> <%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, <%= referencia.getClasseOposta().getNomeServiceI() %> service);
+	private final <%= referencia.getClasseOposta().getNomeModeloI() %> <%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, <%= referencia.getClasseOposta().getNomeServiceI() %> service) {
+		try {
+			return service.<%= referencia.getReferenciaOposta().metodoObtemServico() %>(<%= classe.getNomeVariavel() %>);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+
+<%}%>
+<%
+iterador = classe.getReferenceWrappersMultiplo().iterator();
+while (iterador.hasNext()) {
+	referencia = (ReferenceWrapper) iterador.next();
+%>
+	public void <%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) {
+		<%= referencia.getClasseOposta().getNomeServiceI() %> service = localizador.get<%= referencia.getClasseOposta().getNomeServiceI() %>();
+		List <%= referencia.getClasseOposta().getNomeVariavel() %> = <%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(<%= classe.getNomeVariavel() %>,service);
+		((<%= classe.getNomeAssembledI() %>)<%= classe.getNomeVariavel() %>).<%= referencia.getClasseOposta().getSetterMultiplo() %>(<%= referencia.getClasseOposta().getNomeVariavel() %>);
+	}
+	//protected abstract List <%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, <%= referencia.getClasseOposta().getNomeServiceI() %> service);
+	private final List <%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, <%= referencia.getClasseOposta().getNomeServiceI() %> service) {
+		try {
+			return service.<%= referencia.getReferenciaOposta().metodoObtemServico() %>(<%= classe.getNomeVariavel() %>);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+<%}%>
+}

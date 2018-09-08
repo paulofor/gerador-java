@@ -1,0 +1,57 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ServiceImpl" %>
+<%
+EClass eClass = (EClass) argument;  
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+AttributeWrapper atributo = new AttributeWrapper();
+ReferenceWrapper referencia = null;
+OperationWrapper operacao = new OperationWrapper();
+%>
+package <%= classe.getPacoteServiceImpl() %>;
+
+import <%= classe.getPacoteUtil() %>.MetodoNaoImplementadoException;
+import <%= classe.getPacoteServiceI() %>.<%= classe.getNomeServiceI() %>;
+import <%= classe.getPacoteServiceI() %>.ServiceException;
+import java.util.List;
+import <%= classe.getPacoteModeloI() %>.*;
+
+public class <%= classe.getNomeServiceImpl() %> <% if (classe.getSuperTipo()!=null) {%> extends <%= classe.getSuperTipo().getNomeServiceImpl() %> <% } %>implements <%= classe.getNomeServiceI() %>{
+
+<%for (EOperation item : eClass.getEOperations()) {%>
+<% operacao.setOperation(item); %>
+    public <%= operacao.getTipo() %> <%= operacao.getAssinatura() %> {
+    	throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","<%= operacao.getAssinatura() %>");
+    }
+<%}%>
+
+<%
+	Iterator iterador = classe.getReferenceWrappersOpostoUnico().iterator();
+	while(iterador.hasNext()) {
+		ReferenceWrapper reference = (ReferenceWrapper) iterador.next();
+%>
+	<%= "/***"  %>
+    <%= "* Gerada pelo relacionamento com o objeto de dominio " + reference.getClasseOposta().getNomeSimples() %> 
+    <%= "* @param item objeto a ser relacionado" %> 
+    <%= "*/ " %>
+	public <%= classe.getNomeModeloI() %> <%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> item) {
+		throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","<%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> item)");
+	}	
+<%	} %>
+
+<%
+	iterador = classe.getReferenceWrappersOpostoMultiplo().iterator();
+	while(iterador.hasNext()) {
+		ReferenceWrapper reference = (ReferenceWrapper) iterador.next();
+%>
+	<%= "/***"  %>
+    <%= "* Gerada pelo relacionamento com o objeto de dominio " + reference.getClasseOposta().getNomeSimples() %> 
+    <%= "* @param item objeto a ser relacionado" %> 
+    <%= "*/ " %>
+	public List <%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> item) {
+		throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","<%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> item)");
+	}
+<%	} %>
+
+}

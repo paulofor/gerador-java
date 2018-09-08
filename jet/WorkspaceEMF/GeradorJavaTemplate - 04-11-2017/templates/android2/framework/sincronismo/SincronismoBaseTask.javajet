@@ -1,0 +1,31 @@
+<%@ jet package="jet.android2.framework.sincronismo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="SincronismoBaseTask" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.framework.sincronismo;
+
+import android.content.Context;
+import android.os.AsyncTask;
+
+public abstract class SincronismoBaseTask extends AsyncTask<Context, Void, Void> {
+
+    public interface CallbackSincronismo {
+        public void onConcluido();
+    }
+
+    private CallbackSincronismo callbackSincronismo = null;
+
+    public void setCallback(CallbackSincronismo callback) {
+        callbackSincronismo = callback;
+    }
+    
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        callbackSincronismo.onConcluido();
+    }
+}

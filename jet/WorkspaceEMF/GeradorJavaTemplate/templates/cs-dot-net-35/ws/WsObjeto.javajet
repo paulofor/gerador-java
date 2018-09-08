@@ -1,0 +1,77 @@
+<%@ jet package="jet.csdn35.ws" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="WsObjeto" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.modelo.ws
+{
+
+	using <%= conf.getNamespace() %>.modelo.vo;
+	using <%= conf.getNamespace() %>.modelo;
+	using System.Collections;
+
+	public class <%= classe.getNomeParaClasse() %>ObjetoWs 
+	{
+	
+		<%
+		Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+		while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();
+		%>
+		private <%= atributo.getTipo() %> <%= atributo.getNomeVariavel() %>;
+		public <%= atributo.getTipo() %> <%= atributo.getNomePropriedade() %>
+		{
+			get { return <%= atributo.getNomeVariavel() %>; }
+			set { <%= atributo.getNomeVariavel() %> = value; }
+		}
+		<%
+		}
+		%>
+		
+		
+    	<%
+		Iterator<RelacionamentoWrapper> iteradorN = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iteradorN.hasNext()) {
+		RelacionamentoWrapper relac = iteradorN.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		private <%= classeOposta.getNomeParaClasse() %>ObjetoWs[] lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+		public <%= classeOposta.getNomeParaClasse() %>ObjetoWs[] Lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> 
+		{	
+			get {
+				return lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+			}
+			set {
+				lista<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = value;
+			}
+		} 
+ 		<%
+		}
+		%>
+		
+		<%
+		iteradorN = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iteradorN.hasNext()) {
+		RelacionamentoWrapper relac = iteradorN.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		private <%= classeOposta.getNomeParaClasse() %>ObjetoWs <%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+		public <%= classeOposta.getNomeParaClasse() %>ObjetoWs <%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> 
+		{	
+			get {
+				return <%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %>;
+			}
+			set {
+				<%= classeOposta.getNomeParaVariavel() %><%= relac.getNomeRelacionamento() %> = value;
+			}
+		} 
+ 		<%
+		}
+		%>
+	
+	}
+	
+}

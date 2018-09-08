@@ -1,0 +1,27 @@
+<%@ jet package="jet.android.res.layout" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ItemListaXml" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+<?xml version="1.0" encoding="utf-8"?>
+ <br.com.digicom.layout.ItemLista xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:minHeight="?android:attr/listPreferredItemHeight"
+     android:orientation="vertical">
+
+	<!--
+     <TextView
+         android:id="@+id/Nome"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_weight="2"
+         android:text="Nome"
+         android:layout_gravity="center"
+         android:textAppearance="?android:attr/textAppearanceMedium"
+         android:textStyle="bold" />
+	-->
+</br.com.digicom.layout.ItemLista>

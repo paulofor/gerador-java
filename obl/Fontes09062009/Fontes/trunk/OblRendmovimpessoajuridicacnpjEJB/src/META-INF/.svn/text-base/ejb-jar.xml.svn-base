@@ -1,0 +1,55 @@
+<?xml version = "1.0" encoding = "iso-8859-1"?>
+<ejb-jar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd" version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee">
+<enterprise-beans>
+<session>
+<description>Session Bean ( Stateless )</description>
+<display-name>RendmovimpessoajuridicacnpjCN</display-name>
+<ejb-name>RendmovimpessoajuridicacnpjCN</ejb-name>
+<home>com.br.brasilcap.cap.obl.rendmovimpessoajuridicacnpj.ejbsession.RendmovimpessoajuridicacnpjCNHome</home>
+<remote>com.br.brasilcap.cap.obl.rendmovimpessoajuridicacnpj.ejbsession.RendmovimpessoajuridicacnpjCN</remote>
+<ejb-class>com.br.brasilcap.cap.obl.rendmovimpessoajuridicacnpj.ejbsession.RendmovimpessoajuridicacnpjCNBean</ejb-class>
+<session-type>Stateless</session-type>
+<transaction-type>Container</transaction-type>
+<!--
+<resource-ref>
+<res-type>jdbc/oracObl</res-type>
+<res-type>javax.sql.DataSource</res-type>
+<res-auth>Container</res-auth>
+</resource-ref>
+-->
+</session>
+<session>
+<description>Session Bean ( Stateless )</description>
+<display-name>RendmovimpessoajuridicacnpjCD</display-name>
+<ejb-name>RendmovimpessoajuridicacnpjCD</ejb-name>
+<home>com.br.brasilcap.cap.obl.rendmovimpessoajuridicacnpj.ejbsession.RendmovimpessoajuridicacnpjCDHome</home>
+<remote>com.br.brasilcap.cap.obl.rendmovimpessoajuridicacnpj.ejbsession.RendmovimpessoajuridicacnpjCD</remote>
+<ejb-class>com.br.brasilcap.cap.obl.rendmovimpessoajuridicacnpj.ejbsession.RendmovimpessoajuridicacnpjCDBean</ejb-class>
+<session-type>Stateless</session-type>
+<transaction-type>Container</transaction-type>
+<!--
+<resource-ref>
+<res-type>jdbc/oracObl</res-type>
+<res-type>javax.sql.DataSource</res-type>
+<res-auth>Container</res-auth>
+</resource-ref>
+-->
+</session>
+</enterprise-beans>
+<assembly-descriptor>
+<container-transaction>
+<method>
+<ejb-name>RendmovimpessoajuridicacnpjCN</ejb-name>
+<method-name>*</method-name>
+</method>
+<trans-attribute>NotSupported</trans-attribute>
+</container-transaction>
+<container-transaction>
+<method>
+<ejb-name>RendmovimpessoajuridicacnpjCD</ejb-name>
+<method-name>*</method-name>
+</method>
+<trans-attribute>Required</trans-attribute>
+</container-transaction>
+</assembly-descriptor>
+</ejb-jar>

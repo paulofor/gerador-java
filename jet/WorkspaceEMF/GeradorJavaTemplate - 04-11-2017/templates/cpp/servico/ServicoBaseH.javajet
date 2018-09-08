@@ -1,0 +1,36 @@
+<%@ jet package="jet.cpp.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cpp.* gerapp.modelo.* " 
+class="ServicoBaseH" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapperCpp classe = (ClasseWrapperCpp) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+#pragma once
+#include "..\digicom\ServicoBase.h"
+#include "..\digicom\DaoConexao.h"
+#include "<%= classe.getNomeParaClasse() %>Dao.h"
+#include "estruturaobjeto.h"
+
+class C<%= classe.getNomeParaClasse() %>ServicoBase : public CServicoBase
+{
+public:
+	C<%= classe.getNomeParaClasse() %>ServicoBase(void);
+	~C<%= classe.getNomeParaClasse() %>ServicoBase(void);
+protected:
+	C<%= classe.getNomeParaClasse() %>Dao* getDao();
+	
+<%
+	Iterator<RegraColecao> iteradorRegra2 = classe.getListaRegraColecao().iterator();
+	for (RegraColecao regra : classe.getListaRegraColecao()) {
+		if (regra.getAtivoCpp()) {
+%>
+public: 
+	<%= classe.getNomeEstrutura() %>*  <%= regra.getNome() %>();
+	<%= classe.getNomeEstrutura() %>*  <%= regra.getNome() %>(CDaoConexao* conexao);
+	virtual <%= classe.getNomeEstrutura() %>*  <%= regra.getNome() %>Impl(CDaoConexao* conexao);
+<%
+		} // if
+	} // for
+%>
+};

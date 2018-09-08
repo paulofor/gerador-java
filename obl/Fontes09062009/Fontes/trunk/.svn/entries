@@ -1,0 +1,200 @@
+9
+
+dir
+743
+file://Srv11/Repositories/Brasilcap/Informe%20de%20Rendimentos/Fontes/trunk
+file://Srv11/Repositories/Brasilcap
+
+
+
+2009-06-03T16:44:23.880757Z
+743
+paulo.forestieri
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+e535e3ab-539c-9647-a80e-044fcfbe2e3f
+
+
+
+
+
+
+0
+
+OblRendmovimpessoajuridicacnpjEJB
+dir
+
+OblRendparceirovendapessoafisicaWEB
+dir
+
+OblAutorizacaoresponsavelEJB
+dir
+
+OblConsultarotinasWEB
+dir
+
+OblConferenciasituacaoEJB
+dir
+
+OblSolicitacaoacertoWEB
+dir
+
+OblControlemovimentoirrfEJB
+dir
+
+OblControlebasegraficaWEB
+dir
+
+OblAutorizacaoprocesWEB
+dir
+
+OblTrataresponsavelWEB
+dir
+
+OblConsultacodretencaoWEB
+dir
+
+OblControleretornoparceirovendaWEB
+dir
+
+OblSolicitacaosegundaviaWEB
+dir
+
+OblAutorizacaoparamWEB
+dir
+
+OblRendparceirovendapessoajuridicaEJB
+dir
+
+OblConsultaobrigacaolegalWEB
+dir
+
+OblRendparceirovendapessoafisicaEJB
+dir
+
+OblTrataparametrosWEB
+dir
+
+OblConsultarotinasEJB
+dir
+
+OblSolicitacaoacertoEJB
+dir
+
+OblSolicitacaoverificacaofuturaWEB
+dir
+
+AplicacaoOBL
+dir
+
+OblControlebasegraficaEJB
+dir
+
+OblAutorizacaoprocesEJB
+dir
+
+OblTrataresponsavelEJB
+dir
+
+OblConsultaperiodicidadesWEB
+dir
+
+OblTratacodretencaoWEB
+dir
+
+OblConsultacodretencaoEJB
+dir
+
+OblRendmovimpessoafisicacpfWEB
+dir
+
+OblControlebaseparceirovendaWEB
+dir
+
+OblSolicitacaosegundaviaEJB
+dir
+
+OblControleretornoparceirovendaEJB
+dir
+
+OblAutorizacaoparamEJB
+dir
+
+OblConsultaobrigacaolegalEJB
+dir
+
+OblTrataprocesWEB
+dir
+
+OblRendgraficapessoajuridicaWEB
+dir
+
+OblRendmovimpessoajuridicaccorrenteWEB
+dir
+
+OblTrataparametrosEJB
+dir
+
+OblRendgraficapessoafisicaWEB
+dir
+
+OblRendmovimpessoafisicaccorrenteWEB
+dir
+
+OblSolicitacaoverificacaofuturaEJB
+dir
+
+OblRendmovimpessoajuridicacnpjWEB
+dir
+
+OblAutorizacaoresponsavelWEB
+dir
+
+OblConsultaperiodicidadesEJB
+dir
+
+OblConferenciasituacaoWEB
+dir
+
+OblTratacodretencaoEJB
+dir
+
+OblControlemovimentoirrfWEB
+dir
+
+OblControlebaseparceirovendaEJB
+dir
+
+OblRendmovimpessoafisicacpfEJB
+dir
+
+OblTrataprocesEJB
+dir
+
+OblRendgraficapessoajuridicaEJB
+dir
+
+OblRendmovimpessoajuridicaccorrenteEJB
+dir
+
+OblRendparceirovendapessoajuridicaWEB
+dir
+
+OblRendgraficapessoafisicaEJB
+dir
+
+OblRendmovimpessoafisicaccorrenteEJB
+dir
+

@@ -1,0 +1,20 @@
+<%@ jet package="jet.android.data" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ContractBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.data.base;
+
+import android.content.ContentResolver;
+import android.net.Uri;
+import android.provider.BaseColumns;
+
+public abstract class <%= classe.getNomeParaClasse() %>BaseContract {
+
+	
+	
+}

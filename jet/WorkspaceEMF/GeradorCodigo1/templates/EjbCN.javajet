@@ -1,0 +1,26 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* " 
+class="EjbCN" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseFuncionalidade classe = (ClasseFuncionalidade) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= classe.getPacoteEjb() %>;
+
+import com.br.brasilcap.arq.glb.persistencia.standard.AbstractDTO;
+
+import com.br.brasilcap.arq.glb.util.standard.BusinessException;
+
+import java.rmi.RemoteException;
+
+import javax.ejb.EJBObject;
+
+import javax.sql.RowSet;
+
+public interface <%= classe.getNomeParaClasse() %>CN extends EJBObject {
+    RowSet listaParametros(AbstractDTO o, 
+                           Object credencial) throws BusinessException, 
+                                                     RemoteException;
+
+}

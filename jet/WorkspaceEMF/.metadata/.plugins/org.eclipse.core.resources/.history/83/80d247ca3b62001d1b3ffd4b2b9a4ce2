@@ -1,0 +1,260 @@
+package aplicacao;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Iterator;
+
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+
+import util.Comparador;
+import util.wrappers.AplicacaoWrapper;
+import util.wrappers.ClassWrapper;
+
+import compiledtemplates.ActionPesquisar;
+import compiledtemplates.AssembledI;
+import compiledtemplates.AssembledVo;
+import compiledtemplates.Assembler;
+import compiledtemplates.AssemblerImpl;
+import compiledtemplates.BuilderDao;
+import compiledtemplates.BuilderDaoImpl;
+import compiledtemplates.DaoI;
+import compiledtemplates.Derivada;
+import compiledtemplates.DerivadaI;
+import compiledtemplates.FormBean;
+import compiledtemplates.HtmlClassesEntidade;
+import compiledtemplates.ModeloI;
+import compiledtemplates.ModeloVo;
+import compiledtemplates.MySqlDao;
+import compiledtemplates.OracleDao;
+import compiledtemplates.ServiceI;
+import compiledtemplates.ServiceImpl;
+import compiledtemplates.ServiceLocator;
+
+public class Gerador {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		AplicacaoWrapper aplicacao = new AplicacaoWrapper();
+		aplicacao.setArquivoEcore("C:/WorkspaceEMF/ImportacaoModelo/model/ModeloFidelizacao.ecore");
+		aplicacao.setNomeAplicacao("fidelizacao");
+		aplicacao.setPathWorkspace("C:/FidelizacaoWorkspace/");
+		aplicacao.setNomeProjetoWorkspace("PrototipoFidelizacao0_3");
+			
+		
+		
+		ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
+		Resource resource = resourceSet.getResource(URI.createFileURI(aplicacao.getArquivoEcore()),true);
+		
+		EPackage pacote = (EPackage) resource.getContents().get(0);
+		EList<EClassifier> listaClassificadores = pacote.getEClassifiers();
+		
+		
+		//EList listaGeral = pacote.getEClassifiers();
+		ECollections.sort(pacote.getEClassifiers(), new Comparador());
+		ClassWrapper classeWrapper = new ClassWrapper();
+		Iterator<EClassifier> iterador = listaClassificadores.iterator();
+		
+		limpaDiretorio(ClassWrapper.getPathModeloI(), aplicacao);
+		limpaDiretorio(ClassWrapper.getPathAssembledI(), aplicacao);
+		limpaDiretorio(ClassWrapper.getPathServiceI(), aplicacao);
+		limpaDiretorio(ClassWrapper.getPathBuilderDao(), aplicacao);
+		limpaDiretorio(ClassWrapper.getPathFormBean(), aplicacao);
+		limpaDiretorio(ClassWrapper.getPathActionPesquisar(), aplicacao);
+		
+		//limpaDiretorioEmUso(ClassWrapper.getPathServiceImpl(), aplicacao,listaClassificadores);
+		
+		try{
+			String saida = ServiceLocator.create("\n").generate(pacote);
+			geraArquivoFonte(saida,aplicacao, ClassWrapper.getPathServiceI() + "/ServiceLocator");
+			
+			saida = HtmlClassesEntidade.create("\n").generate(pacote);
+			geraArquivoDocumentoHtml(saida,aplicacao,"/ClassesEntidades");
+
+			
+		} catch(Exception e){
+			//JOptionPane.showMessageDialog(null,e.getMessage(),"Atenção",JOptionPane.WARNING_MESSAGE);
+			e.printStackTrace();
+		}
+		
+		while (iterador.hasNext()) {
+			EClass classe = (EClass) iterador.next();
+			classeWrapper.setClasse(classe);
+			
+			System.out.println("Gerando " + classe.getName() + "...");
+			String saida;
+			
+			try{
+				
+				saida = ModeloI.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathModeloI() + "/" + classeWrapper.getNomeModeloI());
+					
+				//limpaDiretorio(ClassWrapper.getPathModeloVo(), aplicacao);
+				saida = ModeloVo.create("\n").generate(classe);
+				geraArquivoFonteInicial(saida,aplicacao, classeWrapper.getPathModeloVo() + "/" + classeWrapper.getNomeModeloVo());
+				
+				
+				saida = AssembledI.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathAssembledI() + "/" + classeWrapper.getNomeAssembledI());
+				
+				//limpaDiretorio(ClassWrapper.getPathAssembledVo(), aplicacao);
+				saida = AssembledVo.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathAssembledVo() + "/" + classeWrapper.getNomeAssembledVo());
+				
+				//limpaDiretorio(ClassWrapper.getPathAssembler(), aplicacao);
+				saida = Assembler.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathAssembler() + "/" + classeWrapper.getNomeAssembler());
+				
+				saida = AssemblerImpl.create("\n").generate(classe);
+				geraArquivoFonteInicial(saida,aplicacao, classeWrapper.getPathAssemblerImpl() + "/" + classeWrapper.getNomeAssemblerImpl());
+				
+				
+				saida = ServiceI.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathServiceI() + "/" + classeWrapper.getNomeServiceI());
+				
+				saida = DaoI.create("\n").generate(classe);
+				geraArquivoFonteInicial(saida,aplicacao, classeWrapper.getPathDaoI() + "/" + classeWrapper.getNomeDaoI());
+				
+				saida = ServiceImpl.create("\n").generate(classe);
+				geraArquivoFonteInicial(saida,aplicacao, classeWrapper.getPathServiceImpl() + "/" + classeWrapper.getNomeServiceImpl());
+				
+				saida = OracleDao.create("\n").generate(classe);
+				geraArquivoFonteInicial(saida,aplicacao, classeWrapper.getPathOracleDao() + "/" + classeWrapper.getNomeOracleDao());
+
+				saida = MySqlDao.create("\n").generate(classe);
+				geraArquivoFonteInicial(saida,aplicacao, classeWrapper.getPathMySqlDao() + "/" + classeWrapper.getNomeMySqlDao());
+
+		
+				//saida = DaoLocator.create("\n").generate(pacote);
+				//geraArquivoFonte(saida,aplicacao, classeWrapper.getPathDaoI() + "/DaoLocator");
+	
+				
+				saida = BuilderDao.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathBuilderDao() + "/" + classeWrapper.getNomeBuilderDao());
+				
+				saida = BuilderDaoImpl.create("\n").generate(classe);
+				geraArquivoFonteInicial(saida,aplicacao, classeWrapper.getPathBuilderDaoImpl() + "/" + classeWrapper.getNomeBuilderDaoImpl());
+
+				
+				saida = FormBean.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathFormBean() + "/" + classeWrapper.getNomeFormBean());
+				
+				saida = ActionPesquisar.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathActionPesquisar() + "/" + classeWrapper.getNomeActionPesquisar());
+				
+				
+				saida = Derivada.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathDerivada() + "/" + classeWrapper.getNomeDerivada());
+				
+				saida = DerivadaI.create("\n").generate(classe);
+				geraArquivoFonte(saida,aplicacao, classeWrapper.getPathDerivadaI() + "/" + classeWrapper.getNomeDerivadaI());
+		
+			}
+			catch(Exception e){
+				//JOptionPane.showMessageDialog(null,e.getMessage(),"Atenção",JOptionPane.WARNING_MESSAGE);
+				e.printStackTrace();
+			}
+	
+		}
+		System.out.println("Finalizado com " + listaClassificadores.size() + " objetos tratados.");
+		
+		
+	}
+	
+	private static void limpaDiretorioEmUso(String diretorio, AplicacaoWrapper aplicacao, EList<EClassifier> listaClasses) {
+		boolean sucesso;
+		String path = aplicacao.getPathWorkspace() + aplicacao.getNomeProjetoWorkspace() + "/src/" + diretorio ;
+		File dir = new File(path); 
+		String[] children = dir.list(); 
+		ClassWrapper classeWrapper = new ClassWrapper();
+		boolean mantem = false;
+		try{ 
+			System.out.println("Limpando " + path + "...");
+			for (int i=0; i<children.length; i++) 
+			{ 
+				mantem = false;
+				String nomeArquivo = children[i];
+				Iterator<EClassifier> iterador = listaClasses.iterator();
+				while (iterador.hasNext()) {
+					EClass classe = (EClass) iterador.next();
+					classeWrapper.setClasse(classe);
+					System.out.println("Comparando..." + nomeArquivo + " e " + classeWrapper.getNomeServiceImpl() + ".java");
+					if (nomeArquivo.compareTo(classeWrapper.getNomeServiceImpl() + ".java")==0) {
+						mantem = true;
+						break;
+					}
+				}
+				if (!mantem) {
+					System.out.println("Não mantem..." + nomeArquivo);
+				}
+				//String arquivo = path + "/"  + children[i]; 
+				//File file = new File(arquivo);
+				//if (file.isFile()) sucesso = file.delete(); 
+			} 
+		} catch(Exception e) { 
+			System.out.println("Error in Reading data" + e.getMessage()); 
+		} 
+		finally { 
+			
+		} 
+	}
+	
+	private static void limpaDiretorio(String diretorio, AplicacaoWrapper aplicacao) {
+		boolean sucesso;
+		String path = aplicacao.getPathWorkspace() + aplicacao.getNomeProjetoWorkspace() + "/src/" + diretorio ;
+		File dir = new File(path); 
+		String[] children = dir.list(); 
+		try{ 
+			System.out.println("Limpando " + path + "...");
+			for (int i=0; i<children.length; i++) 
+			{ 
+				String arquivo = path + "/"  + children[i]; 
+				File file = new File(arquivo);
+				if (file.isFile()) sucesso = file.delete(); 
+			} 
+		} catch(Exception e) { 
+			System.out.println("Error in Reading data" + e.getMessage()); 
+		} 
+		finally { 
+			
+		} 
+	}
+	
+	private static void geraArquivoDocumentoHtml(String texto, AplicacaoWrapper aplicacao, String nomeArquivo) throws IOException {
+		String arquivo = aplicacao.getPathWorkspace() + aplicacao.getNomeProjetoWorkspace() + "/doc/" + nomeArquivo + ".html";
+		FileWriter x = new FileWriter(arquivo); 
+		x.write(texto); 
+		x.close(); 
+	}
+	
+	private static void geraArquivoFonte(String texto, AplicacaoWrapper aplicacao, String nomeArquivo) throws IOException {
+		String arquivo = aplicacao.getPathWorkspace() + aplicacao.getNomeProjetoWorkspace() + "/src/" + nomeArquivo + ".java";
+		FileWriter x = new FileWriter(arquivo); 
+		x.write(texto); 
+		x.close(); 
+	}
+	
+	private static void geraArquivoFonteInicial(String texto, AplicacaoWrapper aplicacao, String nomeArquivo) throws IOException {
+		String arquivo = aplicacao.getPathWorkspace() + aplicacao.getNomeProjetoWorkspace() + "/src/" + nomeArquivo + ".java";
+		File file = new File(arquivo);
+		if (!file.exists()) {
+			FileWriter x = new FileWriter(arquivo); 
+			x.write(texto); 
+			x.close(); 
+		}
+	}
+
+}

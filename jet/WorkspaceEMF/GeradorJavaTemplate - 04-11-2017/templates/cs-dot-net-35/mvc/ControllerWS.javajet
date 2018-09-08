@@ -1,0 +1,175 @@
+<%@ jet package="jet.csdn35.mvc" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="ControllerWS" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.mvc.controller {
+
+using System;
+using System.Web.Mvc;
+using System.Collections.Generic;
+using <%= conf.getNamespace() %>.mvc.controller;
+using <%= conf.getNamespace() %>.servico;
+using <%= conf.getNamespace() %>.servico.filtro;
+using <%= conf.getNamespace() %>.modelo;
+using <%= conf.getNamespace() %>.modelo.vo;
+using System.Web.Script.Serialization;
+using br.com.digicom.lib.util;
+
+
+public abstract class <%= classe.getNomeParaClasse() %>WSBaseController : BaseController {
+
+		protected <%= classe.getNomeParaClasse() %>Servico servico =
+            FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico
+            (FabricaServico.LOCAL);
+
+		/*
+		public virtual ActionResult ListaSincronizadaUsuario(int versao, string tmp = null, string cod=null)
+        {
+        	if (tmp!=null) {
+	        	tmp = tmp.Trim();
+    	        if (tmp[0] == '+') tmp = tmp.Substring(1);
+    	    }
+            List<<%= classe.getNomeParaClasse() %>> lista = servico.listaSincronizadaUsuario(tmp,cod);
+            string json = servico.listaJSon(lista);
+            ViewData["JSON"] = json;
+            return PartialView("ListaSincronizada");
+        }
+        public virtual ActionResult ListaSincronizadaUsuarioV2(int versao, string tmp = null, string cod=null)
+        {
+        	if (tmp!=null) {
+	        	tmp = tmp.Trim();
+    	        if (tmp[0] == '+') tmp = tmp.Substring(1);
+    	    }
+            List<<%= classe.getNomeParaClasse() %>> lista = servico.listaSincronizadaUsuarioV2(tmp,cod);
+            string json = servico.listaJSon(lista);
+            ViewData["JSON"] = json;
+            return PartialView("ListaSincronizada");
+        }
+		*/
+
+		public virtual ActionResult ListaSincronizada(int versao, string tmp = null, string cod=null, string app = null)
+        {
+        	LogArquivo.Display("ListaSincronizada <%= classe.getNomeParaClasse() %> (tmp=" + tmp + " versao=" + versao + ")");
+        	if (tmp!=null) {
+	        	tmp = tmp.Trim();
+    	        if (tmp[0] == '+') tmp = tmp.Substring(1);
+    	    }
+            List<<%= classe.getNomeParaClasse() %>> lista = servico.listaSincronizada(tmp,cod, app);
+            string json = servico.listaJSon(lista);
+            ViewData["JSON"] = json;
+            return PartialView("ListaSincronizada");
+        }
+        
+		public virtual ActionResult ListaSincronizadaAlteracao(string lista, int versao, string tmp = null, string cod=null)
+        {
+	        if (tmp!=null) {
+	        	tmp = tmp.Trim();
+    	        if (tmp[0] == '+') tmp = tmp.Substring(1);
+    	    }
+            var jss = new JavaScriptSerializer();
+            List<<%= classe.getNomeParaClasse() %>Vo> listaSinc = (List<<%= classe.getNomeParaClasse() %>Vo>) jss.Deserialize<List<<%= classe.getNomeParaClasse() %>Vo>>(lista);
+            List<<%= classe.getNomeParaClasse() %>>  listaSrv = RealizaCast(listaSinc);
+            servico.recebeListaSincronizada(listaSrv, tmp, cod, versao);
+            ViewData["JSON"] = "Recebi lista com " + listaSinc.Count + " elemento(s)";
+            return PartialView("ListaSincronizada");
+        }
+
+        private List<<%= classe.getNomeParaClasse() %>> RealizaCast(List<<%= classe.getNomeParaClasse() %>Vo> listaEntrada)
+        {
+            List<<%= classe.getNomeParaClasse() %>> saida = new List<<%= classe.getNomeParaClasse() %>>();
+            foreach (<%= classe.getNomeParaClasse() %> item in listaEntrada)
+            {
+            	/*
+           		AjustaObjetoRecebido(item);
+           		// SemChaveEstrangeira
+	<%
+		Iterator<RelacionamentoWrapper> iteradorN = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iteradorN.hasNext()) {
+		RelacionamentoWrapper relac = iteradorN.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+				if (item.ExisteLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>) 
+				{
+					List<<%= classeOposta.getNomeParaClasse() %>> lista = item.Lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>;
+					<%= classeOposta.getNomeParaClasse() %>WSBaseController.AjustaListaRecebida(lista);
+				}
+ 		<%
+		}
+	%>
+				*/
+				saida.Add((<%= classe.getNomeParaClasse() %>)item);
+            }
+            return saida;
+        }
+        
+        public static void AjustaListaRecebida(List<<%= classe.getNomeParaClasse() %>> lista)
+        {
+            foreach (<%= classe.getNomeParaClasse() %> item in lista)
+            {
+                AjustaObjetoRecebido(item);
+            }
+        }
+        
+        public static void AjustaObjetoRecebido(<%= classe.getNomeParaClasse() %> item)
+        {
+             <%
+				Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+				while (iterador.hasNext()) {
+				AtributoTotalI atributo = iterador.next();
+				if (atributo.ehData() && atributo.ehHora()) {
+				%>
+				item.<%= atributo.getNomePropriedade() %> = AjustaDataHora(item.<%= atributo.getNomePropriedade() %>);<% 
+				}
+				if (atributo.ehData() && !atributo.ehHora()) {
+				%>
+				item.<%= atributo.getNomePropriedade() %> = AjustaData(item.<%= atributo.getNomePropriedade() %>);<% 
+				}
+				if (!atributo.ehData() && atributo.ehHora()) {
+				%>
+				item.<%= atributo.getNomePropriedade() %> = AjustaHora(item.<%= atributo.getNomePropriedade() %>);<% 
+				}
+				}
+			%>
+        }
+        
+        
+        private static string AjustaDataHora(string data)
+        {
+            // Data Entrada: AAAA-MM-DD HH:MM:SS
+            //               0123456789012345678
+            if ("null".Equals(data) || data == null) return null;
+            string ano = data.Substring(0, 4);
+            string mes = data.Substring(5, 2);
+            string dia = data.Substring(8, 2);
+            string hora = data.Substring(11, 8);
+            return dia + "/" + mes + "/" + ano + " " + hora;
+        }
+        private static string AjustaData(string data)
+        {
+            // Data Entrada: AAAA-MM-DD HH:MM:SS
+            //               0123456789012345678
+            if ("null".Equals(data) || data == null) return null;
+            string ano = data.Substring(0, 4);
+            string mes = data.Substring(5, 2);
+            string dia = data.Substring(8, 2);
+            string hora = data.Substring(11, 8);
+            return dia + "/" + mes + "/" + ano;
+        }
+        private static string AjustaHora(string valor)
+        {
+            // Data Entrada: AAAA-MM-DD HH:MM:SS
+            //               0123456789012345678
+            if ("null".Equals(valor) || valor == null) return null;
+            string ano = valor.Substring(0, 4);
+            string mes = valor.Substring(5, 2);
+            string dia = valor.Substring(8, 2);
+            string hora = valor.Substring(11, 8);
+            throw new NotImplementedException("AjustaHora em <%= classe.getNomeParaClasse() %>WSBaseController ");
+            //return dia + "/" + mes + "/" + ano;
+        }
+}
+}

@@ -1,0 +1,17 @@
+<%@ jet package="jet.android2.framework.tela" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="SplashActivityBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.tela;
+
+
+public abstract class SplashActivityBase extends AppCompatActivity {
+
+    
+
+}

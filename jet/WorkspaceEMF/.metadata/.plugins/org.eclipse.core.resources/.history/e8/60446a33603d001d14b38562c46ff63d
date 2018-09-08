@@ -1,0 +1,90 @@
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
+ */
+package exemplo1;
+
+import org.eclipse.emf.common.util.EList;
+
+import org.eclipse.emf.ecore.EObject;
+
+/**
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Library</b></em>'.
+ * <!-- end-user-doc -->
+ *
+ * <p>
+ * The following features are supported:
+ * <ul>
+ *   <li>{@link exemplo1.Library#getWriter <em>Writer</em>}</li>
+ *   <li>{@link exemplo1.Library#getBook <em>Book</em>}</li>
+ *   <li>{@link exemplo1.Library#getName <em>Name</em>}</li>
+ * </ul>
+ * </p>
+ *
+ * @see exemplo1.Exemplo1Package#getLibrary()
+ * @model
+ * @generated
+ */
+public interface Library extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Writer</b></em>' reference list.
+	 * The list contents are of type {@link exemplo1.Writer}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Writer</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Writer</em>' reference list.
+	 * @see exemplo1.Exemplo1Package#getLibrary_Writer()
+	 * @model
+	 * @generated
+	 */
+	EList<Writer> getWriter();
+
+	/**
+	 * Returns the value of the '<em><b>Book</b></em>' reference list.
+	 * The list contents are of type {@link exemplo1.Book}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Book</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Book</em>' reference list.
+	 * @see exemplo1.Exemplo1Package#getLibrary_Book()
+	 * @model
+	 * @generated
+	 */
+	EList<Book> getBook();
+
+	/**
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see exemplo1.Exemplo1Package#getLibrary_Name()
+	 * @model
+	 * @generated
+	 */
+	String getName();
+
+	/**
+	 * Sets the value of the '{@link exemplo1.Library#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
+	void setName(String value);
+
+} // Library

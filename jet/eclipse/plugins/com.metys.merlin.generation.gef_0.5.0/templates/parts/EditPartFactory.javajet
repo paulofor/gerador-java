@@ -1,0 +1,133 @@
+<%
+/**
+ * Copyright (c) 2005 Joel Cheuoua & Contributors
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Merlin project nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+%>
+<%@ jet package="com.metys.merlin.generation.gef.compiledtemplates.parts" imports="com.metys.merlin.generation.gef.genmodel.* com.metys.merlin.generation.gef.genmodel.util.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.ecore.genmodel.* java.util.*" class="EditPartFactory" %>
+<%GenEditPartFactory genEditPartFactory = (GenEditPartFactory) argument; GenModel genModel = genEditPartFactory.getGenGEFModel().getGenModel();%>
+<%@ include file="../Header.jetinc"%>
+package <%=genEditPartFactory.getPackageName()%>;
+
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartFactory;
+
+<%genModel.markImportLocation(stringBuffer);%>
+
+/**
+ * <!-- begin-user-doc -->
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public class <%=genEditPartFactory.getName()%> implements EditPartFactory {
+
+	/**
+ 	 * <!-- begin-user-doc -->
+ 	 * <!-- end-user-doc -->
+ 	 * @generated
+ 	 */
+	private <%=genModel.getImportedName("org.eclipse.emf.common.notify.AdapterFactory")%> adapterFactory;
+	
+	/**
+ 	 * <!-- begin-user-doc -->
+ 	 * <!-- end-user-doc -->
+ 	 * @generated
+ 	 */
+	private <%=genModel.getImportedName("org.eclipse.emf.ecore.resource.Resource")%> modelResource;
+	
+	/**
+ 	 * <!-- begin-user-doc -->
+ 	 * <!-- end-user-doc -->
+ 	 * @generated
+ 	 */
+	public <%=genEditPartFactory.getName()%>(AdapterFactory adapterFactory, Resource modelResource) {
+		this.adapterFactory = adapterFactory;
+		this.modelResource = modelResource;
+	}
+	
+<%for (Iterator i=GenModelHelper.getGenNodeEditParts(genEditPartFactory.getGenEditParts()).iterator(); i.hasNext();) { GenNodeEditPart genEditPart = (GenNodeEditPart)i.next(); EClass ecoreClass = ((GenNodeEditPart)genEditPart).getEcoreClass(); if (ecoreClass.isAbstract()) continue;%>
+	/**
+	 * This creates an edit part for a {@link <%=ecoreClass.getName()%>}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EditPart create<%=ecoreClass.getName()%>EditPart(<%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ENode")%> model)
+	{
+		return new <%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>(model, adapterFactory);
+	}
+<%} //for%>
+
+<%for (Iterator i=GenModelHelper.getGenLinkEditParts(genEditPartFactory.getGenEditParts()).iterator(); i.hasNext();) { GenLinkEditPart genEditPart = (GenLinkEditPart)i.next(); EClass ecoreClass = genEditPart.getEcoreClass(); if (ecoreClass.isAbstract()) continue;%>
+    /**
+     * This creates an edit part for a {@link <%=ecoreClass.getName()%>}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EditPart create<%=ecoreClass.getName()%>LinkEditPart(<%=genModel.getImportedName("com.metys.merlin.generation.gef.model.EObjectLink")%> model)
+    {
+    	return new <%=GenModelHelper.getImportedQualifiedLinkEditPartClass(genModel, genEditPart)%>(model, adapterFactory);
+    }
+<%} //for%>
+	
+	/**
+	 * This creates an edit part for any 
+   	 * model object.
+	 * <!-- begin-user-doc -->
+   	 * <!-- end-user-doc -->
+   	 * @generated
+   	 */
+	public EditPart createEditPart(EditPart context, Object model) {
+		EditPart part = null;
+		if (model instanceof <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.EDiagram")%>) {
+			part = new <%=genModel.getImportedName("com.metys.merlin.generation.gef.parts.EDiagramEditPart")%>((EDiagram) model, adapterFactory, modelResource);
+		} else if (model instanceof <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.EReferenceLink")%>) {
+			part = new <%=genModel.getImportedName("com.metys.merlin.generation.gef.parts.ELinkEditPart")%>((EReferenceLink) model, adapterFactory);
+		} else if (model instanceof <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.EObjectLink")%>) {
+<%if (!GenModelHelper.getGenLinkEditParts(genEditPartFactory.getGenEditParts()).isEmpty()) {%> 		
+			<%=genModel.getImportedName("org.eclipse.emf.ecore.EClass")%> ecoreClass = ((EObjectLink)model).getTransitionEObject().eClass();						
+<%for (Iterator i=GenModelHelper.getGenLinkEditParts(genEditPartFactory.getGenEditParts()).iterator(); i.hasNext();) { GenEditPart genEditPart = (GenEditPart)i.next(); EClass ecoreClass = genEditPart.getEcoreClass();  if (ecoreClass.isAbstract()) continue;%>
+			if (ecoreClass == <%=GenModelHelper.getGenClass(genModel, ecoreClass).getGenPackage().getImportedPackageInterfaceName()%>.eINSTANCE.get<%=GenModelHelper.getGenClass(genModel, ecoreClass).getClassifierAccessorName()%>())
+				part = create<%=ecoreClass.getName()%>LinkEditPart((EObjectLink) model);
+<%} //for%>
+<%} //if%>
+		} else if (model instanceof <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ENode")%>){
+<%if (!GenModelHelper.getGenNodeEditParts(genEditPartFactory.getGenEditParts()).isEmpty()) {%>
+			<%=genModel.getImportedName("org.eclipse.emf.ecore.EClass")%> ecoreClass = ((ENode)model).getEObject().eClass();
+<%for (Iterator i=GenModelHelper.getGenNodeEditParts(genEditPartFactory.getGenEditParts()).iterator(); i.hasNext();) { GenNodeEditPart genEditPart = (GenNodeEditPart)i.next(); EClass ecoreClass = genEditPart.getEcoreClass();  if (ecoreClass.isAbstract()) continue;%>
+			if (ecoreClass == <%=GenModelHelper.getGenClass(genModel, ecoreClass).getGenPackage().getImportedPackageInterfaceName()%>.eINSTANCE.get<%=GenModelHelper.getGenClass(genModel, ecoreClass).getClassifierAccessorName()%>())
+				part = create<%=ecoreClass.getName()%>EditPart((ENode) model);
+<%} //for%>
+<%} //if%>
+		}
+		return part;
+	}	
+}
+<%genModel.emitSortedImports();%>

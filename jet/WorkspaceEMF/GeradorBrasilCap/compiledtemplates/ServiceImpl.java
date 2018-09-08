@@ -1,0 +1,340 @@
+package compiledtemplates;
+
+import java.util.*;
+import util.wrappers.*;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.codegen.util.*;
+
+public class ServiceImpl
+{
+  protected static String nl;
+  public static synchronized ServiceImpl create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    ServiceImpl result = new ServiceImpl();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = "package ";
+  protected final String TEXT_2 = ";" + NL + "" + NL + "import ipiranga.pdsi.framework.modelo.negocio.service.ServiceException;" + NL + "import ";
+  protected final String TEXT_3 = ".MetodoNaoImplementadoException;" + NL + "import ";
+  protected final String TEXT_4 = ".";
+  protected final String TEXT_5 = ";" + NL + "import java.util.List;";
+  protected final String TEXT_6 = "import ";
+  protected final String TEXT_7 = ".";
+  protected final String TEXT_8 = ";";
+  protected final String TEXT_9 = NL + "import ";
+  protected final String TEXT_10 = ".*;" + NL + "" + NL + "public class ";
+  protected final String TEXT_11 = " ";
+  protected final String TEXT_12 = " extends ";
+  protected final String TEXT_13 = " ";
+  protected final String TEXT_14 = "implements ";
+  protected final String TEXT_15 = "{" + NL;
+  protected final String TEXT_16 = NL + "\tpublic ";
+  protected final String TEXT_17 = " obtemPorChave(";
+  protected final String TEXT_18 = " ";
+  protected final String TEXT_19 = ") throws ServiceException {" + NL + "    \tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_20 = "\",\"obtemPorChave(";
+  protected final String TEXT_21 = " ";
+  protected final String TEXT_22 = ")\");" + NL + "    }" + NL + "\tpublic List listaAtivos() throws ServiceException {" + NL + "    \tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_23 = "\",\"listaAtivos()\");" + NL + "    }" + NL;
+  protected final String TEXT_24 = NL + NL + "\tpublic List obtemPorFiltro(";
+  protected final String TEXT_25 = " ";
+  protected final String TEXT_26 = ") throws ServiceException {" + NL + "    \tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_27 = "\",\"obtemPorFiltro(";
+  protected final String TEXT_28 = " ";
+  protected final String TEXT_29 = ")\");" + NL + "    }" + NL + "    public List obtemPorFiltro(";
+  protected final String TEXT_30 = " ";
+  protected final String TEXT_31 = ", String tipoFiltro) throws ServiceException {" + NL + "    \tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_32 = "\",\"obtemPorFiltro(";
+  protected final String TEXT_33 = " ";
+  protected final String TEXT_34 = ", String tipoFiltro)\");" + NL + "    }" + NL + "" + NL + "\tpublic ";
+  protected final String TEXT_35 = " cadastra";
+  protected final String TEXT_36 = "(";
+  protected final String TEXT_37 = " ";
+  protected final String TEXT_38 = ") throws ServiceException {" + NL + "    \tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_39 = "\",\"cadastra";
+  protected final String TEXT_40 = "(";
+  protected final String TEXT_41 = " ";
+  protected final String TEXT_42 = ")\");" + NL + "    }" + NL + "    public ";
+  protected final String TEXT_43 = " atualiza";
+  protected final String TEXT_44 = "(";
+  protected final String TEXT_45 = " ";
+  protected final String TEXT_46 = ") throws ServiceException {" + NL + "    \tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_47 = "\",\"atualiza";
+  protected final String TEXT_48 = "(";
+  protected final String TEXT_49 = " ";
+  protected final String TEXT_50 = ")\");" + NL + "    }";
+  protected final String TEXT_51 = NL + "    public ";
+  protected final String TEXT_52 = " ";
+  protected final String TEXT_53 = "  throws ServiceException{" + NL + "    \tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_54 = "\",\"";
+  protected final String TEXT_55 = "\");" + NL + "    }";
+  protected final String TEXT_56 = NL;
+  protected final String TEXT_57 = NL + "\t";
+  protected final String TEXT_58 = NL + "    ";
+  protected final String TEXT_59 = " ";
+  protected final String TEXT_60 = NL + "    ";
+  protected final String TEXT_61 = " ";
+  protected final String TEXT_62 = NL + "    ";
+  protected final String TEXT_63 = NL + "\tpublic ";
+  protected final String TEXT_64 = " ";
+  protected final String TEXT_65 = "(";
+  protected final String TEXT_66 = " item) throws ServiceException{" + NL + "\t\tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_67 = "\",\"";
+  protected final String TEXT_68 = "(";
+  protected final String TEXT_69 = " item)\");" + NL + "\t}\t" + NL + "\t" + NL + "\t" + NL + "\t\t" + NL + "\t";
+  protected final String TEXT_70 = NL;
+  protected final String TEXT_71 = NL + "\t";
+  protected final String TEXT_72 = NL + "    ";
+  protected final String TEXT_73 = " ";
+  protected final String TEXT_74 = NL + "    ";
+  protected final String TEXT_75 = " ";
+  protected final String TEXT_76 = NL + "    ";
+  protected final String TEXT_77 = NL + "\tpublic List ";
+  protected final String TEXT_78 = "(";
+  protected final String TEXT_79 = " item) throws ServiceException{" + NL + "\t\tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_80 = "\",\"";
+  protected final String TEXT_81 = "(";
+  protected final String TEXT_82 = " item)\");" + NL + "\t}" + NL + "\t" + NL + "\t";
+  protected final String TEXT_83 = NL + "    ";
+  protected final String TEXT_84 = " ";
+  protected final String TEXT_85 = NL + "    ";
+  protected final String TEXT_86 = " ";
+  protected final String TEXT_87 = NL + "    ";
+  protected final String TEXT_88 = NL + "    ";
+  protected final String TEXT_89 = NL + "\tpublic boolean ";
+  protected final String TEXT_90 = "(";
+  protected final String TEXT_91 = ") throws ServiceException{" + NL + "\t\tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_92 = "\",\"";
+  protected final String TEXT_93 = "(";
+  protected final String TEXT_94 = ")\");" + NL + "\t}";
+  protected final String TEXT_95 = NL + NL + "\t";
+  protected final String TEXT_96 = NL + "\tpublic ";
+  protected final String TEXT_97 = " get";
+  protected final String TEXT_98 = "(";
+  protected final String TEXT_99 = ") throws ServiceException{" + NL + "\t\tthrow new MetodoNaoImplementadoException(\"";
+  protected final String TEXT_100 = "\",\"get";
+  protected final String TEXT_101 = "(";
+  protected final String TEXT_102 = ")\");" + NL + "\t}" + NL + "\t";
+  protected final String TEXT_103 = NL + "}";
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    
+ClasseI classe = (ClasseI) argument;  
+
+    stringBuffer.append(TEXT_1);
+    stringBuffer.append( classe.getPacoteServiceImpl() );
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append( classe.getPacoteUtil() );
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append( classe.getPacoteServiceI() );
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append( classe.getNomeServiceI() );
+    stringBuffer.append(TEXT_5);
+     if (classe.possuiAtributos()) { 
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append( classe.getPacoteDaoI() );
+    stringBuffer.append(TEXT_7);
+    stringBuffer.append( classe.getNomeDaoI() );
+    stringBuffer.append(TEXT_8);
+     } 
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append( classe.getPacoteModeloI() );
+    stringBuffer.append(TEXT_10);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_11);
+     if (classe.getSuperTipo()!=null) {
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append( classe.getSuperTipo().getNomeServiceImpl() );
+    stringBuffer.append(TEXT_13);
+     } 
+    stringBuffer.append(TEXT_14);
+    stringBuffer.append( classe.getNomeServiceI() );
+    stringBuffer.append(TEXT_15);
+     if (classe.getSuperTipo()==null) { 
+    stringBuffer.append(TEXT_16);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_17);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_18);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_19);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_20);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_22);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_23);
+     } 
+    stringBuffer.append(TEXT_24);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_25);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_26);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_27);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_28);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_29);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_30);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_31);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_32);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_33);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_34);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_35);
+    stringBuffer.append( classe.getNomeSimples() );
+    stringBuffer.append(TEXT_36);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_37);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_38);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_39);
+    stringBuffer.append( classe.getNomeSimples() );
+    stringBuffer.append(TEXT_40);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_41);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_42);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_43);
+    stringBuffer.append( classe.getNomeSimples() );
+    stringBuffer.append(TEXT_44);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_45);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_46);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_47);
+    stringBuffer.append( classe.getNomeSimples() );
+    stringBuffer.append(TEXT_48);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_49);
+    stringBuffer.append( classe.getNomeVariavel() );
+    stringBuffer.append(TEXT_50);
+    for (EOperation item : eClass.getEOperations()) {
+     operacao.setOperation(item); 
+    stringBuffer.append(TEXT_51);
+    stringBuffer.append( operacao.getTipo() );
+    stringBuffer.append(TEXT_52);
+    stringBuffer.append( operacao.getAssinatura() );
+    stringBuffer.append(TEXT_53);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_54);
+    stringBuffer.append( operacao.getAssinatura() );
+    stringBuffer.append(TEXT_55);
+    }
+    stringBuffer.append(TEXT_56);
+    
+	Iterator iterador = classe.getReferenceWrappersOpostoUnico().iterator();
+	while(iterador.hasNext()) {
+		ReferenceWrapper reference = (ReferenceWrapper) iterador.next();
+
+    stringBuffer.append(TEXT_57);
+    stringBuffer.append( "/***"  );
+    stringBuffer.append(TEXT_58);
+    stringBuffer.append( "* Gerada pelo relacionamento com o objeto de dominio " + reference.getClasseOposta().getNomeSimples() );
+    stringBuffer.append(TEXT_59);
+    stringBuffer.append(TEXT_60);
+    stringBuffer.append( "* @param item objeto a ser relacionado" );
+    stringBuffer.append(TEXT_61);
+    stringBuffer.append(TEXT_62);
+    stringBuffer.append( "*/ " );
+    stringBuffer.append(TEXT_63);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_64);
+    stringBuffer.append( reference.metodoObtemServico() );
+    stringBuffer.append(TEXT_65);
+    stringBuffer.append( reference.getClasseOposta().getNomeModeloI() );
+    stringBuffer.append(TEXT_66);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_67);
+    stringBuffer.append( reference.metodoObtemServico() );
+    stringBuffer.append(TEXT_68);
+    stringBuffer.append( reference.getClasseOposta().getNomeModeloI() );
+    stringBuffer.append(TEXT_69);
+    	} 
+    stringBuffer.append(TEXT_70);
+    
+	iterador = classe.getReferenceWrappersOpostoMultiplo().iterator();
+	while(iterador.hasNext()) {
+		ReferenceWrapper reference = (ReferenceWrapper) iterador.next();
+
+    stringBuffer.append(TEXT_71);
+    stringBuffer.append( "/***"  );
+    stringBuffer.append(TEXT_72);
+    stringBuffer.append( "* Gerada pelo relacionamento com o objeto de dominio " + reference.getClasseOposta().getNomeSimples() );
+    stringBuffer.append(TEXT_73);
+    stringBuffer.append(TEXT_74);
+    stringBuffer.append( "* @param item objeto a ser relacionado" );
+    stringBuffer.append(TEXT_75);
+    stringBuffer.append(TEXT_76);
+    stringBuffer.append( "*/ " );
+    stringBuffer.append(TEXT_77);
+    stringBuffer.append( reference.metodoObtemServico() );
+    stringBuffer.append(TEXT_78);
+    stringBuffer.append( reference.getClasseOposta().getNomeModeloI() );
+    stringBuffer.append(TEXT_79);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_80);
+    stringBuffer.append( reference.metodoObtemServico() );
+    stringBuffer.append(TEXT_81);
+    stringBuffer.append( reference.getClasseOposta().getNomeModeloI() );
+    stringBuffer.append(TEXT_82);
+    stringBuffer.append( "/***"  );
+    stringBuffer.append(TEXT_83);
+    stringBuffer.append( "* Gerada pelo relacionamento com o objeto de dominio " + reference.getClasseOposta().getNomeSimples() );
+    stringBuffer.append(TEXT_84);
+    stringBuffer.append(TEXT_85);
+    stringBuffer.append( "* @param item objeto a ser relacionado" );
+    stringBuffer.append(TEXT_86);
+    stringBuffer.append(TEXT_87);
+    stringBuffer.append( "* @return retorna verdadeiro se existir relacao com o parametro informado " );
+    stringBuffer.append(TEXT_88);
+    stringBuffer.append( "*/ " );
+    stringBuffer.append(TEXT_89);
+    stringBuffer.append( reference.metodoExisteRelacionamento() );
+    stringBuffer.append(TEXT_90);
+    stringBuffer.append( reference.declaracaoParametro() );
+    stringBuffer.append(TEXT_91);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_92);
+    stringBuffer.append( reference.metodoExisteRelacionamento() );
+    stringBuffer.append(TEXT_93);
+    stringBuffer.append( reference.declaracaoParametro() );
+    stringBuffer.append(TEXT_94);
+    	} 
+    stringBuffer.append(TEXT_95);
+     if (classe.ehAssociativa()) {
+    stringBuffer.append(TEXT_96);
+    stringBuffer.append( classe.getNomeModeloI() );
+    stringBuffer.append(TEXT_97);
+    stringBuffer.append( classe.getNomeSimples() );
+    stringBuffer.append(TEXT_98);
+    stringBuffer.append( classe.parametrosParaAssociativa() );
+    stringBuffer.append(TEXT_99);
+    stringBuffer.append( classe.getNomeServiceImpl() );
+    stringBuffer.append(TEXT_100);
+    stringBuffer.append( classe.getNomeSimples() );
+    stringBuffer.append(TEXT_101);
+    stringBuffer.append( classe.parametrosParaAssociativa() );
+    stringBuffer.append(TEXT_102);
+     } 
+    stringBuffer.append(TEXT_103);
+    return stringBuffer.toString();
+  }
+}

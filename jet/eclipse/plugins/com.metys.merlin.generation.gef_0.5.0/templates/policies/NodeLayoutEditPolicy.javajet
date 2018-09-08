@@ -1,0 +1,218 @@
+<%
+/**
+ * Copyright (c) 2005 Joel Cheuoua & Contributors
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Merlin project nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+%>
+<%@ jet package="com.metys.merlin.generation.gef.compiledtemplates.policies" imports="java.util.Iterator com.metys.merlin.generation.gef.genmodel.* com.metys.merlin.generation.gef.genmodel.util.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.ecore.genmodel.*" class="NodeLayoutEditPolicy" %>
+<%GenNodeEditPart genEditPart = (GenNodeEditPart) argument; EClass ecoreClass = genEditPart.getEcoreClass(); GenModel genModel = genEditPart.getGenGEFModel().getGenModel(); GenClass genClass = GenModelHelper.getGenClass(genModel, ecoreClass);%>
+<%@ include file="../Header.jetinc"%>
+package <%=genEditPart.getPackageName()%>.policies;
+
+<%genModel.markImportLocation(stringBuffer);%>
+
+/**
+ * <!-- begin-user-doc -->
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public <%if (ecoreClass.isAbstract()) {%>abstract <%}%>class <%=ecoreClass.getName()%>LayoutEditPolicy<%=GenModelHelper.getLayoutEditPolicyExtendsLitteral(genModel, genEditPart)%>{
+	
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected <%=genModel.getImportedName("org.eclipse.gef.commands.Command")%> createChangeConstraintCommand(<%=genModel.getImportedName("org.eclipse.gef.EditPart")%> child, Object constraint) {
+    <%=genModel.getImportedName("org.eclipse.draw2d.geometry.Rectangle")%> rec = (Rectangle) constraint;
+    <%=genModel.getImportedName("org.eclipse.draw2d.geometry.Point")%> newLocation = new Point(rec.x, rec.y);
+    return new <%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.ChangeBoundsCommand")%>((<%=genModel.getImportedName("com.metys.merlin.generation.gef.parts.ENodeEditPart")%>)child, newLocation, rec.width, rec.height);
+  }
+  
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected Command createAddCommand(<%=genModel.getImportedName("org.eclipse.gef.EditPart")%> childEditPart, Object constraint) {
+    <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ENode")%> child = (ENode) childEditPart.getModel();
+    Point location = new Point();
+    if (constraint instanceof Rectangle) {
+      location.x = ((Rectangle) constraint).x;
+      location.y = ((Rectangle) constraint).y;
+    }
+    <%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.AddElementCommand")%> add = new AddElementCommand((<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>)getHost(), child, location);
+    return add;
+  }
+  
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected Command getCreateCommand(<%=genModel.getImportedName("org.eclipse.gef.requests.CreateRequest")%> request) {
+    <%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%> hostEditPart = (<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>)getHost();
+    Point loc = request.getLocation();
+    if (request.getNewObject() instanceof ENode) {      
+      hostEditPart.getContentPane().translateToRelative(loc);
+      return new <%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.CreateElementCommand")%>(hostEditPart,(ENode)request.getNewObject(), loc);
+    } else if (request.getNewObject() instanceof <%=genModel.getImportedName("org.eclipse.emf.ecore.EObject")%>) {
+      ENode node = <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ModelFactory")%>.eINSTANCE.createENode();
+      node.setEObject((EObject) request.getNewObject());
+      return new CreateElementCommand(hostEditPart, node, loc);        
+    } else if (request.getNewObject() instanceof <%=genModel.getImportedName("java.util.List")%>) {
+      List views = (List)request.getNewObject();      
+      if (views.isEmpty())
+        return <%=genModel.getImportedName("org.eclipse.gef.commands.UnexecutableCommand")%>.INSTANCE;
+      <%=genModel.getImportedName("org.eclipse.gef.commands.CompoundCommand")%> command = new CompoundCommand();
+      hostEditPart.getContentPane().translateToRelative(loc);
+      for (int i = 0; i < views.size(); i++) {
+        Object view = views.get(i);
+        if (view instanceof ENode) {
+          hostEditPart.getContentPane().translateToRelative(loc);
+          command.add(new <%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.CreateElementCommand")%>(hostEditPart,(ENode)view, loc.getTranslated(i * 40, i * 40)));
+        } else if (view instanceof EObject) {
+          ENode node = <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ModelFactory")%>.eINSTANCE.createENode();
+          node.setEObject((EObject) view);
+          command.add(new CreateElementCommand(hostEditPart, node, loc.getTranslated(i * 40, i * 40)));        
+        } else if (view instanceof <%=genModel.getImportedName("com.metys.merlin.generation.gef.outline.LinkModel")%>) {
+          LinkModel linkModel = (LinkModel) view;
+          <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.EDiagram")%> diagram = getDiagram();
+          ENode sourceNode = diagram.getENode(linkModel.getEObject());
+          ENode targetNode = diagram.getENode(linkModel.getRefEObject());
+          // Look for the edit parts in the contents of this parent
+          <%=genModel.getImportedName("com.metys.merlin.generation.gef.parts.EDiagramEditPart")%> diagramEditPart = null;
+          EditPart parent = hostEditPart;
+          while (!(parent instanceof EDiagramEditPart) && parent != null)
+            parent = parent.getParent();
+          if (parent instanceof EDiagramEditPart)
+            diagramEditPart = (EDiagramEditPart) parent;
+          ENodeEditPart sourceEditPart = diagramEditPart.findNodeEditPart(sourceNode);
+          ENodeEditPart targetEditPart = diagramEditPart.findNodeEditPart(targetNode);          
+          <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ELink")%> link = null;
+          if (linkModel instanceof <%=genModel.getImportedName("com.metys.merlin.generation.gef.outline.ReferenceLinkModel")%>) {
+            link = ModelFactory.eINSTANCE.createEReferenceLink();
+            ((<%=genModel.getImportedName("com.metys.merlin.generation.gef.model.EReferenceLink")%>)link).setEReference(((ReferenceLinkModel)linkModel).getEReference());
+          } else if (linkModel instanceof <%=genModel.getImportedName("com.metys.merlin.generation.gef.outline.ClassLinkModel")%>) {
+            link = ModelFactory.eINSTANCE.createEObjectLink();
+            ((<%=genModel.getImportedName("com.metys.merlin.generation.gef.model.EObjectLink")%>)link).setTransitionEObject(((ClassLinkModel)linkModel).getTransitionObject());
+            ((EObjectLink)link).setSourceReference(((ClassLinkModel)linkModel).getSourceRef());
+            ((EObjectLink)link).setTargetReference(((ClassLinkModel)linkModel).getTargetRef());
+          }
+          command.add(new <%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.TransferLinkCommand")%>(link, sourceEditPart, targetEditPart));
+        }
+      }
+      return command;
+    }
+    return UnexecutableCommand.INSTANCE;
+  }
+  
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected Command getOrphanChildrenCommand(<%=genModel.getImportedName("org.eclipse.gef.Request")%> request) {
+    <%=genModel.getImportedName("org.eclipse.gef.requests.GroupRequest")%> gRequest = (GroupRequest) request;
+    List parts = gRequest.getEditParts();
+    CompoundCommand result = new CompoundCommand();
+    for (int i = 0; i < parts.size(); i++) {
+      ENode child = (ENode) ((EditPart) parts.get(i)).getModel();           
+      <%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.OrphanNodeCommand")%> orphan 
+      	= new OrphanNodeCommand((<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>)getHost(), child);
+      result.add(orphan);
+    }
+    return result.unwrap();
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public boolean acceptAdd(ENode child) {
+<%for (Iterator it = genEditPart.getSubNodeReferences().iterator(); it.hasNext();) { GenSubNodeReference genSubNodeFeature = (GenSubNodeReference) it.next(); GenFeature genFeature = GenModelHelper.getGenFeature(genModel, genSubNodeFeature.getReference());%>
+    if (<%=genFeature.getQualifiedFeatureAccessorName()%>().getEReferenceType().isInstance(child.getEObject()))
+        return true;
+<%}%>
+    return super.acceptAdd(child);    
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public boolean acceptRemove(ENode child) {
+    return super.acceptRemove(child);
+  }
+  
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void handleNodeAdded(ENode parent, ENode child) {  	
+<%for (Iterator it = genEditPart.getSubNodeReferences().iterator(); it.hasNext();) { GenSubNodeReference genSubNodeFeature = (GenSubNodeReference) it.next(); GenFeature genFeature = GenModelHelper.getGenFeature(genModel, genSubNodeFeature.getReference());%>
+	{
+	  <%=genClass.getImportedClassName()%> object = (<%=genClass.getImportedClassName()%>) parent.getEObject();
+      if (<%=genFeature.getQualifiedFeatureAccessorName()%>().getEReferenceType().isInstance(child.getEObject())) {
+<%if (genFeature.getEcoreFeature().isMany()) {%>
+		((<%=genModel.getImportedName("java.util.Collection")%>)object.eGet(<%=genFeature.getQualifiedFeatureAccessorName()%>())).add(child.getEObject());				
+<%} else {%>
+     	object.eSet(<%=genFeature.getQualifiedFeatureAccessorName()%>(), child.getEObject());
+<%}%>
+	  }
+	}
+<%}%>
+	super.handleNodeAdded(parent, child);
+  }
+  
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void handleNodeRemoved(ENode parent, ENode child) {
+<%for (Iterator it = genEditPart.getSubNodeReferences().iterator(); it.hasNext();) { GenSubNodeReference genSubNodeFeature = (GenSubNodeReference) it.next(); GenFeature genFeature = GenModelHelper.getGenFeature(genModel, genSubNodeFeature.getReference());%>
+	{
+	  <%=genClass.getImportedClassName()%> object = (<%=genClass.getImportedClassName()%>) parent.getEObject();
+      if (<%=genFeature.getQualifiedFeatureAccessorName()%>().getEReferenceType().isInstance(child.getEObject())) {
+<%if (genFeature.getEcoreFeature().isMany()) {%>
+		((<%=genModel.getImportedName("java.util.Collection")%>)object.eGet(<%=genFeature.getQualifiedFeatureAccessorName()%>())).remove(child.getEObject());     	  
+<%} else {%>
+     	object.eSet(<%=genFeature.getQualifiedFeatureAccessorName()%>(), null);
+<%}%>
+	  }
+	}
+<%}%>
+	super.handleNodeRemoved(parent, child);
+  }
+}
+<%genModel.emitSortedImports();%>

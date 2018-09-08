@@ -1,0 +1,40 @@
+<%@ jet package="jet.csdn35.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ServicoLocalImpl" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using br.com.digicom.lib.dao;
+using <%= conf.getNamespace() %>.modelo;
+using <%= conf.getNamespace() %>.dao;
+using <%= conf.getNamespace() %>.servico.local.basico;
+using <%= conf.getNamespace() %>.servico.filtro;
+
+namespace <%= conf.getNamespace() %>.servico.local {
+
+	public class <%= classe.getNomeParaClasse() %>ServicoLocalImpl : <%= classe.getNomeParaClasse() %>ServicoLocalBase {
+<%
+	Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra.hasNext()) {
+	RegraColecao regra = iteradorRegra.next();
+	if (regra.getAtivoCs()) {
+		String tipoRetorno = null;
+		if (regra.getRetornaColecao()) tipoRetorno = "List<" + classe.getNomeParaClasse() + ">";
+		else tipoRetorno = classe.getNomeParaClasse();
+	
+%>
+		public override <%= tipoRetorno %> <%= regra.getNome() %>(DaoConexao conexao) {
+			throw new Exception("Metodo nao implementado");
+		}
+<%
+	}
+	}
+%>	
+	
+	}
+}

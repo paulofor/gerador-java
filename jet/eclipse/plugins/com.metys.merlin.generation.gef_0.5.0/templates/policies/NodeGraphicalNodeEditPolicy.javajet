@@ -1,0 +1,133 @@
+<%
+/**
+ * Copyright (c) 2005 Joel Cheuoua & Contributors
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Merlin project nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+%>
+<%@ jet package="com.metys.merlin.generation.gef.compiledtemplates.policies" imports="com.metys.merlin.generation.gef.genmodel.* com.metys.merlin.generation.gef.genmodel.util.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.ecore.genmodel.*" class="NodeGraphicalNodeEditPolicy" %>
+<%GenNodeEditPart genEditPart = (GenNodeEditPart) argument; EClass ecoreClass = genEditPart.getEcoreClass(); EPackage ecorePackage = (EPackage) ecoreClass.getEPackage(); GenModel genModel = genEditPart.getGenGEFModel().getGenModel(); GenClass genClass = GenModelHelper.getGenClass(genModel, ecoreClass);%>
+<%@ include file="../Header.jetinc"%>
+package <%=genEditPart.getPackageName()%>.policies;
+
+<%genModel.markImportLocation(stringBuffer);%>
+
+/**
+ * <!-- begin-user-doc -->
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public <%if (ecoreClass.isAbstract()) {%>abstract <%}%>class <%=ecoreClass.getName()%>GraphicalNodeEditPolicy<%=GenModelHelper.getGraphicalNodeEditPolicyExtendsLitteral(genModel, genEditPart)%>{
+	
+	/**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected <%=genModel.getImportedName("org.eclipse.gef.commands.Command")%> getConnectionCompleteCommand(<%=genModel.getImportedName("org.eclipse.gef.requests.CreateConnectionRequest")%> request) {
+    if (request.getStartCommand() instanceof <%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.CreateConnectionCommand")%>) {
+      CreateConnectionCommand cmd = (CreateConnectionCommand) request.getStartCommand();
+      <%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%> targetNodeEditPart = (<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>) getHost();
+      <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ENode")%> target = targetNodeEditPart.getENode();
+      <%=genModel.getImportedName("com.metys.merlin.generation.gef.model.ELink")%> link = cmd.getLink();
+      if (acceptLinkAsTarget(target, link)) {
+        cmd.setTargetNodeEditPart(targetNodeEditPart);
+        return cmd;
+      }
+    }
+    return null;
+  }
+
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
+    <%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%> sourceNodeEditPart = (<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>) getHost();
+    ENode source = sourceNodeEditPart.getENode();
+    ELink link = (ELink) request.getNewObject();
+    if (acceptLinkAsSource(source, link)) {
+      CreateConnectionCommand cmd = new CreateConnectionCommand(sourceNodeEditPart, link);
+      request.setStartCommand(cmd);
+      return cmd;
+    }
+    return null;
+  }
+
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected Command getReconnectSourceCommand(<%=genModel.getImportedName("org.eclipse.gef.requests.ReconnectRequest")%> request) {
+    <%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%> sourceNodeEditPart = (<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>) getHost();
+    ELink link = (ELink) request.getConnectionEditPart().getModel();
+    ENode source = sourceNodeEditPart.getENode();
+    if (acceptLinkAsSource(source, link)) {
+      <%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.ReconnectSourceCommand")%> cmd = new ReconnectSourceCommand(sourceNodeEditPart, link);
+      return cmd;
+    }
+    return null;
+  }
+
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected Command getReconnectTargetCommand(ReconnectRequest request) {
+    <%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%> targetNodeEditPart = (<%=GenModelHelper.getImportedQualifiedEditPartClass(genModel, genEditPart)%>) getHost();
+    ELink link = (ELink) request.getConnectionEditPart().getModel();
+    ENode target = targetNodeEditPart.getENode();
+    if (acceptLinkAsTarget(target, link)) {
+      <%=genModel.getImportedName("com.metys.merlin.generation.gef.commands.ReconnectTargetCommand")%> cmd = new ReconnectTargetCommand(targetNodeEditPart, link);
+      return cmd;
+    }
+    return null;
+  }
+  
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public boolean acceptLinkAsTarget(ENode target, ELink link) {
+    return target.acceptLinkAsTarget(link);
+  }
+  
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public boolean acceptLinkAsSource(ENode source, ELink link) {
+    return source.acceptLinkAsSource(link);
+  }
+}
+<%genModel.emitSortedImports();%>

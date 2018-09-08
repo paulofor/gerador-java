@@ -1,0 +1,67 @@
+<%@ jet package="jet.android2.framework.sincronismo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="FCMIdServico" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.framework.fcm;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
+import <%= conf.getNamespaceExtendido() %>.framework.log.DCLog;
+
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
+
+import <%= conf.getNamespaceExtendido() %>.data.contract.DispositivoUsuarioContract;
+import <%= conf.getNamespaceExtendido() %>.framework.log.DCLog;
+import <%= conf.getNamespaceExtendido() %>.framework.telefonia.Telefone;
+import <%= conf.getNamespaceExtendido() %>.modelo.DispositivoUsuario;
+import <%= conf.getNamespaceExtendido() %>.modelo.montador.DispositivoUsuarioMontador;
+import <%= conf.getNamespaceExtendido() %>.remoto.DispositivoUsuarioSincronismo;
+import <%= conf.getNamespaceExtendido() %>.remoto.UsuarioSincronismo;
+import <%= conf.getNamespaceExtendido() %>.data.contract.AplicacaoContract;
+
+
+public class DCFirebaseInstanceIDService extends FirebaseInstanceIdService {
+
+	private static DCSincronizador sincronizador = null;
+
+    @Override
+    public void onTokenRefresh() {
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        DCLog.d(DCLog.SINCRONIZACAO_GCM,this,"token:" + refreshedToken);
+        sincronizador.sincronizaUsuarioDispositivoFcmId(this);
+        processaAtualizacao(refreshedToken);
+        sincronizador.sincronizaDispositivoFcmId(this);
+        sincronizador.executaDiario(this,AplicacaoContract.getCodigoAplicacaoSinc());
+   	}
+
+	public static void setSincronizador(DCSincronizador valor) {
+        sincronizador = valor;
+    }
+	
+	private void processaAtualizacao(String token) {
+        Uri uriDispositivo = DispositivoUsuarioContract.buildAll();
+        ContentResolver resolver = getContentResolver();
+        Cursor cursor = resolver.query(uriDispositivo, null, null, null, null);
+        DispositivoUsuario dispositivoUsuario = null;
+        if (cursor.moveToFirst()) {
+            DispositivoUsuarioMontador montador = new DispositivoUsuarioMontador();
+            dispositivoUsuario = (DispositivoUsuario) montador.getItem(cursor);
+            dispositivoUsuario.setTokenGcm(token);
+            dispositivoUsuario.setCodigoDispositivo(Telefone.getModelo(this));
+            uriDispositivo = DispositivoUsuarioContract.buildDispositivoUsuarioUri(dispositivoUsuario.getIdObj());
+            resolver.update(uriDispositivo, dispositivoUsuario.getContentValues(), null, null);
+        }
+	}
+	
+
+   
+}

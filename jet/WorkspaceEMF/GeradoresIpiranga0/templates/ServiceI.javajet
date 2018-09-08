@@ -1,0 +1,81 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ServiceI" %>
+<%
+EClass eClass = (EClass) argument;  
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+AttributeWrapper atributo = new AttributeWrapper();
+ReferenceWrapper referencia = null;
+OperationWrapper operacao = new OperationWrapper();
+%>
+package <%= classe.getPacoteServiceI() %>;
+
+import ipiranga.pdsi.framework.modelo.negocio.service.ServiceException;
+import <%= classe.getPacoteModeloI() %>.*;
+import java.util.List;
+import ipiranga.pdsi.framework.modelo.acesso.DaoFactory;
+
+<%= "/*" %>
+<%= "* Interface gerada automaticamente, n&atilde;o realizar altera&ccedil;&otilde;es " %>
+<%= "*/" %>
+
+<%= "/***"  %>
+<%= "*  Interface respons&aacute;vel por oferecer servi&ccedil;os que manipulem objetos do tipo " + classe.getNomeModeloI() %>
+<%= "*/ " %>
+public interface <%= classe.getNomeServiceI() %> <% if (classe.getSuperTipo()!=null) {%> extends <%= classe.getSuperTipo().getNomeServiceI() %> <% } %>{
+
+<% if (classe.getSuperTipo()==null) { %>
+	public <%= classe.getNomeModeloI() %> obtemPorChave(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws ServiceException;
+	public List listaAtivos() throws ServiceException;
+<% } %>
+	public <%= classe.getNomeModeloI() %> cadastra<%= classe.getNomeSimples() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws ServiceException;
+	public <%= classe.getNomeModeloI() %> cadastra<%= classe.getNomeSimples() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, DaoFactory factory) throws ServiceException;
+	public <%= classe.getNomeModeloI() %> atualiza<%= classe.getNomeSimples() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws ServiceException;
+	public List obtemPorFiltro(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws ServiceException;
+	public List obtemPorFiltro(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, String tipoFiltro) throws ServiceException;
+	
+	
+<%for (EOperation item : eClass.getEOperations()) {%>
+<% operacao.setOperation(item); %>
+    public <%= operacao.getTipo() %> <%= operacao.getAssinatura() %>  throws ServiceException;
+<%}%>
+
+<%
+	Iterator iterador = classe.getReferenceWrappersOpostoUnico().iterator();
+	while(iterador.hasNext()) {
+		ReferenceWrapper reference = (ReferenceWrapper) iterador.next();
+%>
+	<%= "/***"  %>
+    <%= "* Retorna o " + classe.getNomeModeloI() + " relacionado com " + reference.getClasseOposta().getNomeModeloI() + " passado como par&acirc;metro" %> 
+    <%= "* @param item objeto a ser relacionado" %> 
+    <%= "*/ " %>
+	public <%= classe.getNomeModeloI() %> <%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> item)  throws ServiceException;	
+<%	} %>
+
+<%
+	iterador = classe.getReferenceWrappersOpostoMultiplo().iterator();
+	while(iterador.hasNext()) {
+		ReferenceWrapper reference = (ReferenceWrapper) iterador.next();
+%>
+	<%= "/***"  %>
+    <%= "* Retorna uma lista de objetos " + classe.getNomeModeloI() + " que estejam relacionados com " + reference.getClasseOposta().getNomeModeloI() + " passado como par&acirc;metro" %> 
+    <%= "* @param " + reference.getClasseOposta().getNomeVariavel() + " objeto de refer&ecirc;ncia utilizado para criar a lista " %> 
+    <%= "*/ " %>
+	//public List <%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> <%= reference.getClasseOposta().getNomeVariavel() %>);	
+	public List <%= reference.metodoObtemServico() %>(<%= reference.declaracaoParametro() %>)  throws ServiceException;	
+	
+	<%= "/***"  %>
+    <%= "* Gerada pelo relacionamento com o objeto de dominio " + reference.getClasseOposta().getNomeSimples() %> 
+    <%= "* @param item objeto a ser relacionado" %> 
+    <%= "* @return retorna verdadeiro se existir relacao com o parametro informado " %>
+    <%= "*/ " %>
+	//public boolean <%= reference.metodoExisteRelacionamento() %>(<%= reference.getClasseOposta().getNomeModeloI() %> <%= reference.getClasseOposta().getNomeVariavel() %>);	
+	public boolean <%= reference.metodoExisteRelacionamento() %>(<%= reference.declaracaoParametro() %>)  throws ServiceException;	
+	
+<%	} %>
+
+	<% if (classe.ehAssociativa()) {%>
+	public <%= classe.getNomeModeloI() %> get<%= classe.getNomeSimples() %>(<%= classe.parametrosParaAssociativa() %>)  throws ServiceException;
+	<% } %>
+}

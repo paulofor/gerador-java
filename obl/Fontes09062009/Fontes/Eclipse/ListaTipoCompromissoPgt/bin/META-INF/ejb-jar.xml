@@ -1,0 +1,27 @@
+<?xml version = '1.0' encoding = 'windows-1252'?>
+<ejb-jar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd" version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee">
+  <enterprise-beans>
+    <session>
+      <description>Session Bean ( Stateless )</description>
+      <display-name>ListaTipoCompromissoPgtCN</display-name>
+      <ejb-name>ListaTipoCompromissoPgtCN</ejb-name>
+      <home>com.br.brasilcap.ejb.ListaTipoCompromissoPgtCNHome</home>
+      <remote>com.br.brasilcap.ejb.ListaTipoCompromissoPgtCN</remote>
+      <ejb-class>com.br.brasilcap.ejb.ListaTipoCompromissoPgtCNBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      
+    </session>
+     
+   </enterprise-beans>
+  <assembly-descriptor>
+    <container-transaction>
+      <method>
+        <ejb-name>ListaTipoCompromissoPgtCN</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+     
+   </assembly-descriptor>
+</ejb-jar>

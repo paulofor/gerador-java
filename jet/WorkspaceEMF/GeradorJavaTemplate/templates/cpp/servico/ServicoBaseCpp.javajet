@@ -1,0 +1,51 @@
+<%@ jet package="jet.cpp.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cpp.* gerapp.modelo.* " 
+class="ServicoBaseCpp" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapperCpp classe = (ClasseWrapperCpp) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+#include "StdAfx.h"
+#include "<%= classe.getNomeParaClasse() %>ServicoBase.h"
+
+C<%= classe.getNomeParaClasse() %>ServicoBase::C<%= classe.getNomeParaClasse() %>ServicoBase(void)
+{
+}
+
+C<%= classe.getNomeParaClasse() %>ServicoBase::~C<%= classe.getNomeParaClasse() %>ServicoBase(void)
+{
+}
+C<%= classe.getNomeParaClasse() %>Dao* C<%= classe.getNomeParaClasse() %>ServicoBase::getDao() 
+{
+	return new C<%= classe.getNomeParaClasse() %>Dao();
+}
+
+<%
+	Iterator<RegraColecao> iteradorRegra2 = classe.getListaRegraColecao().iterator();
+	for (RegraColecao regra : classe.getListaRegraColecao()) {
+		if (regra.getAtivoCpp()) {
+%>
+<%= classe.getNomeEstrutura() %>*  C<%= classe.getNomeParaClasse() %>ServicoBase::<%= regra.getNome() %>()
+{
+  C<%= classe.getNomeParaClasse() %>Dao* dao = getDao();
+  CDaoConexao* conexao = dao->criaConexao();
+  dao->setConexao(conexao);
+  <%= classe.getNomeEstrutura() %>* saida = <%= regra.getNome() %>(conexao);
+  dao->liberaConexao(conexao);
+  return saida;
+}
+<%= classe.getNomeEstrutura() %>*  C<%= classe.getNomeParaClasse() %>ServicoBase::<%= regra.getNome() %>(CDaoConexao* conexao)
+{
+	return <%= regra.getNome() %>Impl(conexao);
+}
+
+<%= classe.getNomeEstrutura() %>*  C<%= classe.getNomeParaClasse() %>ServicoBase::<%= regra.getNome() %>Impl(CDaoConexao* conexao)
+{
+	return nullptr;
+}
+
+<%
+		} // if
+	} // for
+%>

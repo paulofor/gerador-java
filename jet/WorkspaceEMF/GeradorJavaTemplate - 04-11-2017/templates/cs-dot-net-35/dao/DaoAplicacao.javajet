@@ -1,0 +1,22 @@
+<%@ jet package="jet.csdn35.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="DaoAplicacao" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+using System.Collections;
+using br.com.digicom.lib.dao;
+using br.com.digicom.lib;
+using <%= conf.getNamespace() %>.dao.datasource;
+
+namespace <%= conf.getNamespace() %>.dao.basico
+{
+	public abstract class DaoAplicacao  : DaoBase 
+	{ 
+		public DaoAplicacao() : base(new DataSourceAplicacao()) { }
+		public DaoAplicacao(DataFonte ds) : base(ds) {}
+	}
+}

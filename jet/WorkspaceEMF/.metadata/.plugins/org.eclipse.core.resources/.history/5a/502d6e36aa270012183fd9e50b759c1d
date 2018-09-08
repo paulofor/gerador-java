@@ -1,0 +1,41 @@
+<%@ jet package="jet.android.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ListActivity" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.activity.base;
+
+import <%= conf.getNamespace() %>.app.R;
+import <%= conf.getNamespace() %>.app.activity.BaseListActivity;
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.servico.FabricaServico;
+import <%= conf.getNamespace() %>.servico.<%= classe.getNomeParaClasse() %>Servico;
+import <%= conf.getNamespace() %>.view.adapter.<%= classe.getNomeParaClasse() %>Adapter;
+
+import java.util.List;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.widget.ListView;
+
+public class <%= classe.getNomeParaClasse() %>ListActivity extends  BaseListActivity{
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.lista);
+        ListView lista = (ListView) findViewById(R.id.listViewPrincipal);
+        <%= classe.getNomeParaClasse() %>Adapter adapt = new <%= classe.getNomeParaClasse() %>Adapter(getListaCorrente(this),this);
+        lista.setAdapter(adapt);
+    }
+	
+	private List<<%= classe.getNomeParaClasse() %>> getListaCorrente(Context contexto) {
+		<%= classe.getNomeParaClasse() %>Servico servico = FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		List<<%= classe.getNomeParaClasse() %>> saida = servico.getAll(contexto);
+		return saida;
+	}
+}

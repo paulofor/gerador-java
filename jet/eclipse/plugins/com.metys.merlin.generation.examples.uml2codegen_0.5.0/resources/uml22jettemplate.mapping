@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappingmodel.mapping:TypeMappingRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mappingmodel.mapping="http://www.metys.com/merlin/generation/mappingmodel/mapping.ecore" topToBottom="true">
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Model"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JETTemplateContainer"/>
+    <mappingRuleActions action="target.setJavaJETSource(&quot;com.metys.merlin.generation.examples.uml2codegen&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Class"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;templates/model/Class.javajet&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getModel(), true)"/>
+    <mappingRuleActions action="target.setTemplateContainer(templateContainer)"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(&quot;generatedCode/src&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Interface"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;templates/model/Interface.javajet&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getModel(), true)"/>
+    <mappingRuleActions action="target.setTemplateContainer(templateContainer)"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(&quot;generatedCode/src&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#//Enumeration"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;templates/model/Enum.javajet&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getModel(), true)"/>
+    <mappingRuleActions action="target.setTemplateContainer(templateContainer)"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(&quot;generatedCode/src&quot;)"/>
+  </nested>
+  <inputs href="http://www.eclipse.org/uml2/1.0.0/UML#/"/>
+  <outputs href="http://www.metys.com/merlin/generation/templates.ecore#/"/>
+</mappingmodel.mapping:TypeMappingRoot>

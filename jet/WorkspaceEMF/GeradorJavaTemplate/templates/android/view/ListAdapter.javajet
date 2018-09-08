@@ -1,0 +1,23 @@
+<%@ jet package="jet.android.view" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ListAdapter" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.view.adapter;
+
+import java.util.List;
+import android.content.Context;
+import br.com.digicom.quadro.IQuadroLista;
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.view.adapter.base.<%= classe.getNomeParaClasse() %>ListAdapterBase;
+
+public class <%= classe.getNomeParaClasse() %>ListAdapter extends <%= classe.getNomeParaClasse() %>ListAdapterBase {
+	
+	public <%= classe.getNomeParaClasse() %>ListAdapter(List<<%= classe.getNomeParaClasse() %>> lista, Context context) {
+		super(lista, context);
+	}
+	
+}

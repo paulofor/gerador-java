@@ -1,0 +1,30 @@
+<%@ jet package="jet.android2.framework.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="MontadorDaoI" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.framework.dao;
+
+import java.lang.reflect.InvocationTargetException;
+
+import android.database.Cursor;
+
+import <%= conf.getNamespaceExtendido() %>.framework.dao.DaoException;
+import <%= conf.getNamespaceExtendido() %>.framework.dao.DaoItemRetorno;
+import <%= conf.getNamespaceExtendido() %>.framework.modelo.DCIObjetoDominio;
+
+
+public interface MontadorDaoI {
+
+	public void desligaSinc();
+	public DCIObjetoDominio getItem(Cursor c, int posicao);
+	public DCIObjetoDominio getItem(Cursor c);
+	public DCIObjetoDominio getItemSinc(Cursor c);
+	public int quantidadeCampos();
+	public DaoItemRetorno extraiRegistroListaInterna(Cursor c, DCIObjetoDominio objeto)
+			    throws DaoException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException;
+}

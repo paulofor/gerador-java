@@ -1,0 +1,80 @@
+<%@ jet package="jet.csdn35.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="Carregador" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.modelo.carregador {
+
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using br.com.digicom.lib.dao;
+//using <%= conf.getNamespace() %>.dao.basico;
+using <%= conf.getNamespace() %>.modelo;
+//using <%= conf.getNamespace() %>.dao;
+using <%= conf.getNamespace() %>.servico;
+using digicom.util;
+
+public class <%= classe.getNomeParaClasse() %>Carregador{
+
+	private DaoConexao conexao;
+	public void setConexao(DaoConexao conexao) 
+	{
+		this.conexao = conexao;
+	}
+	
+	
+	<%
+		Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador.hasNext()) {
+		RelacionamentoWrapper relac = iterador.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		public void CarregaItem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classe.getNomeParaClasse() %> vo)
+    	{
+        <%= classeOposta.getNomeParaClasse() %>Servico servico = FabricaServico.getInstancia().get<%= classeOposta.getNomeParaClasse() %>Servico(FabricaServico.LOCAL);
+        if (conexao!=null && conexao.Conexao.State==ConnectionState.Open) { 
+        	DCArquivoTempos.Carregador("<%= classe.getNomeParaClasse() %>Carregador.CarregaItem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>");
+	        vo.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = servico.obtemPorId(vo.<%= relac.getNomePropriedade() %>, conexao);
+	    } else {
+	    	DCArquivoTempos.Carregador("<%= classe.getNomeParaClasse() %>Carregador.CarregaItem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>");
+	    	vo.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = servico.obtemPorId(vo.<%= relac.getNomePropriedade() %>);
+    	}
+    	}
+ 		<%
+		}
+     	%>
+	
+	
+	<%
+	Iterator<RelacionamentoWrapper> iteradorN = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (iteradorN.hasNext()) {
+	RelacionamentoWrapper relac = iteradorN.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	
+	%>
+	public void CarregaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classe.getNomeParaClasse() %> vo)
+    {
+        //<%= classeOposta.getNomeParaClasse() %>Dao dao = FabricaDao.getInstancia().get<%= classeOposta.getNomeParaClasse() %>Dao();
+        //dao.setConexao(conexao);
+        //ArrayList daoResult = dao.getPor<%= relac.getNomeRelacionamentoOposto() %><%= classe.getNomeParaClasse() %>(vo.<%= classe.getChaveW().getNomePropriedade() %>);
+        //vo.Lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = dao.ConverteLista(daoResult);
+        
+        <%= classeOposta.getNomeParaClasse() %>Servico servico = FabricaServico.getInstancia().get<%= classeOposta.getNomeParaClasse() %>Servico(FabricaServico.LOCAL);
+        if (conexao!=null && conexao.Conexao.State==ConnectionState.Open) {
+   	    	DCArquivoTempos.Carregador("<%= classe.getNomeParaClasse() %>Carregador.CarregaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>");
+	        vo.Lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = servico.getPor<%= relac.getNomeRelacionamentoOposto() %><%= classe.getNomeParaClasse() %>(vo.<%= classe.getChaveW().getNomePropriedade() %>, conexao);
+	    } else {
+   	    	DCArquivoTempos.Carregador("<%= classe.getNomeParaClasse() %>Carregador.CarregaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>");
+	    	vo.Lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = servico.getPor<%= relac.getNomeRelacionamentoOposto() %><%= classe.getNomeParaClasse() %>(vo.<%= classe.getChaveW().getNomePropriedade() %>);
+	    }
+    }
+	<%
+	}
+	%>
+
+}
+}

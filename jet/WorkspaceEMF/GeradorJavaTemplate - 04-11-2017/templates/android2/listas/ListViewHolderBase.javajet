@@ -1,0 +1,68 @@
+<%@ jet package="jet.android2.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ListViewHolderBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.template.lista;
+
+
+import java.util.List;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
+import <%= conf.getNamespaceExtendido() %>.framework.modelo.DCIObjetoDominio;
+import <%= conf.getNamespaceExtendido() %>.data.contract.<%= classe.getNomeParaClasse() %>Contract;
+import <%= conf.getNamespaceExtendido() %>.framework.util.ItemChoiceManager;
+import <%= conf.getNamespaceExtendido() %>.modelo.<%= classe.getNomeParaClasse() %>;
+
+/**
+ * Created by Paulo on 03/11/15.
+ */
+public abstract class <%= classe.getNomeParaClasse() %>ListViewHolderBase extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+    //protected Cursor mCursor;
+    protected List mLista;
+    protected <%= classe.getNomeParaClasse() %>ListAdapterBase.<%= classe.getNomeParaClasse() %>ListAdapterOnClickHandler mClickHandler;
+    protected ItemChoiceManager mICM = null;
+
+
+	private <%= classe.getNomeParaClasse() %> item;
+	public void setItem(<%= classe.getNomeParaClasse() %> dado) {
+		item = dado;
+	}
+	public <%= classe.getNomeParaClasse() %> getItem() {
+		return item;
+	}
+
+    //public void setCursor(Cursor valor) {
+    //    mCursor = valor;
+    //}
+    public void setLista(List valor) {
+    	mLista = valor;
+    }
+    
+    
+    public void setOnClickHandler(<%= classe.getNomeParaClasse() %>ListAdapterBase.<%= classe.getNomeParaClasse() %>ListAdapterOnClickHandler valor){
+        mClickHandler = valor;
+    }
+
+    public <%= classe.getNomeParaClasse() %>ListViewHolderBase(View itemView) {
+        super(itemView);
+        itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public final void onClick(View v) {
+        DCIObjetoDominio item = (DCIObjetoDominio) mLista.get(this.getAdapterPosition());
+        mClickHandler.onClick((int)item.getIdObj(), this);
+    }
+}

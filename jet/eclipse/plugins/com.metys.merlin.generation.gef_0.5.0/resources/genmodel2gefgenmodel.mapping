@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappingmodel.mapping:TypeMappingRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mappingmodel.mapping="http://www.metys.com/merlin/generation/mappingmodel/mapping.ecore" xmlns:mappingmodel.rules="http://www.metys.com/merlin/generation/mappingmodel/rules.ecore" topToBottom="true">
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="target.getGenModel( ) == source"/>
+      <mappingRuleActions action="target.setGenModel(source)"/>
+      <mappingRuleActions action="target.setPluginID(source.getModelPluginID() + &quot;.gef&quot;)"/>
+      <mappingRuleActions action="target.setOutputDirectoryPath(&quot;/&quot; + source.getModelPluginID() + &quot;.gef&quot;)"/>
+      <mappingRuleActions action="target.setPluginClass(source.getModelPluginID() + &quot;.gef.&quot; + source.getName() + &quot;GefPlugin&quot;)"/>
+    </helper>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/copyrightText"/>
+      <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenGEFModel/copyrightText"/>
+    </nested>
+    <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenModel"/>
+    <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenGEFModel"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="target.getPackageName().equals(source.getInterfacePackageName() + &quot;.editparts&quot;)"/>
+      <mappingRuleActions action="target.setPackageName(source.getInterfacePackageName() + &quot;.editparts&quot;)"/>
+      <mappingRuleActions action="target.setName(source.getPrefix() + &quot;EditPartFactory&quot;)"/>
+      <mappingRuleActions action="genGEFModel = transformer.getFirstMappedInstance(source.getGenModel(), true)"/>
+      <mappingRuleActions action="genGEFModel.getGenEditPartFactories().add(target)"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenPackage"/>
+    <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenEditPartFactory"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="target.getPackageName().equals(source.getInterfacePackageName() + &quot;.gefeditor&quot;)"/>
+      <mappingRuleActions action="target.setPackageName(source.getInterfacePackageName() + &quot;.gefeditor&quot;)"/>
+      <mappingRuleActions action="target.setName(source.getPrefix() + &quot;Editor&quot;)"/>
+      <mappingRuleActions action="genGEFModel = transformer.getFirstMappedInstance(source.getGenModel(), true)"/>
+      <mappingRuleActions action="genGEFModel.getGenEditors().add(target)"/>
+      <mappingRuleActions action="genEditPartFactory = transformer.getFirstMappedInstance(source, com.metys.merlin.generation.gef.genmodel.GenEditPartFactory.class, true)"/>
+      <mappingRuleActions action="target.setGenEditPartFactory(genEditPartFactory)"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenPackage"/>
+    <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenEditor"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="target.getPackageName().equals(source.getInterfacePackageName() + &quot;.gefviewer&quot;)"/>
+      <mappingRuleActions action="target.setPackageName(source.getInterfacePackageName() + &quot;.gefviewer&quot;)"/>
+      <mappingRuleActions action="target.setName(source.getPrefix() + &quot;Viewer&quot;)"/>
+      <mappingRuleActions action="genGEFModel = transformer.getFirstMappedInstance(source.getGenModel(), true)"/>
+      <mappingRuleActions action="genGEFModel.getGenViewers().add(target)"/>
+      <mappingRuleActions action="genEditPartFactory = transformer.getFirstMappedInstance(source, com.metys.merlin.generation.gef.genmodel.GenEditPartFactory.class, true)"/>
+      <mappingRuleActions action="target.setGenEditPartFactory(genEditPartFactory)"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenPackage"/>
+    <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenViewer"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="target.getEcoreClass() == source.getEcoreClass()"/>
+      <mappingRuleConditions condition="source.getEcoreClass().getEAnnotation(&quot;com.metys.merlin.LinkClass&quot;) == null"/>
+      <mappingRuleActions action="genGEFModel = transformer.getFirstMappedInstance(source.getGenModel(), true)"/>
+      <mappingRuleActions action="genGEFModel.getGenEditParts().add(target)"/>
+      <mappingRuleActions action="target.setName(source.getName())"/>
+      <mappingRuleActions action="target.setPackageName(source.getGenPackage().getInterfacePackageName() + &quot;.editparts&quot;)"/>
+      <mappingRuleActions action="target.setEcoreClass(source.getEcoreClass())"/>
+      <mappingRuleActions action="genEditor = transformer.getFirstMappedInstance(source.getGenPackage(), com.metys.merlin.generation.gef.genmodel.GenEditor.class, true)"/>
+      <mappingRuleActions action="if (genEditor.getGenPaletteComponentsFactories().isEmpty()) genEditor.getGenPaletteComponentsFactories().add(com.metys.merlin.generation.gef.genmodel.GenModelFactory.eINSTANCE.createGenPaletteComponentsFactory())"/>
+      <mappingRuleActions action="genPaletteComponentsFactory = genEditor.getGenPaletteComponentsFactories().get(0)"/>
+      <mappingRuleActions action="if (!source.isAbstract()) genPaletteComponentsFactory.getGenNodeParts().add(target)"/>
+      <mappingRuleActions action="genEditPartFactory = transformer.getFirstMappedInstance(source.getGenPackage(), com.metys.merlin.generation.gef.genmodel.GenEditPartFactory.class, true)"/>
+      <mappingRuleActions action="if (!source.isAbstract()) genEditPartFactory.getGenEditParts().add(target)"/>
+    </helper>
+    <nested xsi:type="mappingmodel.mapping:TypeMapping">
+      <helper xsi:type="mappingmodel.rules:MappingRule"/>
+      <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenClass/genFeatures"/>
+      <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenNodeEditPart/subNodeReferences"/>
+    </nested>
+    <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenClass"/>
+    <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenNodeEditPart"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="target.getEcoreClass() == source.getEcoreClass()"/>
+      <mappingRuleConditions condition="source.getEcoreClass().getEAnnotation(&quot;com.metys.merlin.LinkClass&quot;) != null"/>
+      <mappingRuleActions action="genGEFModel = transformer.getFirstMappedInstance(source.getGenModel(), true)"/>
+      <mappingRuleActions action="genGEFModel.getGenEditParts().add(target)"/>
+      <mappingRuleActions action="target.setName(source.getName())"/>
+      <mappingRuleActions action="target.setPackageName(source.getGenPackage().getInterfacePackageName() + &quot;.editparts&quot;)"/>
+      <mappingRuleActions action="target.setEcoreClass(source.getEcoreClass())"/>
+      <mappingRuleActions action="genEditor = transformer.getFirstMappedInstance(source.getGenPackage(), true)"/>
+      <mappingRuleActions action="if (!source.isAbstract()) genEditor.getGenPaletteConnectionsFactory().getGenLinkParts().add(target)"/>
+      <mappingRuleActions action="genEditPartFactory = transformer.getFirstMappedInstance(source.getGenPackage(), com.metys.merlin.generation.gef.genmodel.GenEditPartFactory.class, true)"/>
+      <mappingRuleActions action="if (!source.isAbstract()) genEditPartFactory.getGenEditParts().add(target)"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenClass"/>
+    <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenLinkEditPart"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="target.eContainer() != null &amp;&amp; target.eContainer().getEcoreClass() == source.getEcoreClass()"/>
+      <mappingRuleConditions condition="source.getEcoreClass().getEAnnotation(&quot;com.metys.merlin.LinkClass&quot;) == null"/>
+      <mappingRuleActions action="target.setFigureClass(&quot;com.metys.merlin.generation.gef.figures.ENodeFigure&quot;)"/>
+      <mappingRuleActions action="genEditPart = transformer.getFirstMappedInstance(source, com.metys.merlin.generation.gef.genmodel.GenEditPart.class, true)"/>
+      <mappingRuleActions action="genEditPart.setGenFigure(target)"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenClass"/>
+    <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenFigure"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/modelName"/>
+    <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenGEFNamedElement/name"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <helper xsi:type="mappingmodel.rules:MappingRule">
+      <targetMatchingConditions condition="target.getReference() == source.getEcoreFeature()"/>
+      <mappingRuleConditions condition="source.isReferenceType() &amp;&amp; source.isContains()"/>
+      <mappingRuleActions action="target.setReference(source.getEcoreFeature())"/>
+    </helper>
+    <inputs href="http://www.eclipse.org/emf/2002/GenModel#//GenFeature"/>
+    <outputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenSubNodeReference"/>
+  </nested>
+  <inputs href="http://www.eclipse.org/emf/2002/GenModel#/"/>
+  <outputs href="http://www.metys.com/merlin/generation/gef.ecore#/"/>
+</mappingmodel.mapping:TypeMappingRoot>

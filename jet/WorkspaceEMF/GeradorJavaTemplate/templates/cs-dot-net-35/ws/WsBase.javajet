@@ -1,0 +1,205 @@
+<%@ jet package="jet.csdn35.ws" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="WsBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.ws.basica {
+
+
+using System;
+using System.Web;
+using System.Web.Services;
+using System.Collections;
+using br.com.digicom.ws;
+using br.com.digicom.lib.dao;
+using br.com.digicom.lib.util;
+using <%= conf.getNamespace() %>.servico;
+using <%= conf.getNamespace() %>.modelo.ws;
+using <%= conf.getNamespace() %>.modelo;
+using System.Collections.Generic;
+
+
+
+[WebService(Namespace="http://www.lojadigicom.com.br/webservices/")]
+
+public  class <%= classe.getNomeParaClasse() %>WSBase  : DCWebService { 
+
+	protected <%= classe.getNomeParaClasse() %>Servico _regraColecao =
+            FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico
+            (FabricaServico.LOCAL);
+
+	[WebMethod]
+	public   <%= classe.getNomeParaClasse() %>ObjetoWs[] ListaCorrente()  {
+		List<<%= classe.getNomeParaClasse() %>> lista;
+		lista = _regraColecao.listaTotal();
+		return ConverteLista(lista);
+	}
+
+
+	[WebMethod]
+	public   <%= classe.getNomeParaClasse() %>ObjetoWs InsereItem( <%= classe.getNomeParaClasse() %>ObjetoWs item  )  {
+		<%= classe.getNomeParaClasse() %> objetoVo;
+		objetoVo = CopiaParaObjetoVo(item);
+		_regraColecao.cria(objetoVo);
+		return item;
+	}
+
+	/*
+	[WebMethod]
+	public   <%= classe.getNomeParaClasse() %>ObjetoWs[] Insere<%= classe.getNomeParaClasse() %>( <%= classe.getNomeParaClasse() %>ObjetoWs <%= classe.getNomeParaClasse() %>  ,  <%= classe.getNomeParaClasse() %>Filtro filtro )  {
+		<%= classe.getNomeParaClasse() %>Dao dao;
+		<%= classe.getNomeParaClasse() %> objetoVo;
+		objetoVo = CopiaParaObjetoVo(<%= classe.getNomeParaClasse() %>);
+		//_regraColecao.PreInsercao(objetoVo);
+		regraColecao.insereItem(objetoVo);
+		return ListaPorFiltroObjeto(filtro);
+	}
+
+
+	[WebMethod]
+	public   <%= classe.getNomeParaClasse() %>ObjetoWs[] Altera<%= classe.getNomeParaClasse() %>( <%= classe.getNomeParaClasse() %>ObjetoWs <%= classe.getNomeParaClasse() %>  ,  <%= classe.getNomeParaClasse() %>Filtro filtro )  {
+		<%= classe.getNomeParaClasse() %> objetoVo;
+		objetoVo = CopiaParaObjetoVo(<%= classe.getNomeParaClasse() %>);
+		//_regraColecao.PreAlteracao(objetoVo);
+		dao.alteraItem(objetoVo);
+		dao.liberaConexao(conexao);
+		return ListaPorFiltroObjeto(filtro);
+	}
+	*/
+	
+	
+	protected   <%= classe.getNomeParaClasse() %>ObjetoWs[] ConverteLista( ArrayList lista )  {
+		<%= classe.getNomeParaClasse() %>ObjetoWs[] saida;
+		saida = new <%= classe.getNomeParaClasse() %>ObjetoWs[lista.Count];
+		for (int i=0;i<lista.Count;i++) 
+			saida[i] = CopiaParaObjetoWs((<%= classe.getNomeParaClasse() %>)lista[i]);
+		return saida;
+	}
+ 	protected <%= classe.getNomeParaClasse() %>ObjetoWs[] ConverteLista(List<<%= classe.getNomeParaClasse() %>> lista)
+    {
+        <%= classe.getNomeParaClasse() %>ObjetoWs[] saida;
+        saida = new <%= classe.getNomeParaClasse() %>ObjetoWs[lista.Count];
+        for (int i = 0; i < lista.Count; i++)
+            saida[i] = CopiaParaObjetoWs((<%= classe.getNomeParaClasse() %>)lista[i]);
+        return saida;
+    }
+    protected List<<%= classe.getNomeParaClasse() %>> DesConverteLista( <%= classe.getNomeParaClasse() %>ObjetoWs[] lista )  {
+		List<<%= classe.getNomeParaClasse() %>> saida;
+		saida = new List<<%= classe.getNomeParaClasse() %>>();
+		for (int i=0;i<lista.Length;i++) 
+			saida.Add(CopiaParaObjetoVo((<%= classe.getNomeParaClasse() %>ObjetoWs)lista[i]));
+		return saida;
+	}
+	/*
+	protected   ArrayList DesConverteLista( <%= classe.getNomeParaClasse() %>ObjetoWs[] lista )  {
+		ArrayList saida;
+		saida = new ArrayList();
+		for (int i=0;i<lista.Length;i++) 
+			saida.Add(CopiaParaObjetoVo((<%= classe.getNomeParaClasse() %>ObjetoWs)lista[i]));
+		return saida;
+	}
+	*/
+
+
+
+
+
+
+	public    static <%= classe.getNomeParaClasse() %>ObjetoWs CopiaParaObjetoWs( <%= classe.getNomeParaClasse() %> vo )  {
+		// Nao copia listas associadas, apenas objetos unicos.
+		if (vo==null) return null;
+		<%= classe.getNomeParaClasse() %>ObjetoWs objetoWs =  new <%= classe.getNomeParaClasse() %>ObjetoWs();
+		<%
+		Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+		while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();
+		%>
+		objetoWs.<%= atributo.getNomePropriedade() %> = vo.<%= atributo.getNomePropriedade() %>;
+		<%
+		}
+		%>
+		// *** Inicio Relacionamentos Unicos *** 
+		<%
+		Iterator<RelacionamentoWrapper> iterador3 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador3.hasNext()) {
+		RelacionamentoWrapper relac = iterador3.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		if (vo.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>!=null)
+			objetoWs.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = <%= classeOposta.getNomeParaClasse() %>WSBase.CopiaParaObjetoWs(vo.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>);
+		<%
+		}
+		%>
+		// *** Final Relacionamentos Unicos *** 
+		return objetoWs;
+	}
+
+	public    static <%= classe.getNomeParaClasse() %> CopiaParaObjetoVo( <%= classe.getNomeParaClasse() %>ObjetoWs objetoWs )  {
+		if (objetoWs==null) return null;
+		<%= classe.getNomeParaClasse() %> vo =  FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+		<%
+		iterador = classe.getListaAtributoTotal().iterator();
+		while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();
+		%>
+		vo.<%= atributo.getNomePropriedade() %> = objetoWs.<%= atributo.getNomePropriedade() %>;
+		<%
+		}
+		%>
+		// *** Inicio Relacionamentos Multiplos *** 
+		<%
+		Iterator<RelacionamentoWrapper> iterador2 = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iterador2.hasNext()) {
+		RelacionamentoWrapper relac = iterador2.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		if (objetoWs.Lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> != null) {
+			for (int i = 0; i < objetoWs.Lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>.Length;i++ )
+	        {
+    	        vo.AddLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = <%= classeOposta.getNomeParaClasse() %>WSBase.CopiaParaObjetoVo(objetoWs.Lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>[i]);
+        	}
+        }
+		<%
+		}
+     	%>
+     	// *** Final Relacionamentos Multiplos ***
+		// *** Inicio Relacionamentos Unicos *** 
+		<%
+		iterador2 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador2.hasNext()) {
+		RelacionamentoWrapper relac = iterador2.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		if (objetoWs.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>!=null)
+			vo.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = <%= classeOposta.getNomeParaClasse() %>WSBase.CopiaParaObjetoVo(objetoWs.<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>);
+		<%
+		}
+     	%>
+     	// *** Final Relacionamentos Multiplos ***
+		 
+		return vo;
+	}
+
+	/*
+	[WebMethod]
+	public   <%= classe.getNomeParaClasse() %>ObjetoWs[] ListaPorFiltroObjeto( <%= classe.getNomeParaClasse() %>Filtro filtro )  {
+		ArrayList lista;
+		<%= classe.getNomeParaClasse() %>RegraColecao regraColecao;
+		regraColecao = FabricaRegra.getInstancia().get<%= classe.getNomeParaClasse() %>RegraColecao();
+		regraColecao.Filtro = filtro;
+		lista = regraColecao.ListaFiltro();
+		return ConverteLista(lista);
+	}
+	*/
+
+	[WebMethod]
+	public   <%= classe.getNomeParaClasse() %>ObjetoWs ObtemPorChave( long id )  {
+		<%= classe.getNomeParaClasse() %> vo;
+		vo = _regraColecao.obtemPorId(id);
+		return CopiaParaObjetoWs(vo);
+	}
+}
+}

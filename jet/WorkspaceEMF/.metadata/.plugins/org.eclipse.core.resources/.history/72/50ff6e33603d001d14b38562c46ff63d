@@ -1,0 +1,372 @@
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
+ */
+package exemplo1;
+
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+
+/**
+ * <!-- begin-user-doc -->
+ * The <b>Package</b> for the model.
+ * It contains accessors for the meta objects to represent
+ * <ul>
+ *   <li>each class,</li>
+ *   <li>each feature of each class,</li>
+ *   <li>each enum,</li>
+ *   <li>and each data type</li>
+ * </ul>
+ * <!-- end-user-doc -->
+ * @see exemplo1.Exemplo1Factory
+ * @model kind="package"
+ * @generated
+ */
+public interface Exemplo1Package extends EPackage {
+	/**
+	 * The package name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String eNAME = "exemplo1";
+
+	/**
+	 * The package namespace URI.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String eNS_URI = "http:///exemplo1.ecore";
+
+	/**
+	 * The package namespace name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String eNS_PREFIX = "exemplo1";
+
+	/**
+	 * The singleton instance of the package.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	Exemplo1Package eINSTANCE = exemplo1.impl.Exemplo1PackageImpl.init();
+
+	/**
+	 * The meta object id for the '{@link exemplo1.impl.BookImpl <em>Book</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see exemplo1.impl.BookImpl
+	 * @see exemplo1.impl.Exemplo1PackageImpl#getBook()
+	 * @generated
+	 */
+	int BOOK = 0;
+
+	/**
+	 * The feature id for the '<em><b>Title</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOK__TITLE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Pages</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOK__PAGES = 1;
+
+	/**
+	 * The number of structural features of the '<em>Book</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOK_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link exemplo1.impl.WriterImpl <em>Writer</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see exemplo1.impl.WriterImpl
+	 * @see exemplo1.impl.Exemplo1PackageImpl#getWriter()
+	 * @generated
+	 */
+	int WRITER = 1;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WRITER__NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>Writer</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WRITER_FEATURE_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link exemplo1.impl.LibraryImpl <em>Library</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see exemplo1.impl.LibraryImpl
+	 * @see exemplo1.impl.Exemplo1PackageImpl#getLibrary()
+	 * @generated
+	 */
+	int LIBRARY = 2;
+
+	/**
+	 * The feature id for the '<em><b>Writer</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LIBRARY__WRITER = 0;
+
+	/**
+	 * The feature id for the '<em><b>Book</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LIBRARY__BOOK = 1;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LIBRARY__NAME = 2;
+
+	/**
+	 * The number of structural features of the '<em>Library</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LIBRARY_FEATURE_COUNT = 3;
+
+
+	/**
+	 * Returns the meta object for class '{@link exemplo1.Book <em>Book</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Book</em>'.
+	 * @see exemplo1.Book
+	 * @generated
+	 */
+	EClass getBook();
+
+	/**
+	 * Returns the meta object for the attribute '{@link exemplo1.Book#getTitle <em>Title</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Title</em>'.
+	 * @see exemplo1.Book#getTitle()
+	 * @see #getBook()
+	 * @generated
+	 */
+	EAttribute getBook_Title();
+
+	/**
+	 * Returns the meta object for the attribute '{@link exemplo1.Book#getPages <em>Pages</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Pages</em>'.
+	 * @see exemplo1.Book#getPages()
+	 * @see #getBook()
+	 * @generated
+	 */
+	EAttribute getBook_Pages();
+
+	/**
+	 * Returns the meta object for class '{@link exemplo1.Writer <em>Writer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Writer</em>'.
+	 * @see exemplo1.Writer
+	 * @generated
+	 */
+	EClass getWriter();
+
+	/**
+	 * Returns the meta object for the attribute '{@link exemplo1.Writer#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see exemplo1.Writer#getName()
+	 * @see #getWriter()
+	 * @generated
+	 */
+	EAttribute getWriter_Name();
+
+	/**
+	 * Returns the meta object for class '{@link exemplo1.Library <em>Library</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Library</em>'.
+	 * @see exemplo1.Library
+	 * @generated
+	 */
+	EClass getLibrary();
+
+	/**
+	 * Returns the meta object for the reference list '{@link exemplo1.Library#getWriter <em>Writer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Writer</em>'.
+	 * @see exemplo1.Library#getWriter()
+	 * @see #getLibrary()
+	 * @generated
+	 */
+	EReference getLibrary_Writer();
+
+	/**
+	 * Returns the meta object for the reference list '{@link exemplo1.Library#getBook <em>Book</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Book</em>'.
+	 * @see exemplo1.Library#getBook()
+	 * @see #getLibrary()
+	 * @generated
+	 */
+	EReference getLibrary_Book();
+
+	/**
+	 * Returns the meta object for the attribute '{@link exemplo1.Library#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see exemplo1.Library#getName()
+	 * @see #getLibrary()
+	 * @generated
+	 */
+	EAttribute getLibrary_Name();
+
+	/**
+	 * Returns the factory that creates the instances of the model.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the factory that creates the instances of the model.
+	 * @generated
+	 */
+	Exemplo1Factory getExemplo1Factory();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * Defines literals for the meta objects that represent
+	 * <ul>
+	 *   <li>each class,</li>
+	 *   <li>each feature of each class,</li>
+	 *   <li>each enum,</li>
+	 *   <li>and each data type</li>
+	 * </ul>
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	interface Literals {
+		/**
+		 * The meta object literal for the '{@link exemplo1.impl.BookImpl <em>Book</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see exemplo1.impl.BookImpl
+		 * @see exemplo1.impl.Exemplo1PackageImpl#getBook()
+		 * @generated
+		 */
+		EClass BOOK = eINSTANCE.getBook();
+
+		/**
+		 * The meta object literal for the '<em><b>Title</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BOOK__TITLE = eINSTANCE.getBook_Title();
+
+		/**
+		 * The meta object literal for the '<em><b>Pages</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BOOK__PAGES = eINSTANCE.getBook_Pages();
+
+		/**
+		 * The meta object literal for the '{@link exemplo1.impl.WriterImpl <em>Writer</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see exemplo1.impl.WriterImpl
+		 * @see exemplo1.impl.Exemplo1PackageImpl#getWriter()
+		 * @generated
+		 */
+		EClass WRITER = eINSTANCE.getWriter();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute WRITER__NAME = eINSTANCE.getWriter_Name();
+
+		/**
+		 * The meta object literal for the '{@link exemplo1.impl.LibraryImpl <em>Library</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see exemplo1.impl.LibraryImpl
+		 * @see exemplo1.impl.Exemplo1PackageImpl#getLibrary()
+		 * @generated
+		 */
+		EClass LIBRARY = eINSTANCE.getLibrary();
+
+		/**
+		 * The meta object literal for the '<em><b>Writer</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LIBRARY__WRITER = eINSTANCE.getLibrary_Writer();
+
+		/**
+		 * The meta object literal for the '<em><b>Book</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LIBRARY__BOOK = eINSTANCE.getLibrary_Book();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LIBRARY__NAME = eINSTANCE.getLibrary_Name();
+
+	}
+
+} //Exemplo1Package

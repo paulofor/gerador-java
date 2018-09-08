@@ -1,0 +1,37 @@
+<%@ jet package="jet.java.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="FabricaRegra" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.regracolecao;
+
+import  <%= conf.getNamespace() %>.regracolecao.impl.*;
+
+// versao templates
+
+public  class FabricaRegra   {
+
+	private static FabricaRegra _instancia =  null;
+	public static FabricaRegra getInstancia() {
+		if (_instancia==null) _instancia = new FabricaRegra();
+		return _instancia;
+	}
+
+<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+%>
+	private  <%= corrente.getNomeParaClasse() %>RegraColecao _<%= corrente.getNomeParaVariavel() %>RegraColecao;
+	public  <%= corrente.getNomeParaClasse() %>RegraColecao get<%= corrente.getNomeParaClasse() %>RegraColecao() {
+		if (_<%= corrente.getNomeParaVariavel() %>RegraColecao==null) _<%= corrente.getNomeParaVariavel() %>RegraColecao = new <%= corrente.getNomeParaClasse() %>RegraColecaoImpl();
+		return _<%= corrente.getNomeParaVariavel() %>RegraColecao;
+	}
+<%
+}
+%>
+
+}

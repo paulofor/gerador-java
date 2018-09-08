@@ -1,0 +1,59 @@
+<%@ jet package="jet.csdn35.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="FabricaServico" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+
+
+namespace <%= conf.getNamespace() %>.servico {
+
+using <%= conf.getNamespace() %>.servico.local;
+using <%= conf.getNamespace() %>.servico.remoto;
+
+public class FabricaServico {
+
+	static FabricaServico fabrica = new FabricaServico();
+	public static int LOCAL = 1;
+	public static int REMOTO = 2;
+	
+	public static FabricaServico getInstancia() {
+		return fabrica;
+	}
+
+<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+%>
+
+	private <%= corrente.getNomeParaClasse() %>Servico <%= corrente.getNomeParaVariavel() %>ServicoLocal = null;
+	private <%= corrente.getNomeParaClasse() %>Servico <%= corrente.getNomeParaVariavel() %>ServicoRemoto = null;
+	
+	public <%= corrente.getNomeParaClasse() %>Servico get<%= corrente.getNomeParaClasse() %>Servico(int tipo) {
+		if (tipo==LOCAL) {
+			// Mudanca feita para permitir que tente se reaproveitar a conexao com o banco de dados.
+			//return new <%= corrente.getNomeParaVariavel() %>ServicoLocalImpl()
+			if (<%= corrente.getNomeParaVariavel() %>ServicoLocal==null) {
+				<%= corrente.getNomeParaVariavel() %>ServicoLocal = new <%= corrente.getNomeParaClasse() %>ServicoLocalImpl();
+			}
+			return <%= corrente.getNomeParaVariavel() %>ServicoLocal;
+		}
+		if (tipo==REMOTO) {
+			if (<%= corrente.getNomeParaVariavel() %>ServicoRemoto==null) {
+				<%= corrente.getNomeParaVariavel() %>ServicoRemoto = new <%= corrente.getNomeParaClasse() %>ServicoRemotoImpl();
+			}
+			return <%= corrente.getNomeParaVariavel() %>ServicoRemoto;
+		}
+		return null;
+	}
+	
+<%
+	}
+%>
+	}
+}
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><feature id="org.eclipse.datatools.enablement.sybase.feature" image="eclipse_update_120.jpg" label="%featureName" plugin="org.eclipse.datatools.enablement.sybase" provider-name="%providerName" version="1.5.2.200802201">
+	<description>%description</description>
+	<license url="%licenseURL">%license</license>
+	<url>
+		<update label="Data Tools Platform (DTP) Updates" url="http://download.eclipse.org/datatools/updates"/>
+		<discovery label="Data Tools Platform (DTP) Updates" url="http://download.eclipse.org/datatools/updates"/>
+	</url>
+	<requires>
+		<import feature="org.eclipse.datatools.modelbase.feature" version="1.5.2"/>
+		<import feature="org.eclipse.datatools.connectivity.feature" version="1.5.2"/>
+		<import feature="org.eclipse.datatools.sqldevtools.feature" version="1.5.2"/>
+		<import feature="org.eclipse.datatools.enablement.jdbc.feature" version="1.5.2"/>
+	</requires>
+	<plugin download-size="181" id="org.eclipse.datatools.enablement.sybase.asa.models" install-size="181" unpack="false" version="1.0.0.200706071"/>
+	<plugin download-size="282" id="org.eclipse.datatools.enablement.sybase.asa" install-size="282" unpack="false" version="1.0.0.200706071"/>
+	<plugin download-size="8" id="org.eclipse.datatools.enablement.sybase.ase.dbdefinition" install-size="8" unpack="false" version="1.0.0.200706071"/>
+	<plugin download-size="2" id="org.eclipse.datatools.enablement.sybase.ase.profile" install-size="2" unpack="false" version="1.0.0.200706071"/>
+	<plugin download-size="166" id="org.eclipse.datatools.enablement.sybase" install-size="166" unpack="false" version="1.0.1.200707131"/>
+</feature>

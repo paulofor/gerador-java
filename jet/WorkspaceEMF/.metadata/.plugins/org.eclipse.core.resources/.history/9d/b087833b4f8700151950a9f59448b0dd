@@ -1,0 +1,199 @@
+package gerapp.app;
+
+
+import gerapp.modelo.Entidade;
+
+import java.io.IOException;
+
+import jet.android.data.ContentProviderAplicacao;
+import jet.android.data.ContentProviderBase;
+import jet.android.data.ContractAplicacao;
+import jet.android.data.ContractEntidade;
+import jet.android.data.DBHelperAplicacao;
+import jet.android.data.DBHelperEntidade;
+import jet.android.data.FiltroContract;
+import jet.android2.activity.ListAdapterBase;
+import jet.android2.activity.ListFragmentBase;
+import jet.android2.activity.ListViewHolderBase;
+import jet.android2.data.ConsultaEntidade;
+import jet.android2.data.OperacaoBaseEntidade;
+import jet.android2.data.OperacaoEntidade;
+import jet.android2.modelo.Vo;
+import jet.android2.res.ManifestXml;
+import jet.android2.sincronismo.ObjetoRemote;
+import jet.android2.sincronismo.ObjetoSincronismo;
+import jet.android2.sync.SyncAdapter;
+import jet.android2.sync.SyncAuthenticator;
+import jet.android2.sync.SyncAuthenticatorService;
+import jet.android2.sync.SyncService;
+import jet.wrappers.android.ClasseWrapperAndroid;
+import jet.wrappers.base.ClasseWrapper;
+
+public class GeradorArquivosAndroid2 extends GeradorArquivosBase {
+
+	
+	protected Configuracao configuracao = null;
+	protected ClasseWrapper entidade = null;
+	
+	//D:\Fontes\ProjetosAndroidStudio\ContatoNoite\app\src\main\java\br\com\digicom\contatonoite
+	private static String PATH_TEMPLATES = "D:/Fontes/ProjetosAndroidStudio/";
+	
+	private String getPath(Recursos recursos) {
+		return PATH_TEMPLATES + recursos.getConfiguracao().getNamespace() + "/app/src/main/java/br/com/lojadigicom/" + recursos.getConfiguracao().getNamespacePath();
+	}
+	
+	@Override
+	public void criaArquivoEntidade(Recursos recursos) throws IOException{
+		criaArquivoDatabase(recursos);
+		criaArquivoModelo(recursos);
+		criaArquivoAplicacao(recursos);
+		criaArquivoSincronismo(recursos);
+		criaArquivoTemplate(recursos);
+	}
+
+	private void criaArquivoTemplate(Recursos recursos) throws IOException{
+		String nomeArquivo = getPath(recursos) + "//template//lista//" + recursos.getClasse().getNomeParaClasse()  + "ListAdapterBase.java";
+		String conteudo = ListAdapterBase.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//template//lista//" + recursos.getClasse().getNomeParaClasse()  + "ListFragmentBase.java";
+		conteudo = ListFragmentBase.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		nomeArquivo =  getPath(recursos) + "//template//lista//" + recursos.getClasse().getNomeParaClasse()  + "ListViewHolderBase.java";
+		conteudo = ListViewHolderBase.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+	}
+
+	private void criaArquivoSincronismo(Recursos recursos) throws IOException {
+		String nomeArquivo = getPath(recursos) + "//remoto//" + recursos.getClasse().getNomeParaClasse()  + "Sincronismo.java";
+		String conteudo = ObjetoSincronismo.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//remoto//" + recursos.getClasse().getNomeParaClasse()  + "Remote.java";
+		conteudo = ObjetoRemote.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+	}
+
+	@Override
+	public void criaArquivoUnico(Recursos recursos) throws IOException {
+		criaArquivoUnicoDatabase(recursos);
+		criaArquivoSync(recursos);
+	}
+
+	@Override
+	protected ClasseWrapper criaWrapper(Entidade entidade) {
+		// TODO Auto-generated method stub
+		return new ClasseWrapperAndroid(entidade);
+	}
+	
+	private void criaArquivoSync(Recursos recursos) throws IOException {
+		String nomeArquivo = getPath(recursos) + "//sync//AplicacaoAuthenticator.java";
+		String conteudo = SyncAuthenticator.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//sync//AplicacaoAuthenticatorService.java";
+		conteudo = SyncAuthenticatorService.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//sync//AplicacaoSyncAdapter.java";
+		conteudo = SyncAdapter.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//sync//AplicacaoSyncService.java";
+		conteudo = SyncService.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+	}
+	
+	
+	private void criaArquivoDatabase(Recursos recursos) throws IOException {
+		String nomeArquivo = getPath(recursos) + "//data//provider//" + recursos.getClasse().getNomeParaClasse()  + "Provider.java";
+		String conteudo = ContentProviderBase.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//data//contract//" + recursos.getClasse().getNomeParaClasse()  + "Contract.java";
+		conteudo = ContractEntidade.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//data//contract//" + recursos.getClasse().getNomeParaClasse()  + "Filtro.java";
+		conteudo = FiltroContract.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//data//helper//" + recursos.getClasse().getNomeParaClasse()  + "DbHelper.java";
+		conteudo = DBHelperEntidade.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//data//contract//" + recursos.getClasse().getNomeParaClasse()  + "Operacao.java";
+		//if (!this.existe(nomeArquivo)) {
+			conteudo = OperacaoEntidade.create("\n").generate(recursos);
+			geraArquivoFonte(conteudo,nomeArquivo);
+		//}
+		nomeArquivo =  getPath(recursos) + "//data//contract//" + recursos.getClasse().getNomeParaClasse()  + "OperacaoBase.java";
+		conteudo = OperacaoBaseEntidade.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//data//provider//" + recursos.getClasse().getNomeParaClasse()  + "Consulta.java";
+		if (!this.existe(nomeArquivo)) {
+			conteudo = ConsultaEntidade.create("\n").generate(recursos);
+			geraArquivoFonte(conteudo,nomeArquivo);
+		}
+		//Acho que isso não precisa, já tem no Provider
+		//nomeArquivo =  getPath(recursos) + "//data//provider//" + recursos.getClasse().getNomeParaClasse()  + "ConsultaBase.java";
+		//conteudo = ConsultaBaseEntidade.create("\n").generate(recursos);
+		//geraArquivoFonte(conteudo,nomeArquivo);
+	}
+	
+	private void criaArquivoUnicoDatabase(Recursos recursos) throws IOException {
+		String nomeArquivo = getPath(recursos) + "//data//contract//AplicacaoContract.java";
+		String conteudo = ContractAplicacao.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//data//helper//AplicacaoDbHelper.java";
+		conteudo = DBHelperAplicacao.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo =  getPath(recursos) + "//data//provider//AplicacaoProvider.java";
+		conteudo = ContentProviderAplicacao.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+	}
+	
+	
+	private void criaArquivoModelo(Recursos recursos) throws IOException {
+		String nomeArquivo = getPath(recursos) + "//modelo//" + recursos.getClasse().getNomeParaClasse()  + ".java";
+		//System.out.println("Criando arquivo " + nomeArquivo);
+		String conteudo = Vo.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+	}
+	
+	
+	@Override
+	public void limpaArquivos(Recursos recurso) throws IOException {
+		// TODO Auto-generated method stub
+		this.limpaCaminho(recurso.getConfiguracao().getPathPacoteRegraColecaoBase());
+		
+	}
+	
+	private void criaArquivoAplicacao(Recursos recursos) throws IOException{ 
+
+		String nomeArquivo = this.getPath(recursos) + "//..//..//AndroidManifestInicial.xml";
+		String conteudo = ManifestXml.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+
+		/*
+		nomeArquivo = recursos.getConfiguracao().getPathAndroid() + "//dao//FabricaDao.java";
+		conteudo = FabricaDao.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+		
+		nomeArquivo = recursos.getConfiguracao().getPathAndroid() + "//modelo//vo//FabricaVo.java";
+		conteudo = FabricaVo.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+				nomeArquivo = recursos.getConfiguracao().getPathAndroid() + "//..//..//res//layout//lista_" + recursos.getClasse().getNomeParaTabela() + ".xml";
+		conteudo = ListaObjetoXml.create("\n").generate(recursos);
+		geraArquivoFonte(conteudo,nomeArquivo);
+
+		*/
+	}
+
+	
+}

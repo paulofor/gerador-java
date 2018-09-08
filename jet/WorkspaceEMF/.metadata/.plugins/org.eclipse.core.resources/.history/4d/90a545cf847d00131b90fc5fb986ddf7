@@ -1,0 +1,878 @@
+<%@ jet package="jet.csdn35.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="ServicoLocalBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using <%= conf.getNamespace() %>.modelo.vo;
+using <%= conf.getNamespace() %>.modelo;
+using <%= conf.getNamespace() %>.servico;
+using <%= conf.getNamespace() %>.servico.filtro;
+using <%= conf.getNamespace() %>.dao;
+using <%= conf.getNamespace() %>.dao.basico;
+using br.com.digicom.lib.dao;
+using br.com.digicom.lib.util;
+using digicom.util;
+
+namespace <%= conf.getNamespace() %>.servico.local.basico {
+
+public abstract class <%= classe.getNomeParaClasse() %>ServicoLocalBase :  <%= classe.getNomeParaClasse() %>Servico {
+
+	/*
+	public <%= classe.getNomeParaClasse() %>ServicoLocalBase()
+    {
+      	
+	}
+	*/
+	
+	
+	public static <%= classe.getNomeParaClasse() %>Dao getDao()  
+	{
+      //return FabricaDao.getInstancia().get<%= classe.getNomeParaClasse() %>Dao();
+      return new <%= classe.getNomeParaClasse() %>Dao();
+	}
+	
+	protected virtual void preInsert(<%= classe.getNomeParaClasse() %> item) { }
+	protected virtual void preUpdate(<%= classe.getNomeParaClasse() %> item) { }
+	
+	/*
+	private <%= classe.getNomeParaClasse() %>Filtro _filtro;
+  	public <%= classe.getNomeParaClasse() %>Filtro getFiltro() {
+	    if (_filtro==null) _filtro = new <%= classe.getNomeParaClasse() %>Filtro();
+	    return _filtro;
+  	}
+	public <%= classe.getNomeParaClasse() %>Filtro Filtro {
+		set { _filtro = value; }
+  	}
+	*/
+	
+	/*
+	<%
+	Iterator<RelacionamentoWrapper> iterador4 = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (iterador4.hasNext()) {
+	RelacionamentoWrapper relac = iterador4.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	AtributoWrapper chaveOposta = classeOposta.getChaveW();
+	%>
+	public override <%= classe.getNomeParaClasse() %> obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(long id) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	<%= classe.getNomeParaClasse() %> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(id,conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = null;
+      	}
+      	dao.liberaConexao(conexao);
+      	return saida;
+	}
+	public override <%= classe.getNomeParaClasse() %> obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(long id, DaoConexao conexao){
+		<%= classe.getNomeParaClasse() %> saida = null;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		saida = dao.obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(id);
+		return saida;
+	}
+ 	<%
+		}
+	%>
+	*/
+	
+<%
+	Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra.hasNext()) {
+	RegraColecao regra = iteradorRegra.next();
+	if (regra.getAtivoCs()) {
+		String tipoRetorno = null;
+		String param = null;
+		String paramConn = null;
+		if (regra.getRetornaColecao()) tipoRetorno = "List<" + classe.getNomeParaClasse() + ">";
+		else tipoRetorno = classe.getNomeParaClasse();
+		if (regra.getRecebeColecao()) { 
+			param = "List<" + classe.getNomeParaClasse() + "> lista";
+			paramConn = "lista, conexao";
+		} else {
+			param = "";
+			paramConn = "conexao";
+		}
+%>
+	//public abstract <%= tipoRetorno %> <%= regra.getNome() %>(DaoConexao conexao);
+	public override <%= tipoRetorno %> <%= regra.getNome() %>(<%= param %>){
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.<%= regra.getNome() %>");
+	 	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	<%= tipoRetorno %> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = <%= regra.getNome() %>(<%= paramConn %>);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = null;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("<%= regra.getNome() %>");
+      	return saida;
+	}
+<%
+	}
+	}
+%>
+	public override List<<%= classe.getNomeParaClasse() %>> listaFiltroChaves()  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.listaFiltroChaves");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	List<<%= classe.getNomeParaClasse() %>> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = listaFiltroChaves(conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = null;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("listaFiltroChaves");
+      	return saida;
+	}
+	public override <%= classe.getNomeParaClasse() %> itemFiltroChaves()  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.itemFiltroChaves");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	<%= classe.getNomeParaClasse() %> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = itemFiltroChaves(conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = null;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("itemFiltroChaves");
+      	return saida;
+	}
+
+	public override List<<%= classe.getNomeParaClasse() %>> listaTotal()  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.listaTotal");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	List<<%= classe.getNomeParaClasse() %>> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = listaTotal(conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = null;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("listaTotal");
+      	return saida;
+	}
+	<%
+		String parametros = "";
+		Iterator<RelacionamentoWrapper> itRel = classe.obtemListaComChaveEstrangeira().iterator();
+		while (itRel.hasNext()) {
+		RelacionamentoWrapper relac = itRel.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		if (parametros.length()>0) parametros += " , ";
+		parametros += "getFiltro().Codigo" + classeOposta.getNomeParaClasse() + "_" + relac.getNomeRelacionamento() ;
+		}
+	%>
+	public override List<<%= classe.getNomeParaClasse() %>> listaFiltroChaves(DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		copiaObtem(dao);
+		ArrayList saida = dao.listaFiltroChaves(<%= parametros %>);
+		limpaObtem(dao);
+		return <%= classe.getNomeParaClasse() %>Dao.ConverteLista(saida);
+	}
+	public override <%= classe.getNomeParaClasse() %> itemFiltroChaves(DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		copiaObtem(dao);
+		ArrayList saida = dao.listaFiltroChaves(<%= parametros %>);
+		limpaObtem(dao);
+		if (saida.Count == 0)
+            return null;
+        else
+		    return dao.ConverteItem(saida[0]);
+	}
+	
+	public override List<<%= classe.getNomeParaClasse() %>> listaTotal(DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		copiaObtem(dao);
+		ArrayList saida = dao.listaTotal();
+		limpaObtem(dao);
+		return <%= classe.getNomeParaClasse() %>Dao.ConverteLista(saida);
+	}
+	
+	public override <%= classe.getNomeParaClasse() %> obtemPorId(long id)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.obtemPorId");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	<%= classe.getNomeParaClasse() %> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = obtemPorId(id, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = null;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("obtemPorId");
+      	return saida;
+	}
+	
+	public override <%= classe.getNomeParaClasse() %> obtemCompletoPorId(long id)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.obtemPorId");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	<%= classe.getNomeParaClasse() %> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = obtemCompletoPorId(id, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = null;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("obtemPorId");
+      	return saida;
+	}
+	
+	
+	public override void excluiPorId(long id)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.excluiPorId");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	excluiPorId(id, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("excluiPorId");
+	}
+	
+	public override bool criaLoad(<%= classe.getNomeParaClasse() %> item)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.criaLoad(<%= classe.getNomeParaClasse() %> item)");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	bool saida;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = criaLoad(item, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = false;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("criaLoad(<%= classe.getNomeParaClasse() %> item)");
+      	return saida;
+	}
+	
+	public override bool criaLoad(List<<%= classe.getNomeParaClasse() %>> listaItem)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.criaLoad(List<<%= classe.getNomeParaClasse() %>> listaItem)");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	bool saida;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = criaLoad(listaItem, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = false;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("criaLoad(List<<%= classe.getNomeParaClasse() %>> listaItem)");
+      	return saida;
+	}
+	
+	public override bool cria(<%= classe.getNomeParaClasse() %> item)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.cria(<%= classe.getNomeParaClasse() %> item)");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	bool saida;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = cria(item, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = false;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("cria(<%= classe.getNomeParaClasse() %> item)");
+      	return saida;
+	}
+	
+	public override bool cria(List<<%= classe.getNomeParaClasse() %>> listaItem)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.cria(List<<%= classe.getNomeParaClasse() %>> listaItem)");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	bool saida;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = cria(listaItem, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = false;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("cria(List<<%= classe.getNomeParaClasse() %>> listaItem)");
+      	return saida;
+	}
+	public override bool atualizaCamposEdicao(List<<%= classe.getNomeParaClasse() %>> listaItem)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.atualizaCamposEdicao(List<<%= classe.getNomeParaClasse() %>> listaItem)");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	bool saida;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = atualizaCamposEdicao(listaItem, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = false;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("atualizaCamposEdicao(List<<%= classe.getNomeParaClasse() %>> listaItem)");
+      	return saida;
+	}
+	
+	public override bool atualiza(<%= classe.getNomeParaClasse() %> item)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.atualiza(<%= classe.getNomeParaClasse() %> item)");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	bool saida;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = atualiza(item, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = false;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("atualiza(<%= classe.getNomeParaClasse() %> item)");
+      	return saida;
+	}
+	
+	protected void copiaObtem(<%= classe.getNomeParaClasse() %>Dao dao)
+    {
+        <%
+		Iterator<RelacionamentoWrapper> iterador3 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador3.hasNext()) {
+		RelacionamentoWrapper relac = iterador3.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		if (this._obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>) dao.setObtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();<%
+		}
+		%>
+    }
+    protected void limpaObtem(<%= classe.getNomeParaClasse() %>Dao dao)
+    {
+        <%
+		Iterator<RelacionamentoWrapper> iterador7 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador7.hasNext()) {
+		RelacionamentoWrapper relac = iterador7.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		AtributoWrapper chaveOposta = classeOposta.getChaveW();
+		%>
+		_obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = false;<%
+		}
+		%>
+		dao.limpaObtem();
+    }
+	
+	
+	// Lista Sincronizada, para receber altera??es do Android
+	public override void recebeListaSincronizada(List<<%= classe.getNomeParaClasse() %>> lista, string tmp, int versao)  {
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	recebeListaSincronizada(lista, tmp , versao, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+      	}
+      	dao.liberaConexao(conexao);
+	}
+	public override void  recebeListaSincronizada(List<<%= classe.getNomeParaClasse() %>> lista, string tmp, int versao, DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		foreach (<%= classe.getNomeParaClasse() %> item in lista)
+        {
+        	<%= classe.getNomeParaClasse() %>Vo vo = (<%= classe.getNomeParaClasse() %>Vo) item;
+        	if (vo.OperacaoSinc == "I")
+            {
+                dao.cria(item);
+            }
+            else
+            {
+                dao.atualiza(item);
+            }
+        }
+		return ;
+	}
+	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizada(string tmp)  {
+		List<<%= classe.getNomeParaClasse() %>> saida = null;
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = listaSincronizada(tmp,conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+      	}
+      	dao.liberaConexao(conexao);
+      	return saida;
+	}
+	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizada(string tmp, DaoConexao conexao) {
+ 		throw new NotImplementedException();
+ 	}
+	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuario(string tmp)  {
+		List<<%= classe.getNomeParaClasse() %>> saida = null;
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = listaSincronizadaUsuario(tmp,conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+      	}
+      	dao.liberaConexao(conexao);
+      	return saida;
+	}
+	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuario(string tmp, DaoConexao conexao) {
+ 		UsuarioServico usuarioSrv = FabricaServico.getInstancia().getUsuarioServico(FabricaServico.LOCAL);
+        usuarioSrv.getFiltro().CodigoAcesso = tmp;
+        Usuario usuario = usuarioSrv.ObtemPorCodigoAcesso(conexao);
+        <%= classe.getNomeParaClasse() %>Dao dao = getDao();
+        dao.setConexao(conexao);
+        ArrayList lista = dao.ObtemPorUsuario(usuario);
+        return <%= classe.getNomeParaClasse() %>DaoBase.ConverteLista(lista);
+ 	}
+
+	
+	public override <%= classe.getNomeParaClasse() %>  obtemPorId(long id, DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %> saida = null;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		copiaObtem(dao);
+		saida = dao.getPorId(id);
+		limpaObtem(dao);
+		return saida;
+	}
+	
+	public override <%= classe.getNomeParaClasse() %>  obtemCompletoPorId(long id, DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %> saida = null;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		copiaObtem(dao);
+		saida = dao.getCompletoPorId(id);
+		limpaObtem(dao);
+		return saida;
+	}
+	
+	public override void excluiPorId(long id, DaoConexao conexao) {
+		if (permiteExclusao(id,conexao)) {
+			<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+			dao.setConexao(conexao);
+			dao.excluiPorId(id);
+		}
+	}
+	
+	protected virtual bool permiteExclusao(long id, DaoConexao conexao) {
+		return true;
+	}
+	
+	public override bool criaLoad(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) {
+		bool saida = false;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		preInsert(item);
+		saida = dao.criaLoad(item);
+		return saida;
+	}
+	
+	public override bool criaLoad(List<<%= classe.getNomeParaClasse() %>> listaItem, DaoConexao conexao) {
+		bool saida = true;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		// Usar transacao
+		foreach (<%= classe.getNomeParaClasse() %> item in listaItem) {
+			saida = saida && dao.criaLoad(item);
+		}
+		return saida;
+	}
+	
+	public override bool cria(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) {
+		bool saida = false;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		preInsert(item);
+		saida = dao.cria(item);
+		return saida;
+	}
+	
+	public override bool atualizaCamposEdicao(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) {
+		bool saida = true;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		saida = dao.atualizaCamposEdicao(item);
+		return saida;
+	}
+	
+	
+	public override bool atualizaCamposEdicao(List<<%= classe.getNomeParaClasse() %>> listaItem, DaoConexao conexao) {
+		bool saida = true;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		// Usar transacao
+		foreach (<%= classe.getNomeParaClasse() %> item in listaItem) {
+			saida = saida && dao.atualizaCamposEdicao(item);
+		}
+		return saida;
+	}
+	
+	public override bool cria(List<<%= classe.getNomeParaClasse() %>> listaItem, DaoConexao conexao) {
+		bool saida = true;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		// Usar transacao
+		foreach (<%= classe.getNomeParaClasse() %> item in listaItem) {
+			saida = saida && dao.cria(item);
+		}
+		return saida;
+	}
+	
+	public override bool atualiza(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) {
+		bool saida = false;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		saida = dao.atualiza(item);
+		return saida;
+	}
+	/*
+	public void insertAll(List<<%= classe.getNomeParaClasse() %>> lista, Context contexto) {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = new <%= classe.getNomeParaClasse() %>DBHelper(contexto);
+		for (int i=0;i<lista.size();i++) {
+			dao.insert(lista.get(i));
+		}
+		dao.cleanup();
+	}	
+	public void dropCreate(Context contexto) {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = new <%= classe.getNomeParaClasse() %>DBHelper(contexto);
+		dao.dropTable();
+		dao.criaTabela();
+		dao.cleanup();
+	}	
+		
+	<%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper relCorrente = iterador.next();
+	%>
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(Context contexto, long id) {
+		<%= classe.getNomeParaClasse() %>DBHelper dao = new <%= classe.getNomeParaClasse() %>DBHelper(contexto);
+		List<<%= classe.getNomeParaClasse() %>> saida = dao.getPor<%= relCorrente.getNome() %>(contexto, id);
+		dao.cleanup();
+		return saida;
+	}
+	<%
+	}
+	%>
+	*/
+	
+	<%
+	Iterator<RelacionamentoWrapper> iteradorRel = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel.hasNext()) {
+		RelacionamentoWrapper relCorrente = iteradorRel.next();
+	%>
+	
+	<% if (classe.isAssociativa()) { %>
+	// Para fazer atualizacoes em objetos associativos.
+	public override bool AtualizaPor<%= relCorrente.getNome() %>NN(long id, string[] ids) {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.AtualizaPor<%= relCorrente.getNome() %>NN(long id, string[] ids)");
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	bool saida = false;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = AtualizaPor<%= relCorrente.getNome() %>NN(id, ids, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = false;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("AtualizaPor<%= relCorrente.getNome() %>NN(long id, string[] ids)");
+      	return saida;
+	}
+	
+	<% } %>
+	
+	
+	public override List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.getPor<%= relCorrente.getNome() %>(long id)");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	List<<%= classe.getNomeParaClasse() %>> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = getPor<%= relCorrente.getNome() %>(id, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = null;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("getPor<%= relCorrente.getNome() %>(long id)");
+      	return saida;
+	}
+	
+	<% if (!classe.isAssociativa()) { %>
+	// Método para entidades não associativa
+	public override List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id, DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		copiaObtem(dao);
+		ArrayList saida = dao.getPor<%= relCorrente.getNome() %>(id);
+		limpaObtem(dao);
+		return <%= classe.getNomeParaClasse() %>Dao.ConverteLista(saida);
+	}
+	<% } %>
+	
+	public override bool excluiPor<%= relCorrente.getNome() %>(long id)  {
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.excluiPor<%= relCorrente.getNome() %>(long id)");
+     	<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	bool saida = false;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = excluiPor<%= relCorrente.getNome() %>(id, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+          	saida = false;
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("excluiPor<%= relCorrente.getNome() %>(long id)");
+      	return saida;
+	}
+	
+	public override bool excluiPor<%= relCorrente.getNome() %>(long id, DaoConexao conexao) {
+		bool saida = false;
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		dao.excluiPor<%= relCorrente.getNome() %>(id);
+		saida = true;
+		return saida;
+	}
+	<%
+	}
+	%>
+	
+	<%
+	// *****  Somente associativas ********
+	if (classe.isAssociativa()) {
+	List<RelacionamentoWrapper> relac = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper rel1 = relac.get(0);
+	RelacionamentoWrapper rel2 = relac.get(1);
+	%>
+	public override List<<%= rel1.getClasseOposta().getNomeParaClasse() %>> lista<%= rel1.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel1.getNomeRelacionamento() %>(long id<%= rel2.getClasseOposta().getNomeParaClasse() %>){
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.lista<%= rel1.getClasseOposta().getNomeParaClasse() %>NaoAssociada(long id<%= rel2.getClasseOposta().getNomeParaClasse() %>)");
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	List<<%= rel1.getClasseOposta().getNomeParaClasse() %>> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = lista<%= rel1.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel1.getNomeRelacionamento() %>(id<%= rel2.getClasseOposta().getNomeParaClasse() %>, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("lista<%= rel1.getClasseOposta().getNomeParaClasse() %>NaoAssociada(long id<%= rel2.getClasseOposta().getNomeParaClasse() %>)");
+      	return saida;
+	}
+	public virtual List<<%= rel1.getClasseOposta().getNomeParaClasse() %>> lista<%= rel1.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel1.getNomeRelacionamento() %>(long id<%= rel2.getClasseOposta().getNomeParaClasse() %>, DaoConexao conexao){
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+        dao.setConexao(conexao);
+        ArrayList lista = dao.lista<%= rel1.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel1.getNomeRelacionamento() %>(id<%= rel2.getClasseOposta().getNomeParaClasse() %>);
+        return <%= rel1.getClasseOposta().getNomeParaClasse() %>Dao.ConverteLista(lista);
+	}
+	public override List<<%= rel2.getClasseOposta().getNomeParaClasse() %>> lista<%= rel2.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel2.getNomeRelacionamento() %>(long id<%= rel1.getClasseOposta().getNomeParaClasse() %>){
+		DCArquivoTempos.ServicoInicio("<%= classe.getNomeParaClasse() %>ServicoLocalBase.lista<%= rel2.getClasseOposta().getNomeParaClasse() %>NaoAssociada(long id<%= rel1.getClasseOposta().getNomeParaClasse() %>)");
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	List<<%= rel2.getClasseOposta().getNomeParaClasse() %>> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = lista<%= rel2.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel2.getNomeRelacionamento() %>(id<%= rel1.getClasseOposta().getNomeParaClasse() %>, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+      	}
+      	dao.liberaConexao(conexao);
+      	DCArquivoTempos.ServicoFinal("lista<%= rel2.getClasseOposta().getNomeParaClasse() %>NaoAssociada(long id<%= rel1.getClasseOposta().getNomeParaClasse() %>)");
+      	return saida;
+	}
+	public virtual List<<%= rel2.getClasseOposta().getNomeParaClasse() %>> lista<%= rel2.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel2.getNomeRelacionamento() %>(long id<%= rel1.getClasseOposta().getNomeParaClasse() %>, DaoConexao conexao){
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+        dao.setConexao(conexao);
+        ArrayList lista = dao.lista<%= rel2.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel2.getNomeRelacionamento() %>(id<%= rel1.getClasseOposta().getNomeParaClasse() %>);
+        return <%= rel2.getClasseOposta().getNomeParaClasse() %>Dao.ConverteLista(lista);
+	}
+	
+	public override bool AtualizaPor<%= rel1.getNome() %>NN(long id, string[] ids, DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+        dao.setConexao(conexao);
+        bool saida = true;
+        <%= classe.getNomeParaClasse() %> novo = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+        novo.<%= rel1.getNomePropriedade() %> = id;
+        // inicia transacao
+        dao.excluiPor<%= rel1.getNome() %>(id);
+        foreach (string id2 in ids)
+        {
+            novo.<%= rel2.getNomePropriedade() %> = Convert.ToInt32(id2);
+            dao.cria(novo);
+        }
+        // termina transacao
+        return saida;
+	}
+	public override bool AtualizaPor<%= rel2.getNome() %>NN(long id, string[] ids, DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+        dao.setConexao(conexao);
+        bool saida = true;
+        <%= classe.getNomeParaClasse() %> novo = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+        novo.<%= rel2.getNomePropriedade() %> = id;
+        // inicia transacao
+        dao.excluiPor<%= rel2.getNome() %>(id);
+        foreach (string id2 in ids)
+        {
+            novo.<%= rel1.getNomePropriedade() %> = Convert.ToInt32(id2);
+            dao.cria(novo);
+        }
+        // termina transacao
+        return saida;
+	}
+	public override List<<%= classe.getNomeParaClasse() %>> getPor<%= rel1.getNome() %>(long id, DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+		// é uma entidade associativa - obter a entidade oposta
+        setObtem<%= rel2.getClasseOposta().getNomeParaClasse() %>_<%= rel2.getNomeRelacionamento() %>();
+		copiaObtem(dao);
+		ArrayList saida = dao.getPor<%= rel1.getNome() %>(id);
+		limpaObtem(dao);
+		return <%= classe.getNomeParaClasse() %>Dao.ConverteLista(saida);
+	}
+	public override List<<%= classe.getNomeParaClasse() %>> getPor<%= rel2.getNome() %>(long id, DaoConexao conexao) {
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+		dao.setConexao(conexao);
+	 	// é uma entidade associativa - obter a entidade oposta
+        setObtem<%= rel1.getClasseOposta().getNomeParaClasse() %>_<%= rel1.getNomeRelacionamento() %>();
+		copiaObtem(dao);
+		ArrayList saida = dao.getPor<%= rel2.getNome() %>(id);
+		limpaObtem(dao);
+		return <%= classe.getNomeParaClasse() %>Dao.ConverteLista(saida);
+	}
+	
+	public override <%= classe.getNomeParaClasse() %> obtemPorCodigoDuplo(long idLetraSemelhante,long idLetraParece){
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+     	DaoConexao conexao = null;
+     	<%= classe.getNomeParaClasse() %> saida = null;
+      	try
+      	{
+       		conexao = dao.criaConexao();
+          	saida = obtemPorCodigoDuplo(idLetraSemelhante,idLetraParece, conexao);
+      	} 
+      	catch (Exception e) 
+      	{
+        	LogArquivo.ErroGeral(e,dao.DescricaoDataFonte);
+      	}
+      	dao.liberaConexao(conexao);
+      	return saida;
+	}
+	public virtual <%= classe.getNomeParaClasse() %> obtemPorCodigoDuplo(long id<%= rel1.getClasseOposta().getNomeParaClasse() %><%= rel2.getNomeRelacionamento() %>,long id<%= rel2.getClasseOposta().getNomeParaClasse() %><%= rel1.getNomeRelacionamento() %>, DaoConexao conexao){
+		<%= classe.getNomeParaClasse() %>Dao dao = getDao();
+        dao.setConexao(conexao);
+        <%= classe.getNomeParaClasse() %> item = dao.obtemPorCodigoDuplo(id<%= rel1.getClasseOposta().getNomeParaClasse() %><%= rel2.getNomeRelacionamento() %>,id<%= rel2.getClasseOposta().getNomeParaClasse() %><%= rel1.getNomeRelacionamento() %>);
+        return dao.ConverteItem(item);
+	}
+	<%
+	}
+	%>
+	
+	
+	
+	}
+}

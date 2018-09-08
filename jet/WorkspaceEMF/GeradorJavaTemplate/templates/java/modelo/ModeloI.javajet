@@ -1,0 +1,34 @@
+<%@ jet package="jet.java.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="ModeloI" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo;
+
+import <%= conf.getNamespace() %>.modelo.agregado.*;
+import <%= conf.getNamespace() %>.modelo.derivadas.*;
+import br.com.digicom.lib.DCIObjetoDominio;
+
+// Geração automática não alterar
+public interface <%= classe.getNomeParaClasse() %> extends DCIObjetoDominio , <%= classe.getNomeParaClasse() %>AgregadoI , <%= classe.getNomeParaClasse() %>DerivadaI
+{
+
+	
+<%
+	Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+	while (iterador.hasNext()) {
+	AtributoTotalI atributo = iterador.next();
+	%>
+	public <%= atributo.getTipo() %> get<%= atributo.getNomePropriedade() %>();
+	public void set<%= atributo.getNomePropriedade() %>(<%= atributo.getTipo() %> valor);
+	<% if (atributo.ehMoeda()) { %>
+	public String get<%= atributo.getNomePropriedade() %>Formatada();
+	<% } %>
+	<% 
+	}
+%>
+}
+

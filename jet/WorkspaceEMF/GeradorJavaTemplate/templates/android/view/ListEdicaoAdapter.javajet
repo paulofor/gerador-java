@@ -1,0 +1,25 @@
+<%@ jet package="jet.android.view" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ListEdicaoAdapter" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.view.adapter.listaedicao;
+
+import java.util.List;
+import android.content.Context;
+import br.com.digicom.quadro.IQuadroListaEdicao;
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.view.adapter.listaedicao.base.<%= classe.getNomeParaClasse() %>ListEdicaoAdapterBase;
+
+public class <%= classe.getNomeParaClasse() %>ListEdicaoAdapter extends <%= classe.getNomeParaClasse() %>ListEdicaoAdapterBase {
+	
+	
+	public <%= classe.getNomeParaClasse() %>ListEdicaoAdapter(List<<%= classe.getNomeParaClasse() %>> lista,IQuadroListaEdicao origem, Context context) {
+		super(lista, origem, context);
+	}
+	
+	
+}

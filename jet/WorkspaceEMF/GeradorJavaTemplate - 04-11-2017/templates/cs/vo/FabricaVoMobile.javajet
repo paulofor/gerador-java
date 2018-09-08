@@ -1,0 +1,28 @@
+<%@ jet package="jet.cs.vo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="FabricaVoMobile" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.modelo {
+
+
+using <%= conf.getNamespace() %>.modelo.vo;
+using <%= conf.getNamespace() %>.modelo.mobilevo;
+
+public  class FabricaVo  {
+<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+%>
+	public static <%= corrente.getNomeParaClasse() %> cria<%= corrente.getNomeParaClasse() %>()  {
+          return new <%= corrente.getNomeParaClasse() %>MobileVo();
+	}
+<%
+}
+%>
+}
+}

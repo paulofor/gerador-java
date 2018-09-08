@@ -1,0 +1,29 @@
+<%@ jet package="jet.java.webparse" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="ListaCallbackHtmlImpl" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.parse.callback;
+
+import <%= conf.getNamespace() %>.parse.callback.basico.<%= classe.getNomeParaClasse() %>ListaCallbackHtmlBase;
+
+public class <%= classe.getNomeParaClasse() %>ListaCallbackHtml extends <%= classe.getNomeParaClasse() %>ListaCallbackHtmlBase{
+
+// Orientação Digicom :
+// Se tiver problemas de acentuacao veja a funcao da getCharSet de <%= classe.getNomeParaClasse() %>ListaCallbackHtmlBase
+
+
+
+/*
+Cuidado para não sobrescrever as variáveis da classe pai !!!
+
+protected <%= classe.getNomeParaClasse() %>DadosParseBase dadosParse;
+protected boolean ligaColetaLista = false;
+protected List<LinhaProduto> lista = null;
+protected LinhaProduto corrente = null;
+*/
+
+}

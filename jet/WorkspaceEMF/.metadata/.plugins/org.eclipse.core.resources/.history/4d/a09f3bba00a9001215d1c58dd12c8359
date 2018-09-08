@@ -1,0 +1,62 @@
+<%@ jet package="jet.java.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="DaoBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.dao.basica;
+
+public class <%= classe.getNomeParaClasse() %>DaoBase2 extends DaoAplicacao implements <%= classe.getNomeParaClasse() %>DaoBaseI {
+	
+
+	
+	public static String camposOrdenados() {
+		return <%
+		Iterator<AtributoTotalI> iterador10 = classe.getListaAtributoTotal().iterator();
+		boolean primeiro = true;
+		while (iterador10.hasNext()) {
+		AtributoTotalI atributo = iterador10.next();
+		String campo = classe.getNomeParaTabela() + "." + atributo.getNomeCampoTabela();
+		if (atributo.getTipoOriginal().compareTo("Tempo")==0)
+			campo = " DATE_FORMAT(" + campo + ",'%H:%i')";
+		if (atributo.getTipoOriginal().compareTo("Data")==0)
+			campo = " DATE_FORMAT(" + campo + ",'%d-%m-%Y')";
+		if (atributo.getTipoOriginal().compareTo("DTemp")==0)
+			campo = " DATE_FORMAT(" + campo + ",'%d-%m-%Y %H:%i:%s')";
+		if (primeiro) {
+		%>" <%= campo %> " 
+		<% } else { %>+ " ,<%= campo %> " 
+		<%
+		}
+		primeiro = false;
+		}
+		%>;
+	}
+
+	public static String camposOrdenadosAlias(String nomeTabela) {
+		return <%
+		Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+		primeiro = true;
+		while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();
+		String campo = "nomeTabela + \"." + atributo.getNomeCampoTabela();
+		if (atributo.getTipoOriginal().compareTo("Tempo")==0)
+			campo = " \"DATE_FORMAT(\" + " + campo + ",'%H:%i')";
+		if (atributo.getTipoOriginal().compareTo("Data")==0)
+			campo = " \"DATE_FORMAT(\" + " + campo + ",'%d-%m-%Y')";
+		if (atributo.getTipoOriginal().compareTo("DTemp")==0)
+			campo = " \"DATE_FORMAT(\" + " + campo + ",'%d-%m-%Y %H:%i:%s')";
+		if (primeiro) {
+		%> <%= campo %> " 
+		<% } else { %>+ " , " + <%= campo %> " 
+		<%
+		}
+		primeiro = false;
+		}
+		%>;
+	}
+
+	
+}

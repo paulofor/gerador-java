@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+     <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="com.metys.merlin.tools.examples.Wizard.category.ID"
+            name="Samples"
+            parentCategory="com.metys.merlin.tools.Wizard.category.ID"/>
+      <wizard
+            category="com.metys.merlin.tools.Wizard.category.ID/com.metys.merlin.tools.examples.Wizard.category.ID"
+            class="com.metys.merlin.generation.examples.uml2codegen.wizards.UML2CodegenSampleWizard"
+            icon="icons/sample.gif"
+            id="com.metys.merlin.generation.examples.uml2codegen.wizards.UML2CodegenSampleWizard"
+            name="UML2 Code Generation"/>
+   </extension>
+
+</plugin>

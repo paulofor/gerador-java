@@ -1,0 +1,35 @@
+<%@ jet package="jet.csdn35.mvc" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="ControllerWS" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.mvc.controller {
+
+using System;
+using System.Web.Mvc;
+using System.Collections.Generic;
+using <%= conf.getNamespace() %>.mvc.controller;
+using <%= conf.getNamespace() %>.servico;
+using <%= conf.getNamespace() %>.servico.filtro;
+using <%= conf.getNamespace() %>.modelo;
+
+
+public abstract class <%= classe.getNomeParaClasse() %>WSBaseController : BaseController {
+
+		protected <%= classe.getNomeParaClasse() %>Servico servico =
+            FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico
+            (FabricaServico.LOCAL);
+
+		public ActionResult ListaSincronizada(string tmp)
+        {
+            List<<%= classe.getNomeParaClasse() %>> lista = servico.listaTotal();
+            string json = servico.listaJSon(lista);
+            ViewData["JSON"] = json;
+            return PartialView("ListaSincronizada");
+        }
+
+}
+}

@@ -1,0 +1,18 @@
+<%@ jet package="jet.java.webparse" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="DetalheCallbackHtmlImpl" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.parse.callback;
+
+import <%= conf.getNamespace() %>.parse.callback.basico.<%= classe.getNomeParaClasse() %>DetalheCallbackHtmlBase;
+
+public class <%= classe.getNomeParaClasse() %>DetalheCallbackHtml extends <%= classe.getNomeParaClasse() %>DetalheCallbackHtmlBase{
+
+// Orientação Digicom :
+// Se tiver problemas de acentuacao veja a funcao da getCharSet de <%= classe.getNomeParaClasse() %>DetalheCallbackHtmlBase
+
+}

@@ -1,0 +1,95 @@
+<%@ jet package="jet.android.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="Montador" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+<%
+	AtributoWrapper atributoW = new AtributoWrapperAndroid();
+	AtributoWrapper chaveW = new AtributoWrapperAndroid();
+	chaveW.setBase(classe.getChave());
+	
+%>
+package <%= conf.getNamespace() %>.dao.montador;
+
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.modelo.vo.FabricaVo;
+import android.database.Cursor;
+import br.com.digicom.dao.MontadorDaoBase;
+import br.com.digicom.dao.MontadorDaoI;
+import br.com.digicom.modelo.DCIObjetoDominio;
+import br.com.digicom.modelo.ObjetoSinc;
+
+
+public class <%= classe.getNomeParaClasse() %>Montador extends MontadorDaoBase implements MontadorDaoI{
+
+	
+	// Existem casos em que o tratamento do objeto sinc esta
+	// no metodo do DAO porem para aa listaInterna usando DaoComposite
+	// que se trata de algo mais complexo o tratamento esta 
+	// nesse flag, no futuro poderemos evoluir todos para esse formato.
+	private boolean sinc = false;
+	public <%= classe.getNomeParaClasse() %>Montador(boolean sinc) {
+		this.sinc = sinc;
+	}
+	public <%= classe.getNomeParaClasse() %>Montador() {
+		this.sinc = false;
+	}
+	public void desligaSinc() {
+		this.sinc = false;
+	}
+
+	public DCIObjetoDominio getItemSinc(Cursor c) {
+		return super.getItemSinc(c);
+	}
+
+	public boolean getItemListaInterna(Cursor c, DCIObjetoDominio objeto)
+    {
+    	objeto = ((MontadorDaoI)this).getItem(c);
+        return true;
+    }
+    public boolean getItemRegistroInterno(Cursor c, DCIObjetoDominio objeto)
+    {
+    	objeto = ((MontadorDaoI)this).getItem(c);
+        return true;
+    }
+
+	public DCIObjetoDominio getItem(Cursor c) {
+		DCIObjetoDominio objeto = null;
+		objeto = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+		return getItem(c, objeto, 0);
+	}
+	public DCIObjetoDominio getItem(Cursor c, int pos) {
+		DCIObjetoDominio objeto = null;
+		objeto = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+		return getItem(c, objeto, pos);
+	}
+
+	public DCIObjetoDominio getItem(Cursor c, DCIObjetoDominio entrada, int pos) {
+		<%= classe.getNomeParaClasse() %> item = null;
+		item = (<%= classe.getNomeParaClasse() %>) entrada;
+        <% 
+        Iterator<AtributoEntidade>  iterador = classe.getListaAtributoEntidade().iterator(); 
+        int ind=0;
+		while (iterador.hasNext()) {
+        	atributoW.setBase(iterador.next());
+		%>item.set<%= atributoW.getNomePropriedade() %>(get<%= atributoW.getMetodoObtemSqlite() %>(c,pos++));
+		<%
+		}
+		Iterator<RelacionamentoWrapper> iteradorRel1 = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+		while (iteradorRel1.hasNext()) {
+			RelacionamentoWrapper relCorrente = iteradorRel1.next();
+		%>item.set<%= relCorrente.getNomePropriedade() %>(getInt(c,pos++));
+		<%
+		}
+		%>if (sinc) {
+			((ObjetoSinc)item).setOperacaoSinc(getString(c,pos++));
+		}
+		return item;
+	}
+   	public int quantidadeCampos()  {
+   		return (sinc?<%= "" + classe.getListaAtributoTotal().size() %>+1:<%= "" + classe.getListaAtributoTotal().size() %>);
+ 	}
+}

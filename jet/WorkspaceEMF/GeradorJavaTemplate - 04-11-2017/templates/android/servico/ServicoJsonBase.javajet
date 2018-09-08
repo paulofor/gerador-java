@@ -1,0 +1,463 @@
+<%@ jet package="jet.android.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ServicoJsonBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+
+package <%= conf.getNomePacoteServicoWsJsonBase() %>;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.LinkedList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import <%= conf.getNamespace() %>.dao.datasource.DataSourceRemoto;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.modelo.vo.FabricaVo;
+import <%= conf.getNamespace() %>.servico.<%= classe.getNomeParaClasse() %>Servico;
+import <%= conf.getNamespace() %>.servico.FabricaServico;
+import <%= conf.getNamespace() %>.app.Constantes;
+import <%= conf.getNamespace() %>.app.TrataErro;
+import android.content.Context;
+import br.com.digicom.activity.DigicomContexto;
+import br.com.digicom.log.DCLog;
+import br.com.digicom.modelo.DCIObjetoDominio;
+import br.com.digicom.modelo.ObjetoSinc;
+import br.com.digicom.network.HTTPRequestHelper;
+import br.com.digicom.servico.DataSourceRemotoI;
+import br.com.digicom.servico.ServicoLocal;
+import br.com.digicom.servico.ServicoRemoto;
+import br.com.digicom.so.Dispositivo;
+import br.com.digicom.telefonia.Telefone;
+import br.com.digicom.dao.DaoSincronismo;
+
+
+public abstract class <%= classe.getNomeParaClasse() %>ServicoWsJsonBase 
+		extends  <%= classe.getNomeParaClasse() %>Servico 
+		implements ServicoRemoto<<%= classe.getNomeParaClasse() %>>{
+
+	private List<<%= classe.getNomeParaClasse() %>> listaSaida = null;
+	private String ultimaUrl = null;
+	private DataSourceRemotoI dataSource = null;
+	
+	//String server = "192.168.1.2";
+	//String aplicacao = "CadVideoCli";
+		
+	public void setDataSource(DataSourceRemotoI dataSource) {
+		this.dataSource = dataSource;
+	}
+	public <%= classe.getNomeParaClasse() %>ServicoWsJsonBase() {
+		setDataSource(new DataSourceRemoto());
+	}
+	
+	
+	@Override
+	public void listaSincronizadaAlteracao(List<<%= classe.getNomeParaClasse() %>> listaSinc, Context contexto) throws JSONException {
+		Map<String,String> params = new HashMap<String,String>();
+		String url = getUrl("ListaSincronizadaAlteracao");
+		String saida = " [ ";
+		boolean primeiro = true;
+		for (<%= classe.getNomeParaClasse() %> item:listaSinc) {
+			if (primeiro) {
+				primeiro = false;
+			} else {
+				saida += " , ";
+			}
+			saida += " " + ((ObjetoSinc)item).JSonSinc() + " ";
+		}
+		saida += " ] ";
+		params.put("lista", saida);
+		params.put("versao",String.valueOf(getVersaoSincronizacao()));
+		if (!Dispositivo.isTablet(contexto)) {
+			params.put("tmp",Telefone.getNumero(contexto));
+		} else {
+			params.put("cod",Dispositivo.getId(contexto));
+		}	
+		DCLog.d(DCLog.SINCRONIZACAO_JSON,this,"Enviando...lista<<%= classe.getNomeParaClasse() %>>:" + saida);
+		String resultado = HTTPRequestHelper.getHttpResponse(url,params);
+	}
+	
+	
+	private String getUrl(String metodo) {
+		String objeto = "<%= classe.getNomeParaClasse() %>";
+		ultimaUrl = "http://" + dataSource.getServer() + "/" + (dataSource.getAplicacao()!=null?dataSource.getAplicacao() + "/":"") + objeto + "WS/" + metodo + getFiltro().getRequest();
+		return ultimaUrl;
+		//return "http://" + server + "/" + aplicacao + "/" + objeto + "/" + metodo + getFiltro().getRequest();
+  	}
+	
+	
+	private static final String URL_GET_POSTS_RECENT = 
+		"http://www.lojadigicom.com.br/<%= conf.getNamespace() %>/page/<%= classe.getNomeParaClasse() %>Page.aspx";
+	private JSONObject json;
+	
+	/*
+	private final Handler handler = new Handler() {
+		public void handleMessage(final Message msg) {
+			//progressDialog.dismiss();
+			String bundleResult = msg.getData().getString("RESPONSE");
+			//output.setText(bundleResult);
+			listaSaida = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+			try {
+				json = new JSONObject(bundleResult);
+				JSONArray lista = json.getJSONArray("<%= classe.getNomeParaClasse() %>");
+				int tam = lista.length();
+				JSONObject item = null;
+				String nome = null;
+				for (int i=0;i<lista.length();i++) {
+					item = (JSONObject) lista.get(i);
+					listaSaida.add(new <%= classe.getNomeParaClasse() %>(item));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	*/
+	
+<%
+	Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra.hasNext()) {
+	RegraColecao regra = iteradorRegra.next();
+	if (regra.getAtivoFlex()) {
+		if (!regra.getRetornaColecao()) {
+%>
+	public <%= classe.getNomeParaClasse() %> <%= regra.getNome() %>(DigicomContexto ctx){
+		String resultado = HTTPRequestHelper.getHttpResponse(getUrl("<%= regra.getNome() %>"));
+		return processaResultadoObjeto(resultado);
+	}
+<%		} else  {   %> 
+	public List<<%= classe.getNomeParaClasse() %>> <%= regra.getNome() %>(DigicomContexto ctx){
+		String resultado = HTTPRequestHelper.getHttpResponse(getUrl("<%= regra.getNome() %>"));
+		return processaResultado(resultado);
+	}
+<%
+		}
+	}
+	}
+%>
+
+	private int processaResultado(String resultado, DaoSincronismo daoSinc) {
+		int tam = 0;
+		int inicio = resultado.indexOf('{');
+		resultado = resultado.substring(inicio);
+		try {
+			daoSinc.dropCreate();
+			json = new JSONObject(resultado);
+			JSONArray lista = json.getJSONArray("Lista");
+			tam = lista.length();
+			JSONObject item = null;
+			<%= classe.getNomeParaClasse() %> obj = null;
+			for (int i=0;i<lista.length();i++) {
+				item = (JSONObject) lista.get(i);
+				obj = FabricaVo.cria<%= classe.getNomeParaClasse() %>(item);
+				daoSinc.insere(obj);
+			}
+			lista = null;
+		} catch (Exception e) {
+			DCLog.e(DCLog.SINCRONIZACAO_JSON, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		return tam;
+	}
+
+	@Deprecated
+	private List<<%= classe.getNomeParaClasse() %>> processaResultado(String resultado) {
+		int inicio = resultado.indexOf('{');
+		resultado = resultado.substring(inicio);
+		List<<%= classe.getNomeParaClasse() %>> listaSaida = new LinkedList<<%= classe.getNomeParaClasse() %>>();
+		
+		//ServicoLocal<<%= classe.getNomeParaClasse() %>> servicoLocal = (ServicoLocal<<%= classe.getNomeParaClasse() %>>) FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		//<%= classe.getNomeParaClasse() %> corrente = null;
+		
+		try {
+			json = new JSONObject(resultado);
+			JSONArray lista = json.getJSONArray("Lista");
+			int tam = lista.length();
+			JSONObject item = null;
+			String nome = null;
+			for (int i=0;i<lista.length();i++) {
+				item = (JSONObject) lista.get(i);
+				//corrente = FabricaVo.cria<%= classe.getNomeParaClasse() %>(item);
+				//servicoLocal.insertLocal(corrente);
+				listaSaida.add(FabricaVo.cria<%= classe.getNomeParaClasse() %>(item));
+			}
+			lista = null;			
+		} catch (Exception e) {
+			//Log.e("<%= classe.getNomeParaClasse() %>ServicoWsJson", e.getMessage() + " [ " + ultimaUrl + " ]");
+			DCLog.e(DCLog.SINCRONIZACAO_JSON, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		
+		return listaSaida;	
+	}
+
+	private <%= classe.getNomeParaClasse() %> processaResultadoObjeto(String resultado) {
+		int inicio = resultado.indexOf('{');
+		resultado = resultado.substring(inicio);
+		<%= classe.getNomeParaClasse() %> saida = null;
+		
+		
+		try {
+			json = new JSONObject(resultado);
+			JSONObject item = json.getJSONObject("Lista");
+			String nome = null;
+			saida = FabricaVo.cria<%= classe.getNomeParaClasse() %>(item);
+			
+		} catch (Exception e) {
+			//Log.e("<%= classe.getNomeParaClasse() %>ServicoWsJson", e.getMessage() + " [ " + ultimaUrl + " ]");
+			DCLog.e(DCLog.SINCRONIZACAO_JSON, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		
+		return saida;	
+	}
+
+	public void dropCreate(Context contexto) {
+	}
+	public void insertAll(List<<%= classe.getNomeParaClasse() %>> lista, Context contexto) {
+	}
+	public void insertSincAll(List<<%= classe.getNomeParaClasse() %>> lista, Context contexto) {
+	}
+	
+	public final void alteraParaSincronizacao(<%= classe.getNomeParaClasse() %> item) {
+		throw new UnsupportedOperationException();
+	}
+	public final void insereParaSincronizacao(<%= classe.getNomeParaClasse() %> item) {
+		throw new UnsupportedOperationException();
+	}
+	public final void excluiParaSincronizacao(<%= classe.getNomeParaClasse() %> item) {
+		throw new UnsupportedOperationException();
+	}
+	public final void criaTabelaSincronizacao() {
+	}
+	<% if (classe.ehUsuario() || classe.ehDispositivo()) { %>
+	public final <%= classe.getNomeParaClasse() %> getCorrente() {
+		throw new UnsupportedOperationException();
+	}
+	<% } %>
+	
+	// Itens Tela
+	public final <%= classe.getNomeParaClasse() %> inicializaItemTela(DigicomContexto contexto) {
+		throw new UnsupportedOperationException();
+	}
+	public final <%= classe.getNomeParaClasse() %> inicializaItemTela(<%= classe.getNomeParaClasse() %> itemTela, DigicomContexto contexto) {
+		throw new UnsupportedOperationException();
+	}
+	public final void finalizaItemTela(<%= classe.getNomeParaClasse() %> itemTela, boolean insercao, DigicomContexto contexto){
+		throw new UnsupportedOperationException();
+	}
+	public final void processaItemTela(<%= classe.getNomeParaClasse() %> itemTela, DigicomContexto contexto){
+		throw new UnsupportedOperationException();
+	}
+	
+	public final <%= classe.getNomeParaClasse() %> ultimoInicializado() {
+		throw new UnsupportedOperationException();
+	}
+	
+	public final <%= classe.getNomeParaClasse() %> getById(long id, Context contexto) {
+		throw new UnsupportedOperationException();
+	}
+	public final <%= classe.getNomeParaClasse() %> getById(long id) {
+		throw new UnsupportedOperationException();
+	}
+	
+	public List<<%= classe.getNomeParaClasse() %>> getAll(Context contexto) {
+		String url = getUrl("ListaCorrente");
+		String resultado = HTTPRequestHelper.getHttpResponse(url);
+		return processaResultado(resultado);
+	}
+	public List<<%= classe.getNomeParaClasse() %>> getAllTela(Context contexto) {
+		return getAll(contexto);
+	}
+	
+	/*
+	* Essa nova versáo da operacao de sincronizacao tem o objetivo de
+    * reduzir passos colocando a lista vinda do remoto direto no sqlite
+    * e uma opcao otimizada(Tatico) e o sincronizador gerencia(Estrategico) sua chamada.
+	* Estrategico -> sincronizador
+	* Tatico -> Json
+	* Operacional -> http
+	*/
+	public int listaSincronizadaDao(DaoSincronismo dao, Context contexto) {
+		int tam = 0;
+		String url = getUrl("ListaSincronizada");
+		if (!Dispositivo.isTablet(contexto)) {
+			String numeroTel = Telefone.getNumero(contexto);
+			url += "?tmp=" + numeroTel + "&versao=" + getVersaoSincronizacao();
+		} else {
+			String codId = Dispositivo.getId(contexto);
+			url += "?cod=" + codId + "&versao=" + getVersaoSincronizacao(); 
+		}	
+		if (getVersaoSincronizacao()==3) {
+			List<String> listaPalavra = HTTPRequestHelper.getHttpResponseList(url); 
+			tam = processaResultadoLista(listaPalavra, dao);
+		} else {
+			String resultado = HTTPRequestHelper.getHttpResponse(url);
+			tam = processaResultado(resultado,dao);
+		}
+		return tam;
+	}
+		
+	// Passar para POST depois
+	public List<<%= classe.getNomeParaClasse() %>> listaSincronizada(Context contexto) {
+		List<<%= classe.getNomeParaClasse() %>> listaSaida = null;
+		String url = getUrl("ListaSincronizada");
+		if (!Dispositivo.isTablet(contexto)) {
+			String numeroTel = Telefone.getNumero(contexto);
+			url += "?tmp=" + numeroTel + "&versao=" + getVersaoSincronizacao();
+		} else {
+			String codId = Dispositivo.getId(contexto);
+			url += "?cod=" + codId + "&versao=" + getVersaoSincronizacao(); 
+		}	
+		if (getVersaoSincronizacao()==3) {
+			List<String> listaPalavra = HTTPRequestHelper.getHttpResponseList(url); 
+			listaSaida = this.processaResultadoLista(listaPalavra);
+		} else {
+			String resultado = HTTPRequestHelper.getHttpResponse(url);
+			listaSaida = processaResultado(resultado);
+		}
+		return listaSaida;
+	}
+	
+	
+	public List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuario(Context contexto) {
+		String url = getUrl("ListaSincronizadaUsuario");
+		if (!Dispositivo.isTablet(contexto)) {
+			String numeroTel = Telefone.getNumero(contexto);
+			url += "?tmp=" + numeroTel + "&versao=" + getVersaoSincronizacao();
+		} else {
+			String codId = Dispositivo.getId(contexto);
+			url += "?cod=" + codId + "&versao=" + getVersaoSincronizacao(); 
+		}	
+		String resultado = HTTPRequestHelper.getHttpResponse(url);
+		return processaResultado(resultado);
+	}
+	
+
+	// Começando com versão um fazer override ao mudar versão.
+	protected int getVersaoSincronizacao() {
+		return Constantes.VERSAO_SINCRONISMO;
+	}
+	
+	<%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper relCorrente = iterador.next();
+	%>
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(Context contexto, long id) {
+		String url = getUrl("<%= relCorrente.getNome() %>");
+		String resultado = HTTPRequestHelper.getHttpResponse(url);
+		return processaResultado(resultado);
+	}
+	// Indo buscar a mesma informação ( alterar depois )
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(Context contexto, long id, int qtde) {
+		String url = getUrl("<%= relCorrente.getNome() %>");
+		String resultado = HTTPRequestHelper.getHttpResponse(url);
+		return processaResultado(resultado);
+	}
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id) {
+		String url = getUrl("<%= relCorrente.getNome() %>");
+		String resultado = HTTPRequestHelper.getHttpResponse(url);
+		return processaResultado(resultado);
+	}
+	// Indo buscar a mesma informação ( alterar depois )
+	@Override
+	public List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id, int qtde) {
+		String url = getUrl("<%= relCorrente.getNome() %>");
+		String resultado = HTTPRequestHelper.getHttpResponse(url);
+		return processaResultado(resultado);
+	}
+	<%
+	}
+	%>
+	
+
+
+<%
+	if (classe.isAssociativa()) {
+%>
+	public void atualizaRelacionamento(List<DCIObjetoDominio> inclusao, List<DCIObjetoDominio> exclusao) {
+		throw new UnsupportedOperationException();	
+	}
+<%
+	List<RelacionamentoWrapper> lista = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper relCorrente2 = lista.get(0);
+	RelacionamentoWrapper relOutro = lista.get(1);
+	if (relOutro.getClasseOposta().getId()!= relCorrente2.getClasseOposta().getId()) {
+	%>
+	public void atualizaRelacionamento(<%= relOutro.getClasseOposta().getNomeParaClasse() %> item, List<DCIObjetoDominio> listaEscolhidos) {
+		throw new UnsupportedOperationException();	
+	}
+	public void atualizaRelacionamento(<%= relCorrente2.getClasseOposta().getNomeParaClasse() %> item, List<DCIObjetoDominio> listaEscolhidos) {
+		throw new UnsupportedOperationException();	
+	}
+	public boolean comparaRelacionamentoComItem(Object item, Object relacionamento) {
+		throw new UnsupportedOperationException();	
+	}
+<%
+	}
+	}
+%>
+
+	// ------------- Sincronismo Versão 2 ---------------------
+	
+
+	@Deprecated
+	public List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuarioV2(Context contexto) {
+		String url = getUrl("listaSincronizadaUsuarioV2");
+		if (!Dispositivo.isTablet(contexto)) {
+			String numeroTel = Telefone.getNumero(contexto);
+			url += "?tmp=" + numeroTel + "&versao=" + getVersaoSincronizacao();
+		} else {
+			String codId = Dispositivo.getId(contexto);
+			url += "?cod=" + codId + "&versao=" + getVersaoSincronizacao(); 
+		}	
+		String resultado = HTTPRequestHelper.getHttpResponse(url);
+		return processaResultado(resultado);
+	}
+	
+	// ----------------------------------------------------------------
+	
+	
+	// Para versao 3 de Sincronismo
+	private List<<%= classe.getNomeParaClasse() %>> processaResultadoLista(List<String> lista) {
+		List<<%= classe.getNomeParaClasse() %>> listaSaida = new LinkedList<<%= classe.getNomeParaClasse() %>>();
+		try {
+			for (String palavra : lista) {
+				JSONObject json = new JSONObject(palavra);
+				<%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>(json);
+				listaSaida.add(item);
+			}
+		} catch (Exception e) {
+			DCLog.e(DCLog.SINCRONIZACAO_JSON, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		return listaSaida;
+	}
+	private int processaResultadoLista(List<String> lista , DaoSincronismo daoSinc) {
+		<%= classe.getNomeParaClasse() %> item = null;
+		try {
+			daoSinc.dropCreate();
+			for (String palavra : lista) {
+				JSONObject json = new JSONObject(palavra);
+				item = FabricaVo.cria<%= classe.getNomeParaClasse() %>(json);
+				daoSinc.insere(item);
+			}
+		} catch (Exception e) {
+			DCLog.e(DCLog.SINCRONIZACAO_JSON, this, e);
+			TrataErro.getInstancia().setErro(e);
+		}
+		return lista.size();
+	}
+}

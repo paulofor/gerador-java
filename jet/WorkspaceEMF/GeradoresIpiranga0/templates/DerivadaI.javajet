@@ -1,0 +1,16 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="DerivadaI" %>
+<%
+EClass eClass = (EClass) argument;
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+AttributeWrapper atributo = new AttributeWrapper();
+%>
+package <%= classe.getPacoteDerivadaI() %>;
+
+import <%= classe.getPacoteReferencias() %>.DerivadaI;
+
+public interface <%= classe.getNomeDerivadaI() %> extends DerivadaI <% if (classe.getSuperTipo()!=null) {%> , <%= classe.getSuperTipo().getNomeDerivadaI() %> <% } %>{
+
+} 

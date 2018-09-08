@@ -1,0 +1,66 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ActionConsultar" %>
+<%
+%>
+<%EClass eClass = (EClass) argument;
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+ReferenceWrapper referencia = null;
+
+%>
+package <%= classe.getPacoteActionConsultar() %>;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import <%= classe.getPacoteActionComum() %>.CadastrarAction;
+
+<%= "/*" %>
+<%= "* Classe gerada automaticamente, nao realizar alteracoes " %>
+<%= "*/" %>
+public abstract class <%= classe.getNomeActionConsultar() %> extends Action{
+
+
+	protected abstract executaConsulta(ActionMapping mapping, ActionForm form,
+	    HttpServletRequest request, HttpServletResponse response, ActionErrors erros) throws Exception;
+
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+	    HttpServletRequest request, HttpServletResponse response)
+	    throws Exception {
+
+		ActionErrors errors = new ActionErrors();
+		ActionForward forward = new ActionForward(); // return value
+
+		try {
+	    	// do something here
+			executaConsulta(mapping,form,request,response,errors);
+		} catch (Exception e) {
+		    // Report the error using the appropriate name and ID.
+			e.printStackTrace();
+		    errors.add("name", new ActionError("id"));
+		}
+
+		// If a message is required, save the specified key(s)
+		// into the request for use by the <struts:errors> tag.
+
+		if (!errors.isEmpty()) {
+	    	saveErrors(request, errors);
+	    	// Forward control to the appropriate 'failure' URI (change name as desired)
+		    forward = mapping.findForward("erro");
+		} else {
+		    // Forward control to the appropriate 'success' URI (change name as desired)
+		    forward = mapping.findForward("sucesso");
+		}
+
+		// Finish with
+		return (forward);
+
+    }
+} 

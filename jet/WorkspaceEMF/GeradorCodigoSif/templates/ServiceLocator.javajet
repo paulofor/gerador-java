@@ -1,0 +1,25 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* br.com.probid.gerador.execucao.wrappers.*" 
+class="ServiceLocator" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+List listaClasse = recursos.getListaClasseW();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+
+package <%= conf.getNomePacoteModel() %>.business;
+
+
+public class ServiceLocator {
+	<%
+	Iterator iterador = listaClasse.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper classe = (ClasseWrapper) iterador.next(); %>
+		
+	public static bus<%= classe.getNomeBasico() %> getBus<%= classe.getNomeBasico() %>() {
+		return new bus<%= classe.getNomeBasico() %>();
+	}
+	
+	<%}%>
+	
+}

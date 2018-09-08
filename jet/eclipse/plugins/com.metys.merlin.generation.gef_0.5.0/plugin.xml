@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            class="com.metys.merlin.generation.gef.GefPackage"
+            uri="http://www.metys.com/merlin/generation/gef.ecore"/>
+      <package
+            class="com.metys.merlin.generation.gef.model.ModelPackage"
+            uri="http://www.metys.com/merlin/generation/gef/model.ecore"/>
+      <package
+            class="com.metys.merlin.generation.gef.genmodel.GenModelPackage"
+            uri="http://www.metys.com/merlin/generation/gef/genmodel.ecore"/>
+   </extension>
+
+</plugin>

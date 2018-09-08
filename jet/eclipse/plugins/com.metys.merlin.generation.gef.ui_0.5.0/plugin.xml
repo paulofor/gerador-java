@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="com.metys.merlin.tools.gef.Wizard.category.ID"
+            name="%_UI_Merlin_Tools_GEF_Wizard_category"
+            parentCategory="com.metys.merlin.tools.Wizard.category.ID"/>      
+      <wizard
+            name="%_UI_GenModelModelWizard_label"
+            icon="icons/full/obj16/GenModelModelFile.gif"
+            category="com.metys.merlin.tools.Wizard.category.ID/com.metys.merlin.tools.gef.Wizard.category.ID"
+            class="com.metys.merlin.generation.gef.genmodel.presentation.GenModelModelWizard"
+            id="com.metys.merlin.generation.gef.genmodel.presentation.GenModelModelWizardID">
+         <description>
+            %_UI_GenModelModelWizard_description
+         </description>
+         <selection
+               class="org.eclipse.core.resources.IResource">
+         </selection>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="%_UI_GenModelEditor_label"
+            icon="icons/full/obj16/GenModelModelFile.gif"
+            extensions="gefgenmodel"
+            class="com.metys.merlin.generation.gef.genmodel.presentation.GenModelEditor"
+            contributorClass="com.metys.merlin.generation.gef.genmodel.presentation.GenModelActionBarContributor"
+            id="com.metys.merlin.generation.gef.genmodel.presentation.GenModelEditorID">
+      </editor>
+      <editor
+            class="com.metys.merlin.generation.gef.genmodel.gefeditor.GenModelEditor"
+            contributorClass="com.metys.merlin.generation.gef.genmodel.gefeditor.GenModelEditorActionBarContributor"
+            default="false"
+            extensions="gefgenmodel"
+            icon="icons/full/obj16/GenModelModelFile.gif"
+            id="com.metys.merlin.generation.gef.genmodel.presentation.GenModelGraphicalEditorID"
+            name="%_UI_GenModelGraphicalEditor_label"/>
+   </extension>
+   
+   <extension point = "org.eclipse.ui.popupMenus">
+    <objectContribution
+          adaptable="true"
+          id="com.metys.merlin.generation.gef.genmodel.presentation.ReloadFromGenModel"
+          nameFilter="*.gefgenmodel"
+          objectClass="org.eclipse.core.resources.IFile">
+
+      <action id="com.metys.merlin.generation.gef.genmodel.presentation.ReloadFromGenModelAction"
+          label="%_UI_ReloadAction_label"
+          menubarPath="additions"
+          class="com.metys.merlin.generation.gef.genmodel.presentation.ReloadFromGenModelAction"
+          enablesFor="1">
+      </action>
+    </objectContribution>
+  </extension>
+</plugin>

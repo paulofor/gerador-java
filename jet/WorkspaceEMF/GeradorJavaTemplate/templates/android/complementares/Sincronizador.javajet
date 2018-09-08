@@ -1,0 +1,23 @@
+<%@ jet package="jet.android.complementares" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="Sincronizador" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.app;
+
+import <%= conf.getNamespace() %>.app.base.SincronizadorBase;
+import android.content.Context;
+
+public class Sincronizador extends SincronizadorBase{
+
+	public void principal(Context contexto) {
+		o que vai ser sincronizado
+	}
+	
+	
+	
+	
+}

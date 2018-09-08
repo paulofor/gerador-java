@@ -1,0 +1,35 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* " 
+class="Dto" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package com.br.brasilcap.cap.obl.trataparametros.dto;
+
+import com.br.brasilcap.arq.glb.persistencia.standard.AbstractDTO;
+
+import java.util.Map;
+
+public class Cap_lista_parametros_sps extends AbstractDTO {
+
+    private String identificacao;
+
+    public Cap_lista_parametros_sps(Map params) throws Exception {
+        super(params);
+    }
+
+    public String getPrimeiroParametro() {
+        return "identificacao";
+    }
+
+    public void setIdentificacao(String identificacao) {
+        this.identificacao = identificacao;
+    }
+
+    public String getIdentificacao() {
+        return identificacao;
+    }
+}
+

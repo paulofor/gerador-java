@@ -1,0 +1,54 @@
+<%@ jet package="jet.android.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="FabricaServico" %>
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNomePacoteServicoInterface() %>;
+
+import <%= conf.getNomePacoteServicoSqliteImpl() %>.*;
+import <%= conf.getNomePacoteServicoWsJsonImpl() %>.*;
+//import <%= conf.getNomePacoteServicoInterface() %>.*;
+
+public class FabricaServico {
+
+	static FabricaServico fabrica = new FabricaServico();
+	public static final int TIPO_SQLITE = 1;
+	public static final int TIPO_WSJSON = 2;
+	
+	public static FabricaServico getInstancia() {
+		return fabrica;
+	}
+
+<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+%>
+
+	private <%= corrente.getNomeParaClasse() %>Servico <%= corrente.getNomeParaVariavel() %>ServicoSqlite = null;
+	private <%= corrente.getNomeParaClasse() %>Servico <%= corrente.getNomeParaVariavel() %>ServicoJson = null;
+	
+	public <%= corrente.getNomeParaClasse() %>Servico get<%= corrente.getNomeParaClasse() %>Servico(int tipo) {
+		if (tipo==TIPO_SQLITE) {
+			if (<%= corrente.getNomeParaVariavel() %>ServicoSqlite==null) {
+				<%= corrente.getNomeParaVariavel() %>ServicoSqlite = new <%= corrente.getNomeParaClasse() %>ServicoSqliteImpl();
+			}
+			return <%= corrente.getNomeParaVariavel() %>ServicoSqlite;
+		}
+		if (tipo==TIPO_WSJSON) {
+			if (<%= corrente.getNomeParaVariavel() %>ServicoJson==null) {
+				<%= corrente.getNomeParaVariavel() %>ServicoJson = new <%= corrente.getNomeParaClasse() %>ServicoWsJsonImpl();
+			}
+			return <%= corrente.getNomeParaVariavel() %>ServicoJson;
+		}
+		return null;
+	}
+	
+<%
+	}
+%>
+}
+

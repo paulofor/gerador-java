@@ -1,0 +1,33 @@
+<%@ jet package="jet.android2.framework.tela" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DCAplicacao" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.framework.tela;
+
+import <%= conf.getNamespaceExtendido() %>.framework.faturamento.ConstantesBilling;
+import android.app.Application;
+
+public abstract class DCAplicacao extends Application {
+
+	private ConstantesBilling billing = null;
+
+	public DCAplicacao() {
+		super();
+		billing = criaBilling();
+	}
+
+	public ConstantesBilling getBilling() {
+		return billing;
+	}	
+
+   	public abstract String getLinkFacebook();
+   
+   	public abstract Class activityInicio();
+   	
+   	protected abstract ConstantesBilling criaBilling();
+}

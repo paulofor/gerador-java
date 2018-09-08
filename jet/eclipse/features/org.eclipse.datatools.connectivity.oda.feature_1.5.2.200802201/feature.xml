@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><feature id="org.eclipse.datatools.connectivity.oda.feature" image="eclipse_update_120.jpg" label="%featureName" plugin="org.eclipse.datatools.connectivity.oda" provider-name="%providerName" version="1.5.2.200802201">
+	<description>%description</description>
+	<license url="%licenseURL">%license</license>
+	<url>
+		<update label="Data Tools Platform (DTP) Updates" url="http://download.eclipse.org/datatools/updates"/>
+		<discovery label="Data Tools Platform (DTP) Updates" url="http://download.eclipse.org/datatools/updates"/>
+	</url>
+	<plugin download-size="95" id="org.eclipse.datatools.connectivity.oda.consumer" install-size="95" unpack="false" version="3.1.2.200710011"/>
+	<plugin download-size="182" id="org.eclipse.datatools.connectivity.oda.design" install-size="182" unpack="false" version="3.0.5.200709071"/>
+	<plugin download-size="46" id="org.eclipse.datatools.connectivity.oda.flatfile" install-size="46" unpack="false" version="3.0.5.200711091"/>
+	<plugin download-size="15" id="org.eclipse.datatools.connectivity.oda.profile" install-size="15" unpack="false" version="3.0.6.200710181"/>
+	<plugin download-size="88" id="org.eclipse.datatools.connectivity.oda" install-size="88" unpack="false" version="3.1.1.200711081"/>
+	<plugin download-size="182" id="org.eclipse.datatools.connectivity" install-size="182" unpack="false" version="1.0.1.200802191"/>
+</feature>

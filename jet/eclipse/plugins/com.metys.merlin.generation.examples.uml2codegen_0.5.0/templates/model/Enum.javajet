@@ -1,0 +1,158 @@
+<%@ jet package="com.metys.merlin.generation.examples.compiledtemplates.model" imports="java.util.* com.metys.merlin.generation.examples.compiledtemplates.util.UML2GenerationHelper org.eclipse.emf.codegen.util.*" class="Enum" %>
+<%
+%>
+<%org.eclipse.uml2.Enumeration uml2Enumeration = (org.eclipse.uml2.Enumeration) argument;org.eclipse.uml2.Package uml2Package = uml2Enumeration.getPackage();%>
+<%@ include file="../Header.jetinc"%>
+<%ImportManager importManager=null;%>
+<%if (UML2GenerationHelper.getQualifiedName(uml2Package) != null) {%>
+<%importManager = UML2GenerationHelper.makeImportManager(UML2GenerationHelper.getQualifiedName(uml2Package));%>
+package <%=UML2GenerationHelper.getQualifiedName(uml2Package)%>;
+<%} else {%>
+<%importManager = UML2GenerationHelper.makeImportManager("");%>
+<%}%>
+
+<%importManager.addImport("java.util.Arrays");%>
+<%importManager.addImport("java.util.List");%>
+<%importManager.addImport("java.util.Collections");%>
+<%
+StringBuffer importStringBuffer = stringBuffer;
+int importInsertionPoint = stringBuffer.length();
+importManager.addCompilationUnitImports(stringBuffer.toString());
+%>
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b><%=UML2GenerationHelper.getCapName(uml2Enumeration)%></b></em>'.
+ * <!-- end-user-doc -->
+ *
+ * @generated
+ */
+public final class <%=UML2GenerationHelper.getCapName(uml2Enumeration)%>
+{
+<%for (Iterator l=uml2Enumeration.getOwnedLiterals().iterator(); l.hasNext();) { org.eclipse.uml2.EnumerationLiteral enumLiteral = (org.eclipse.uml2.EnumerationLiteral)l.next();%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final int <%=UML2GenerationHelper.getEnumLiteralID(enumLiteral)%> = <%=uml2Enumeration.getOwnedLiterals().indexOf(enumLiteral)%>;
+
+<%}%>
+<%for (Iterator l=uml2Enumeration.getOwnedLiterals().iterator(); l.hasNext();) { org.eclipse.uml2.EnumerationLiteral enumLiteral = (org.eclipse.uml2.EnumerationLiteral)l.next();%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final <%=UML2GenerationHelper.getCapName(uml2Enumeration)%> <%=UML2GenerationHelper.getEnumLiteralID(enumLiteral)%>_LITERAL = new <%=UML2GenerationHelper.getCapName(uml2Enumeration)%>(<%=UML2GenerationHelper.getEnumLiteralID(enumLiteral)%>, "<%=enumLiteral.getName()%>"); //$NON-NLS-1$
+
+<%}%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private static final <%=UML2GenerationHelper.getCapName(uml2Enumeration)%>[] VALUES_ARRAY =
+		new <%=UML2GenerationHelper.getCapName(uml2Enumeration)%>[]
+		{
+<%for (Iterator l=uml2Enumeration.getOwnedLiterals().iterator(); l.hasNext();) { org.eclipse.uml2.EnumerationLiteral enumLiteral = (org.eclipse.uml2.EnumerationLiteral)l.next();%>
+			<%=UML2GenerationHelper.getEnumLiteralID(enumLiteral)%>_LITERAL,
+<%}%>
+		};
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static <%=UML2GenerationHelper.getCapName(uml2Enumeration)%> get(<%=importManager.getImportedName("java.lang.String")%> name)
+	{
+		for (int i = 0; i < VALUES_ARRAY.length; ++i)
+		{
+			<%=UML2GenerationHelper.getCapName(uml2Enumeration)%> result = VALUES_ARRAY[i];
+			if (result.toString().equals(name))
+			{
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static <%=UML2GenerationHelper.getCapName(uml2Enumeration)%> get(int value)
+	{
+		switch (value)
+		{
+<%for (Iterator l=UML2GenerationHelper.getUniqueValuedGenEnumLiterals(uml2Enumeration).iterator(); l.hasNext();) { org.eclipse.uml2.EnumerationLiteral enumLiteral = (org.eclipse.uml2.EnumerationLiteral)l.next();%>
+			case <%=UML2GenerationHelper.getEnumLiteralID(enumLiteral)%>: return <%=UML2GenerationHelper.getEnumLiteralID(enumLiteral)%>_LITERAL;
+<%}%>
+		}
+		return null;	
+	}
+
+	/**
+	 * The name of the enumerator.
+	 * @generated
+	 */
+	private final String name;
+
+	/**
+	 * The <code>int</code> value of the enumerator.
+	 * @generated
+	 */
+	private final int value;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private <%=UML2GenerationHelper.getCapName(uml2Enumeration)%>(int value, <%=importManager.getImportedName("java.lang.String")%> name)
+	{
+		this.name = name;
+		this.value = value;
+	}
+	
+	/**
+	 * Returns the name of the enumerator.
+	 * @return the name.
+	 * @generated
+	 */
+	public final String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * Returns the <code>int</code> value of the enumerator.
+	 * @return the value.
+	 * @generated
+	 */
+	public final int getValue()
+	{
+		return value;
+	}
+
+	/**
+	 * Returns the name of the enumerator.
+	 * @return the name.
+	 * @generated
+	 */
+	public final String toString()
+	{
+		return name;
+	}
+
+} //<%=UML2GenerationHelper.getCapName(uml2Enumeration)%>
+<%importStringBuffer.insert(importInsertionPoint, importManager.computeSortedImports());%>

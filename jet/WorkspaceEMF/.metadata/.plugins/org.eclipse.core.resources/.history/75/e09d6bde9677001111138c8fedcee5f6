@@ -1,0 +1,212 @@
+<%@ jet package="jet.csdn35.mvc" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="Controller" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+namespace <%= conf.getNamespace() %>.mvc.controller {
+
+using System;
+using System.Web.Mvc;
+using <%= conf.getNamespace() %>.mvc.controller;
+using <%= conf.getNamespace() %>.servico;
+using <%= conf.getNamespace() %>.servico.filtro;
+using <%= conf.getNamespace() %>.modelo;
+
+public abstract class <%= classe.getNomeParaClasse() %>BaseController : BaseController {
+
+
+		protected <%= classe.getNomeParaClasse() %>Servico servico =
+            FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico
+            (FabricaServico.LOCAL);
+
+		protected <%= classe.getNomeParaClasse() %>Filtro Filtro 
+		{
+			get { return servico.getFiltro(); }
+		}
+		/**
+         * 1- Obtem objeto passado por Id;
+         * 2- Se id=0 cria novo objeto no banco
+         * 3- Desvia para view Display
+		 * Obs: sem acesso a camada de serviço.
+         */
+ 		public ActionResult Display(long id)
+        {
+            <%= classe.getNomeParaClasse() %> item = null;
+            if (id>0) {
+            	item = servico.obtemPorId(id);
+            } else {
+              	item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+              	preencheNovoItem(item);
+              	servico.criaLoad(item);
+            }
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Display", model);
+        }
+        
+        /**
+         * 1- Obtem objeto passado por Id;
+         * (nao tem) 2- Se id=0 cria novo objeto no banco
+         * 3- Desvia para view DisplayPage
+		 * Obs: sem acesso a camada de serviço.
+         */
+ 		public ActionResult DisplayPage(long id)
+        {
+            <%= classe.getNomeParaClasse() %> item = null;
+           	item = servico.obtemPorId(id);
+            var model = item;
+            return View("<%= classe.getNomeParaClasse() %>DisplayPage", model);
+        }
+        public ActionResult Edita(long id)
+        {
+            <%= classe.getNomeParaClasse() %> item = servico.obtemPorId(id);
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Edita", model);
+        }
+        
+       	/**
+         * 1- Cria novo objeto;
+         * 2- Chama preencheNovoItem(item)
+         * 3- Desvia para view Edita
+		 * Obs: sem acesso a camada de serviço.
+         */
+        public ActionResult Novo()
+        {
+            <%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+            preencheNovoItem(item);
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Edita", model);
+        }
+        
+        
+         /**
+         * 1- Chama listaFiltroChaves ( precisa montar Filtro )
+         * 2- Retorna view Lista
+         */
+        protected ActionResult ListaCorrenteFiltro() 
+        {
+        	var model = servico.listaFiltroChaves();
+        	//preViewLista();
+			return PartialView("<%= classe.getNomeParaClasse() %>Lista", model);
+        }
+        
+        
+        /*
+		Nao funciona com QueryString
+        public ActionResult ListaCorrente(FormCollection collection) 
+        {
+        <%
+		Iterator<RelacionamentoWrapper> itRel = classe.obtemListaComChaveEstrangeira().iterator();
+		while (itRel.hasNext()) {
+		RelacionamentoWrapper relac = itRel.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+			servico.getFiltro().Codigo<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = Convert.ToInt32(collection["Id<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>"]);
+ 		<%
+		}
+		%>	
+			var model = servico.listaFiltroChaves();
+			return PartialView("<%= classe.getNomeParaClasse() %>Lista", model);
+        }
+		*/        
+
+        /**
+         * 1- Obtem objeto por ID
+         * 2- Chama preencheItemEdicao(item,form)
+         * 3- Atualiza na base de dados 
+		 * 4- Chama Método Display
+         */
+        public ActionResult AtualizaDisplay(int id, FormCollection collection)
+        {
+            <%= classe.getNomeParaClasse() %> item = servico.obtemPorId(id);
+            preencheItemEdicao(item,collection);
+            servico.atualiza(item);
+            return Display(id);
+        }
+        
+         /**
+         * 1- Obtem objeto por ID
+         * 2- Chama preencheItemEdicao(item,form)
+         * 3- Atualiza na base de dados 
+		 * 4- Chama Método ListaCorrente
+         */
+        /* 
+		Depende do ListaCorrente que esta desativado
+        public ActionResult AtualizaLista(int id, FormCollection collection)
+        {
+            <%= classe.getNomeParaClasse() %> item = servico.obtemPorId(id);
+            preencheItemEdicao(item,collection);
+            servico.atualiza(item);
+            return ListaCorrente(collection);
+        }
+        */
+        public ActionResult CriaNovoRetornaLista(FormCollection collection)
+        {
+            <%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+            preencheItemEdicao(item, collection);
+            servico.criaLoad(item);
+            montaFiltroListaRetorno(servico.getFiltro(), item);
+            var lista = servico.listaFiltroChaves();
+            return PartialView("<%= classe.getNomeParaClasse() %>Lista", lista);
+        }
+        protected abstract void montaFiltroListaRetorno(<%= classe.getNomeParaClasse() %>Filtro filtro, <%= classe.getNomeParaClasse() %> item);
+ 
+        
+        protected abstract void preencheItemEdicao(<%= classe.getNomeParaClasse() %> item,FormCollection collection);
+        /**
+         * 1- Chama view de Estrutura
+         */
+        public ActionResult Estrutura(int? id)
+        {
+        	ViewData["Id<%= classe.getNomeParaClasse() %>"] = id;
+        	preViewEstrutura();
+           	return View("<%= classe.getNomeParaClasse() %>Estrutura");
+        }
+        protected virtual void preViewEstrutura() {
+        }
+        
+        protected abstract void preencheNovoItem(<%= classe.getNomeParaClasse() %> item);
+        
+            
+        public ActionResult ListaCompleta()
+        {
+            var model = servico.listaTotal();
+            return View(model);
+        }
+        
+        <%
+		Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador.hasNext()) {
+			RelacionamentoWrapper relCorrente = iterador.next();
+		%>
+		protected ActionResult AtualizaListaPor<%= relCorrente.getNome() %>(int id, FormCollection collection) {
+			<%= classe.getNomeParaClasse() %> item = servico.obtemPorId(id);
+            preencheItemEdicao(item,collection);
+            servico.atualiza(item);
+			var model = servico.getPor<%= relCorrente.getNome() %>(item.<%= relCorrente.getNomePropriedade() %>);
+            return PartialView("<%= classe.getNomeParaClasse() %>Lista", model);
+		}
+		protected ActionResult ListaPor<%= relCorrente.getNome() %>(int id) {
+			var model = servico.getPor<%= relCorrente.getNome() %>(id);
+            return PartialView("<%= classe.getNomeParaClasse() %>Lista", model);
+		}
+		protected ActionResult CriaPor<%= relCorrente.getNome() %>(int id) {
+			<%= classe.getNomeParaClasse() %> item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+            item.<%= relCorrente.getNomePropriedade() %> = id;
+            preencheNovoItem(item);
+            servico.criaLoad(item);
+            var model = item;
+            return PartialView("<%= classe.getNomeParaClasse() %>Edita", model);
+		}
+		<%
+		}
+		%>
+		
+		
+	}
+
+
+}
+

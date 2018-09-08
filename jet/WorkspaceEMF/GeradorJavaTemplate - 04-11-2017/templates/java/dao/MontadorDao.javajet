@@ -1,0 +1,86 @@
+<%@ jet package="jet.java.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="MontadorDao" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.dao.montador;
+
+
+import java.util.*;
+import br.com.digicom.lib.dao.*;
+import br.com.digicom.lib.*;
+import br.com.digicom.lib.util.*;
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.modelo.FabricaVo;
+
+
+//  Nao consegui fazer extender classe MontadorDao para nao precisar 
+//  implementar todos os metodos de MontadorDaoI ( metodos novos )
+//  achei o caminho mais simples colocar os metodos aqui.
+public class <%= classe.getNomeParaClasse() %>Montador   implements MontadorDaoI { 
+
+	public DaoItemRetorno extraiRegistroListaInterna(ResultadoLista result,DCIObjetoDominio objeto) throws  DaoException
+    {
+		DaoItemRetorno retorno = new DaoItemRetorno();
+    	objeto = ((MontadorDaoI)this).extraiRegistro(result);
+    	retorno.setInsere(true);
+    	retorno.setObjeto(objeto);
+        return retorno;
+    }
+	
+    public DaoItemRetorno extraiRegistroInterno(ResultadoLista result, DCIObjetoDominio objeto) throws  DaoException
+    {
+    	DaoItemRetorno retorno = new DaoItemRetorno();
+    	objeto = ((MontadorDaoI)this).extraiRegistro(result);
+    	retorno.setInsere(true);
+    	retorno.setObjeto(objeto);
+        return retorno;
+    }
+    
+    public  DCIObjetoDominio extraiRegistro( ResultadoLista resultadoLista )  throws  DaoException{
+		DCIObjetoDominio objeto;
+		objeto = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+		return extraiRegistro(resultadoLista, objeto, 1);
+	}
+
+
+	public  DCIObjetoDominio extraiRegistro( ResultadoLista resultadoLista  ,  int pos )  throws  DaoException{
+		DCIObjetoDominio objeto;
+		objeto = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+		return extraiRegistro(resultadoLista, objeto, pos );
+	}
+	
+	public  DCIObjetoDominio extraiRegistro( ResultadoLista resultadoLista  ,  DCIObjetoDominio entrada  ,  int pos )  throws  DaoException{
+		<%= classe.getNomeParaClasse() %> objeto;
+		objeto = (<%= classe.getNomeParaClasse() %>)entrada;
+		<%
+		Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+		while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();	%>  
+	  	objeto.set<%= atributo.getNomePropriedade() %>(resultadoLista.get<%= atributo.getTipoFuncaoMontador() %>(pos++));<%
+		}
+		%>
+      	return objeto;
+	}
+		
+	public int quantidadeCampos()  {
+      return <%= "" + classe.getListaAtributoTotal().size() %>;
+	}
+	
+	/*
+	Acho que fiz errado criando isso.
+	@Override
+	public DaoItemRetorno extraiRegistroListaInterna(ResultadoLista paramResultadoLista, DCIObjetoDominio objeto) throws DaoException, ClassNotFoundException,
+			NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public DaoItemRetorno extraiRegistroInterno(ResultadoLista paramResultadoLista, DCIObjetoDominio objeto) throws DaoException {
+		throw new UnsupportedOperationException();
+	}
+	*/
+
+}

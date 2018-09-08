@@ -1,0 +1,32 @@
+<%@ jet package="jet.android2.tela" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="FragmentTrataBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.tela.base;
+
+import android.content.ContentResolver;
+import android.net.Uri;
+import android.provider.BaseColumns;
+import android.support.v4.app.Fragment;
+import <%= conf.getNamespaceExtendido() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import android.view.View;
+
+public abstract class <%= classe.getNomeParaClasse() %>FragmentTrataBase extends Fragment{
+
+	private <%= classe.getNomeParaClasse() %> item = null;
+	protected <%= classe.getNomeParaClasse() %> getItem() {
+		return item;
+	}
+	public void setItem(<%= classe.getNomeParaClasse() %> valor) {
+		item = valor;
+	}
+
+	
+	protected abstract void inicializaCamposTela(View v);
+	
+}

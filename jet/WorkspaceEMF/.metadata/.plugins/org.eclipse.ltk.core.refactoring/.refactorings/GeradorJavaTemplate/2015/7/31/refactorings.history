@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 1 elements(s) to &apos;tela&apos;&#x0D;&#x0A;- Original project: &apos;GeradorJavaTemplate&apos;&#x0D;&#x0A;- Destination element: &apos;tela&apos;&#x0D;&#x0A;- Original element: &apos;CursorAdapterBase.javajet&apos;" description="Move file" element1="templates/android2/data/CursorAdapterBase.javajet" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1438136154070" target="/GeradorJavaTemplate/templates/android2/tela" units="0" version="1.0"/>
+</session>

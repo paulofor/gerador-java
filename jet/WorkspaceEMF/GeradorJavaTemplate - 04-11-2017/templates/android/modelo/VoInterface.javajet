@@ -1,0 +1,99 @@
+<%@ jet package="jet.android.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="VoInterface" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import org.json.JSONObject;
+import org.json.JSONException;
+import br.com.digicom.util.ConversorJson;
+import br.com.digicom.modelo.DCIObjetoDominio;
+import br.com.digicom.activity.DigicomContexto;
+import br.com.digicom.modelo.DisplayI;
+import <%= conf.getNamespace() %>.modelo.derivada.<%= classe.getNomeParaClasse() %>DerivadaI;
+import <%= conf.getNamespace() %>.modelo.agregado.<%= classe.getNomeParaClasse() %>AgregadoI;
+
+
+public interface <%= classe.getNomeParaClasse() %> extends DCIObjetoDominio
+		, <%= classe.getNomeParaClasse() %>DerivadaI, <%= classe.getNomeParaClasse() %>AgregadoI, DisplayI<<%= classe.getNomeParaClasse() %>>{ 
+  
+  	/**
+ 	* @deprecated  Substituir por JSonSimples()
+ 	*/
+	//@Deprecated
+  	//public JSONObject JSon() throws JSONException;
+  	public JSONObject JSonSimples() throws JSONException;
+  	public String debug();
+  	public DigicomContexto getContexto();
+  	public void setContexto(DigicomContexto ctx);
+<%
+	AtributoWrapper atributoW = new AtributoWrapperAndroid();
+	AtributoEntidade ident = classe.getIdentificador();
+	if (ident!=null) {
+		atributoW.setBase(ident);
+%>
+  	public String toString();
+<%
+	}
+	Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+	while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();
+		
+%>
+	public <%= atributo.getTipo() %> get<%= atributo.getNomePropriedade() %>();
+	public void set<%= atributo.getNomePropriedade() %>(<%= atributo.getTipo() %> valor);
+<%
+	if (atributo.ehData()) {
+%>
+	public String get<%= atributo.getNomePropriedade() %>DDMMAAAA();
+<%
+		if (!atributo.ehHora()) {
+%>	
+	public void set<%= atributo.getNomePropriedade() %>DDMMAAAAComBarra(String valor);
+<%
+		}
+%>
+<%
+	}
+%>
+
+<%
+	if (atributo.ehDecimal()) {
+%>	
+	public String get<%= atributo.getNomePropriedade() %>Tela();
+<%
+	}
+%>
+
+<%
+	if (atributo.ehHora()) {
+%>
+	public String get<%= atributo.getNomePropriedade() %>HHMM();
+	public String get<%= atributo.getNomePropriedade() %>HHMMSS();
+<%
+	}
+	}
+%>
+	public String getTituloTela();
+	
+	
+	// ComChaveEstrangeira
+  	<%
+		Iterator<RelacionamentoWrapper> itera = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+		while (itera.hasNext()) {
+		RelacionamentoWrapper relac = itera.next();
+		%>
+	public long get<%= relac.getNomePropriedade() %>LazyLoader(); 
+		<%
+		}
+	%>
+	
+	public boolean getSomenteMemoria();
+	public void setSomenteMemoria(boolean dado);
+}

@@ -1,0 +1,282 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* br.com.probid.gerador.execucao.wrappers.* br.com.probid.gerador.interfaces.* " 
+class="DaoBase" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNomePacoteModel() %>.dao.base;
+
+import br.org.fplf.Utils.Utilitarios;
+import <%= conf.getNomePacoteModel() %>.bean.bean<%= classe.getNomeBasico() %>;
+import <%= conf.getNomePacoteModel() %>.bean.base.FabricaBean;
+import br.org.fplf.logSistema;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.sql.Date;
+import java.sql.Types;
+
+public abstract class daoBase<%= classe.getNomeBasico() %> extends daoUtils {
+
+	protected void preInsercao(bean<%= classe.getNomeBasico() %> item) {
+	}
+
+	public static int quantidadeCampos() {
+		return <%= classe.getBase().getListaAtributo().size() %>;
+	}
+
+	public static String camposOrdenados() {
+		String saida = "";<%
+		AtributoWrapper atributoW = new AtributoWrapper();
+		Iterator iterador = classe.getBase().getListaAtributo().iterator();
+		boolean primeiro = true;
+		while (iterador.hasNext()) {
+			atributoW.setBase((AtributoI) iterador.next());
+			if (primeiro) {
+				primeiro = false;
+		%>		
+		saida += " <%= atributoW.getNomeCampoTabela() %> ";<%
+			} else { %>
+		saida += ", <%= atributoW.getNomeCampoTabela() %> ";<%
+		}
+		}
+		%>
+		return saida;
+	}
+	public static String camposOrdenados(String tabela) {
+		String saida = "";<%
+		atributoW = new AtributoWrapper();
+		iterador = classe.getBase().getListaAtributo().iterator();
+		primeiro = true;
+		while (iterador.hasNext()) {
+			atributoW.setBase((AtributoI) iterador.next());
+			if (primeiro) {
+				primeiro = false;
+		%>		
+		saida += " " + tabela + ".<%= atributoW.getNomeCampoTabela() %> ";<%
+			} else { %>
+		saida += ", " + tabela + ".<%= atributoW.getNomeCampoTabela() %> ";<%
+		}
+		}
+		%>
+		return saida;
+	}
+
+
+	public static bean<%= classe.getNomeBasico() %> extraiItem(ResultSet rs) throws SQLException {
+		bean<%= classe.getNomeBasico() %> novo = FabricaBean.criaBean<%= classe.getNomeBasico() %>();<%
+		atributoW = new AtributoWrapper();
+		iterador = classe.getBase().getListaAtributo().iterator();
+		while (iterador.hasNext()) {
+			atributoW.setBase((AtributoI) iterador.next());
+		%>
+		novo.set<%= atributoW.getNomeMetodo() %>(rs.get<%= atributoW.getTipoParametroSql() %>("<%= atributoW.getNomeCampoTabela() %>"));<%
+		}
+		%>
+		return novo;
+	}
+	
+	public static bean<%= classe.getNomeBasico() %> extraiItem(ResultSet rs, int inicial) throws SQLException {
+		bean<%= classe.getNomeBasico() %> novo = FabricaBean.criaBean<%= classe.getNomeBasico() %>();<%
+		atributoW = new AtributoWrapper();
+		iterador = classe.getBase().getListaAtributo().iterator();
+		while (iterador.hasNext()) {
+			atributoW.setBase((AtributoI) iterador.next());
+		%>
+		novo.set<%= atributoW.getNomeMetodo() %>(rs.get<%= atributoW.getTipoParametroSql() %>(inicial++));<%
+		}
+		%>
+		return novo;
+	}
+	
+	
+	public static bean<%= classe.getNomeBasico() %> extraiItem(ResultSet rs, String nomeTabela) throws SQLException {
+		bean<%= classe.getNomeBasico() %> novo = FabricaBean.criaBean<%= classe.getNomeBasico() %>();<%
+		atributoW = new AtributoWrapper();
+		iterador = classe.getBase().getListaAtributo().iterator();
+		while (iterador.hasNext()) {
+			atributoW.setBase((AtributoI) iterador.next());
+		%>
+		novo.set<%= atributoW.getNomeMetodo() %>(rs.get<%= atributoW.getTipoParametroSql() %>(nomeTabela + ".<%= atributoW.getNomeCampoTabela() %>"));<%
+		}
+		%>
+		return novo;
+	}
+	
+	private PreparedStatement preencheParametros(bean<%= classe.getNomeBasico() %> bean, PreparedStatement ps)  throws SQLException {
+		<%
+		atributoW = new AtributoWrapper();
+		iterador = classe.getBase().getListaAtributo().iterator();
+		int contador = 0;
+		while (iterador.hasNext()) {
+			atributoW.setBase((AtributoI) iterador.next());
+			if (atributoW.precisaTratarNullSql()) {
+				++contador;
+		%>
+		if (bean.get<%= atributoW.getNomeMetodo() %>()!=null) ps.set<%= atributoW.getTipoParametroSql() %>(<%= contador %>,bean.get<%= atributoW.getNomeMetodo() %>());
+        else ps.setNull(<%= contador %>, <%= atributoW.getSqlTypes() %>);
+		<% 	} else {%>
+		ps.set<%= atributoW.getTipoParametroSql() %>(<%= ++contador %>,bean.get<%= atributoW.getNomeMetodo() %>());<%
+			}
+		}
+		%>
+		return ps;
+	}
+	
+	private PreparedStatement preencheParametrosChave(bean<%= classe.getNomeBasico() %> bean, int posicao, PreparedStatement ps)  throws SQLException {
+		<%
+		atributoW = new AtributoWrapper();
+		iterador = classe.getBase().getListaAtributo().iterator();
+		while (iterador.hasNext()) {
+			AtributoI att = (AtributoI) iterador.next();
+			if (att.ehChave()) {
+				atributoW.setBase(att);
+		%>
+		ps.set<%= atributoW.getTipoParametroSql() %>(++posicao,bean.get<%= atributoW.getNomeMetodo() %>());<%
+			}
+		}
+		%>
+		return ps;
+	}
+	
+
+	public int criaItem(bean<%= classe.getNomeBasico() %> item, Connection conn) {
+	
+		<% if (classe.possuiChaveAuto()) { %>
+		String sqlMax = "select ISNULL(max(<%= classe.getChaveAuto().getNomeCampoTabela() %>), 0) from <%= classe.getNomeTabela() %>";
+		<% } %>
+	
+        String sql = "insert into <%= classe.getNomeTabela() %> " +
+        	" <%= classe.sqlCampoInsert() %> " + 
+        	"values <%= classe.sqlConteudoInsert() %>";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+           	<% if (classe.possuiChaveAuto()) { %>
+        	ps = conn.prepareStatement(sqlMax);
+            rs = ps.executeQuery();
+            rs.next();
+            int maximo = rs.getInt(1);
+            int proximo = maximo + 1;
+            item.set<%= classe.getChaveAuto().getNomeMetodo() %>(proximo);
+        	<% } %>
+            ps = conn.prepareStatement(sql);
+            preInsercao(item);
+            ps = preencheParametros(item,ps);
+            ps.executeUpdate();
+            
+        } catch (Exception e) {
+            logSistema.escreveLog("daoBase<%= classe.getNomeBasico() %>.criaItem", Utilitarios.StackTraceToString(e));
+            return 0;
+        } finally {
+            fechaObjetos(ps, rs);
+        }
+		return 1;
+	}
+	
+	public int criaListaItens(Vector<bean<%= classe.getNomeBasico() %>> item, Connection conn) {
+		return 0;
+	}
+	
+	public void alteraItem(bean<%= classe.getNomeBasico() %> item, Connection conn) {
+		String sql = "update <%= classe.getNomeTabela() %> set " +
+        	<%
+			atributoW = new AtributoWrapper();
+			iterador = classe.getBase().getListaAtributo().iterator();
+			contador = 0;
+			while (iterador.hasNext()) {
+				atributoW.setBase((AtributoI) iterador.next());
+				contador++;
+			%><%
+			   if (contador==1) {
+			%>" <%= atributoW.getNomeCampoTabela() %> = ? " +
+			<% } else { 
+			%>" ,<%= atributoW.getNomeCampoTabela() %> = ? " +
+			<% } 
+			}
+			%>" where <%= classe.sqlComparaPorChave() %> ";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conn.prepareStatement(sql);
+            ps = preencheParametros(item,ps);
+            ps = preencheParametrosChave(item,quantidadeCampos(),ps);
+            ps.executeUpdate();
+            
+        } catch (Exception e) {
+            logSistema.escreveLog("daoBase<%= classe.getNomeBasico() %>.alteraItem", Utilitarios.StackTraceToString(e));
+            //return 0;
+        } finally {
+            fechaObjetos(ps, rs);
+        }
+		//return 1;
+	} 
+
+	public bean<%= classe.getNomeBasico() %> obtemPorChave(bean<%= classe.getNomeBasico() %> pesquisa, Connection conn) {
+        String sql = "select * from <%= classe.getNomeTabela() %> " +
+        	" where <%= classe.sqlComparaPorChave() %> ";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conn.prepareStatement(sql);
+            <%
+			iterador = classe.getBase().getListaAtributo().iterator();
+			int contaItem = 0;
+			while (iterador.hasNext()) {
+			atributoW.setBase((AtributoI) iterador.next());
+			if (atributoW.getBase().ehChave()) {
+			%>
+			ps.set<%= atributoW.getTipoParametroSql() %>(<%= ++contaItem%>, pesquisa.get<%= atributoW.getNomeMetodo() %>());
+			<%
+			}
+			}
+			%>
+			rs = ps.executeQuery();
+            bean<%= classe.getNomeBasico() %> saida = null;
+
+            if (rs.next()) {
+            	saida = extraiItem(rs);
+            }
+
+            return saida;
+        } catch (Exception e) {
+            logSistema.escreveLog("daoBase<%= classe.getNomeBasico() %>.obtemPorChave", Utilitarios.StackTraceToString(e));
+            return null;
+        } finally {
+            fechaObjetos(ps, rs);
+        }
+    }
+    
+    protected String orderBy() {
+        return "";
+    }
+    
+    public Vector<bean<%= classe.getNomeBasico() %>> getLista(Connection conn) {
+    	Vector<bean<%= classe.getNomeBasico() %>> listaSaida = new Vector<bean<%= classe.getNomeBasico() %>>();
+        String sql = "select * from <%= classe.getNomeTabela() %> "  + orderBy();
+        	
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+            while (rs.next()) {
+            	listaSaida.add(extraiItem(rs));
+            }
+
+            return listaSaida;
+        } catch (Exception e) {
+            logSistema.escreveLog("daoBase<%= classe.getNomeBasico() %>.getLista", Utilitarios.StackTraceToString(e));
+            return null;
+        } finally {
+            fechaObjetos(ps, rs);
+        }
+    }
+    
+}
+

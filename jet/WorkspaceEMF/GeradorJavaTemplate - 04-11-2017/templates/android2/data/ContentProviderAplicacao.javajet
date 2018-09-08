@@ -1,0 +1,219 @@
+<%@ jet package="jet.android.data" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ContentProviderAplicacao" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.data.provider;
+
+import <%= conf.getNamespaceExtendido() %>.data.helper.AplicacaoDbHelper;
+import android.content.ContentProvider;
+import android.content.ContentValues;
+import android.content.UriMatcher;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import java.util.List;
+
+public abstract class AplicacaoProvider extends ContentProvider {
+
+	private static final UriMatcher sUriMatcher = buildUriMatcher();
+	<%
+		Iterator<ClasseWrapper> iterador = classes.iterator();
+		while (iterador.hasNext()) {
+			ClasseWrapper corrente = iterador.next();
+		%>
+	private <%= corrente.getNomeParaClasse() %>Provider <%= corrente.getNomeParaVariavel() %>Provider = cria<%= corrente.getNomeParaClasse() %>Provider();
+	protected abstract <%= corrente.getNomeParaClasse() %>Provider cria<%= corrente.getNomeParaClasse() %>Provider();
+		<%
+		}
+		%>
+
+	public static UriMatcher buildUriMatcher() {
+
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        //final String authority = AplicacaoContract.CONTENTI_AUTHORITY;
+		
+		<%
+		iterador = classes.iterator();
+		while (iterador.hasNext()) {
+			ClasseWrapper corrente = iterador.next();
+		%>
+		<%= corrente.getNomeParaClasse() %>Provider.buildUriMatcher(matcher);
+		<%
+		}
+		%>
+        //matcher.addURI(authority, WeatherContract.PATH_WEATHER, WEATHER);
+        //matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/*", WEATHER_WITH_LOCATION);
+        //matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/*/#", WEATHER_WITH_LOCATION_AND_DATE);
+        //matcher.addURI(authority, WeatherContract.PATH_LOCATION, LOCATION);
+        return matcher;
+    }
+
+
+	private AplicacaoDbHelper mOpenHelper;
+
+	@Override
+	public boolean onCreate() {
+		mOpenHelper = new AplicacaoDbHelper(getContext());
+		<%
+		iterador = classes.iterator();
+		while (iterador.hasNext()) {
+			ClasseWrapper corrente = iterador.next();
+		%>
+		<%= corrente.getNomeParaVariavel() %>Provider.setAplicacaoDbHelper(mOpenHelper);
+		<%= corrente.getNomeParaVariavel() %>Provider.setContentProvider(this);
+		<%
+		}
+		%>
+	    return true;
+	}
+
+	@Override
+	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+		List<String> lista = uri.getPathSegments();
+		Cursor retCursor = null;
+		<%
+		iterador = classes.iterator();
+		while (iterador.hasNext()) {
+			ClasseWrapper corrente = iterador.next();
+		%>
+		if ("<%= corrente.getNomeParaTabela() %>".equals(lista.get(0)))
+			retCursor = <%= corrente.getNomeParaVariavel() %>Provider.query(sUriMatcher, uri, projection, selection, selectionArgs, sortOrder);
+		<%
+		}
+		%>
+		if (retCursor==null)
+			 throw new UnsupportedOperationException("Uri desconhecida: " + uri);
+		
+		
+		retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
+	}
+
+	@Override
+	public String getType(Uri uri) {
+		List<String> lista = uri.getPathSegments();
+		final int match = sUriMatcher.match(uri);
+        String tipo = null;
+		<%
+		iterador = classes.iterator();
+		while (iterador.hasNext()) {
+			ClasseWrapper corrente = iterador.next();
+		%>
+		if (tipo==null) 
+			tipo = <%= corrente.getNomeParaVariavel() %>Provider.getType(sUriMatcher, uri);
+		<%
+		}
+		%>
+		if (tipo==null)
+			 throw new UnsupportedOperationException("Uri desconhecida: " + uri);
+        return tipo;
+	}
+
+	@Override
+	public Uri insert(Uri uri, ContentValues values) {
+		List<String> lista = uri.getPathSegments();
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        Uri returnUri = null;
+		<%
+		iterador = classes.iterator();
+		while (iterador.hasNext()) {
+			ClasseWrapper corrente = iterador.next();
+		%>
+		if ("<%= corrente.getNomeParaTabela() %>".equals(lista.get(0)))
+			returnUri = <%= corrente.getNomeParaVariavel() %>Provider.insert(uri, values);
+		<%
+		}
+		%>
+		if (returnUri==null)
+			 throw new UnsupportedOperationException("Uri desconhecida: " + uri);
+		// Como essa notificação funciona ?
+		getContext().getContentResolver().notifyChange(uri, null);
+        return returnUri;
+	}
+
+	@Override
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		List<String> lista = uri.getPathSegments();
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int rowsDeleted = 0;
+        boolean matchOk = false;
+		<%
+		iterador = classes.iterator();
+		while (iterador.hasNext()) {
+			ClasseWrapper corrente = iterador.next();
+		%>
+		if ("<%= corrente.getNomeParaTabela() %>".equals(lista.get(0))) 
+			matchOk = <%= corrente.getNomeParaVariavel() %>Provider.delete(sUriMatcher, uri, selection, selectionArgs);
+			if (matchOk) rowsDeleted = <%= corrente.getNomeParaVariavel() %>Provider.getLinhas();
+		<%
+		}
+		%>
+		if (!matchOk)
+			 throw new UnsupportedOperationException("Uri desconhecida: " + uri);
+		// Rever
+		if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsDeleted;
+	}
+
+	@Override
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+		List<String> lista = uri.getPathSegments();
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int rowsUpdated = 0;
+        boolean matchOk = false;
+		<%
+		iterador = classes.iterator();
+		while (iterador.hasNext()) {
+			ClasseWrapper corrente = iterador.next();
+		%>
+		if ("<%= corrente.getNomeParaTabela() %>".equals(lista.get(0))) { 
+			if (selection==null) {
+				matchOk = <%= corrente.getNomeParaVariavel() %>Provider.update(uri, values);
+			} else {
+				matchOk = <%= corrente.getNomeParaVariavel() %>Provider.update(uri, values, selection, selectionArgs);
+			}
+			if (matchOk) rowsUpdated = <%= corrente.getNomeParaVariavel() %>Provider.getLinhas();
+		}
+		<%
+		}
+		%>
+		if (!matchOk)
+			 throw new UnsupportedOperationException("Uri desconhecida: " + uri);
+		// Rever
+		if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
+	}
+	@Override
+	public int bulkInsert(Uri uri, ContentValues[] values) {
+		List<String> lista = uri.getPathSegments();
+		String path = uri.getPath();
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		final int match = sUriMatcher.match(uri);
+		int rowsUpdated = 0;
+		boolean matchOk = false;
+<%
+		iterador = classes.iterator();
+		while (iterador.hasNext()) {
+			ClasseWrapper corrente = iterador.next();
+		%>
+		if ("<%= corrente.getNomeParaTabela() %>".equals(lista.get(0)))
+			rowsUpdated =  <%= corrente.getNomeParaVariavel() %>Provider.bulkInsert(uri, values);
+		<%
+		}
+		%>
+		return rowsUpdated;
+	}
+	
+}

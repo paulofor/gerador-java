@@ -1,0 +1,31 @@
+<%@ jet package="jet.android.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DerivadaInterface" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo.derivada;
+
+import java.sql.Timestamp;
+import java.util.List;
+import br.com.digicom.modelo.*;
+
+public interface <%= classe.getNomeParaClasse() %>DerivadaI { 
+ 	
+ 	<%
+	ProcValorWrapper procValor = new ProcValorWrapperAndroid();
+	Iterator<ProcValor> iterador = classe.getListaProcValor().iterator();
+	while (iterador.hasNext()) {
+		procValor.setProcValor(iterador.next());
+	%>
+	public void set<%= procValor.getNomePropriedade() %>(<%= procValor.getTipo() %> valor);
+	public <%= procValor.getTipo() %> get<%= procValor.getNomePropriedade() %>();
+	<% if (procValor.ehPercentual() || procValor.ehDecimal()) { %>
+	public String get<%= procValor.getNomePropriedade() %>Tela();
+	<% }
+	}
+	%>  
+	public String getTituloTela();	
+}

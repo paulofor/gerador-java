@@ -1,0 +1,35 @@
+<%@ jet package="jet.android.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DBHelperImpl" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+<%
+	AtributoWrapper atributoW = new AtributoWrapperAndroid();
+	AtributoWrapper chaveW = new AtributoWrapperAndroid();
+	chaveW.setBase(classe.getChave());
+	
+%>
+package <%= conf.getNamespace() %>.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+import br.com.digicom.Constants;
+import br.com.digicom.dao.DBHelperBase;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.dao.base.<%= classe.getNomeParaClasse() %>DBHelperBase;
+
+public class <%= classe.getNomeParaClasse() %>DBHelper extends <%= classe.getNomeParaClasse() %>DBHelperBase{
+
+   
+}

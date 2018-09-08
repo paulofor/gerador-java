@@ -1,0 +1,15 @@
+<%@ jet package="jet.android2.data" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="ConsultaEntidade" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.data.provider;
+
+public final class <%= classe.getNomeParaClasse() %>Consulta extends <%= classe.getNomeParaClasse() %>Provider{
+	
+	
+}

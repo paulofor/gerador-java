@@ -1,0 +1,94 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ServiceImpl" %>
+<%
+ClasseI classe = (ClasseI) argument;  
+%>
+package <%= classe.getPacoteServiceImpl() %>;
+
+import ipiranga.pdsi.framework.modelo.negocio.service.ServiceException;
+import <%= classe.getPacoteUtil() %>.MetodoNaoImplementadoException;
+import <%= classe.getPacoteServiceI() %>.<%= classe.getNomeServiceI() %>;
+import java.util.List;
+<% if (classe.possuiAtributos()) { %>import <%= classe.getPacoteDaoI() %>.<%= classe.getNomeDaoI() %>;<% } %>
+import <%= classe.getPacoteModeloI() %>.*;
+
+public class <%= classe.getNomeServiceImpl() %> <% if (classe.getSuperTipo()!=null) {%> extends <%= classe.getSuperTipo().getNomeServiceImpl() %> <% } %>implements <%= classe.getNomeServiceI() %>{
+
+<% if (classe.getSuperTipo()==null) { %>
+	public <%= classe.getNomeModeloI() %> obtemPorChave(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws ServiceException {
+    	throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","obtemPorChave(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>)");
+    }
+	public List listaAtivos() throws ServiceException {
+    	throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","listaAtivos()");
+    }
+
+<% } %>
+
+	public List obtemPorFiltro(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws ServiceException {
+    	throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","obtemPorFiltro(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>)");
+    }
+    public List obtemPorFiltro(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, String tipoFiltro) throws ServiceException {
+    	throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","obtemPorFiltro(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, String tipoFiltro)");
+    }
+
+	public <%= classe.getNomeModeloI() %> cadastra<%= classe.getNomeSimples() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws ServiceException {
+    	throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","cadastra<%= classe.getNomeSimples() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>)");
+    }
+    public <%= classe.getNomeModeloI() %> atualiza<%= classe.getNomeSimples() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>) throws ServiceException {
+    	throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","atualiza<%= classe.getNomeSimples() %>(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>)");
+    }
+<%for (EOperation item : eClass.getEOperations()) {%>
+<% operacao.setOperation(item); %>
+    public <%= operacao.getTipo() %> <%= operacao.getAssinatura() %>  throws ServiceException{
+    	throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","<%= operacao.getAssinatura() %>");
+    }
+<%}%>
+
+<%
+	Iterator iterador = classe.getReferenceWrappersOpostoUnico().iterator();
+	while(iterador.hasNext()) {
+		ReferenceWrapper reference = (ReferenceWrapper) iterador.next();
+%>
+	<%= "/***"  %>
+    <%= "* Gerada pelo relacionamento com o objeto de dominio " + reference.getClasseOposta().getNomeSimples() %> 
+    <%= "* @param item objeto a ser relacionado" %> 
+    <%= "*/ " %>
+	public <%= classe.getNomeModeloI() %> <%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> item) throws ServiceException{
+		throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","<%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> item)");
+	}	
+	
+	
+		
+	
+<%	} %>
+
+<%
+	iterador = classe.getReferenceWrappersOpostoMultiplo().iterator();
+	while(iterador.hasNext()) {
+		ReferenceWrapper reference = (ReferenceWrapper) iterador.next();
+%>
+	<%= "/***"  %>
+    <%= "* Gerada pelo relacionamento com o objeto de dominio " + reference.getClasseOposta().getNomeSimples() %> 
+    <%= "* @param item objeto a ser relacionado" %> 
+    <%= "*/ " %>
+	public List <%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> item) throws ServiceException{
+		throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","<%= reference.metodoObtemServico() %>(<%= reference.getClasseOposta().getNomeModeloI() %> item)");
+	}
+	
+	<%= "/***"  %>
+    <%= "* Gerada pelo relacionamento com o objeto de dominio " + reference.getClasseOposta().getNomeSimples() %> 
+    <%= "* @param item objeto a ser relacionado" %> 
+    <%= "* @return retorna verdadeiro se existir relacao com o parametro informado " %>
+    <%= "*/ " %>
+	public boolean <%= reference.metodoExisteRelacionamento() %>(<%= reference.declaracaoParametro() %>) throws ServiceException{
+		throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","<%= reference.metodoExisteRelacionamento() %>(<%= reference.declaracaoParametro() %>)");
+	}
+<%	} %>
+
+	<% if (classe.ehAssociativa()) {%>
+	public <%= classe.getNomeModeloI() %> get<%= classe.getNomeSimples() %>(<%= classe.parametrosParaAssociativa() %>) throws ServiceException{
+		throw new MetodoNaoImplementadoException("<%= classe.getNomeServiceImpl() %>","get<%= classe.getNomeSimples() %>(<%= classe.parametrosParaAssociativa() %>)");
+	}
+	<% } %>
+}

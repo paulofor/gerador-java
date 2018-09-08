@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappingmodel.mapping:TypeMappingRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mappingmodel.mapping="http://www.metys.com/merlin/generation/mappingmodel/mapping.ecore" topToBottom="true">
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenGEFModel"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JETTemplateContainer"/>
+    <mappingRuleActions action="target.setJavaJETSource(&quot;com.metys.merlin.generation.gef/templates&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenGEFModel"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//TextJETTemplate"/>
+    <mappingRuleConditions condition="source.getPluginID() != null &amp;&amp; source.getPluginID().trim().length() > 0"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getOutputDirectoryPath())"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source, com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;plugin/build.propertiesjet&quot;)"/>
+    <mappingRuleActions action="target.setOutputFileName(&quot;build.properties&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenGEFModel"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//TextJETTemplate"/>
+    <mappingRuleConditions condition="source.getPluginID() != null &amp;&amp; source.getPluginID().trim().length() > 0"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getOutputDirectoryPath())"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source, com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;plugin/plugin.propertiesjet&quot;)"/>
+    <mappingRuleActions action="target.setOutputFileName(&quot;plugin.properties&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenGEFModel"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//TextJETTemplate"/>
+    <mappingRuleConditions condition="source.getPluginID() != null &amp;&amp; source.getPluginID().trim().length() > 0"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getOutputDirectoryPath())"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source, com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;plugin/plugin.xmljet&quot;)"/>
+    <mappingRuleActions action="target.setOutputFileName(&quot;plugin.xml&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenGEFModel"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleConditions condition="source.getPluginClass() != null &amp;&amp; source.getPluginClass().trim().length() > 0"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer =transformer.getFirstMappedInstance(source, com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;plugin/PluginClass.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenEditor"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;editor/Editor.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenEditor"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;editor/ActionBarContributor.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenEditor"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//GIFTemplate"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/icons/full/obj16&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;editor/ModelFile.gif&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenViewer"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;viewer/Viewer.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenEditPartFactory"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;parts/EditPartFactory.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenNodeEditPart"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;parts/NodeEditPart.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenNodeEditPart"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleConditions condition="source.isContainerEditPolicy()"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;policies/NodeLayoutEditPolicy.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenNodeEditPart"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleConditions condition="source.isComponentEditPolicy()"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;policies/NodeComponentEditPolicy.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenNodeEditPart"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleConditions condition="source.isDirectEditPolicy()"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;policies/NodeDirectEditPolicy.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenNodeEditPart"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleConditions condition="source.isGraphicalEditPolicy()"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;policies/NodeGraphicalNodeEditPolicy.javajet&quot;)"/>
+  </nested>
+  <nested xsi:type="mappingmodel.mapping:TypeMapping">
+    <inputs href="http://www.metys.com/merlin/generation/gef.ecore#//genmodel/GenLinkEditPart"/>
+    <outputs href="http://www.metys.com/merlin/generation/templates.ecore#//JavaJETTemplate"/>
+    <mappingRuleActions action="target.setOutputDirectoryPath(source.getGenGEFModel().getOutputDirectoryPath() + &quot;/src&quot;)"/>
+    <mappingRuleActions action="templateContainer = transformer.getFirstMappedInstance(source.getGenGEFModel(), com.metys.merlin.generation.templates.JETTemplateContainer.class, true)"/>
+    <mappingRuleActions action="templateContainer.getJetTemplates().add(target)"/>
+    <mappingRuleActions action="target.setTemplateFilePath(&quot;parts/LinkEditPart.javajet&quot;)"/>
+  </nested>
+  <inputs href="http://www.metys.com/merlin/generation/gef.ecore#/"/>
+  <outputs href="http://www.metys.com/merlin/generation/templates.ecore#/"/>
+</mappingmodel.mapping:TypeMappingRoot>

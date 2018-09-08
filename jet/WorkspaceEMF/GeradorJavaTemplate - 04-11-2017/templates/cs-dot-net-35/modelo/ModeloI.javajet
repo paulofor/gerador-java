@@ -1,0 +1,43 @@
+<%@ jet package="jet.csdn35.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="ModeloI" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+using br.com.digicom.lib;
+using <%= conf.getNamespace() %>.modelo.agregados;
+using <%= conf.getNamespace() %>.modelo.derivadas;
+using System.Collections;
+
+namespace <%= conf.getNamespace() %>.modelo
+{
+
+	public interface <%= classe.getNomeParaClasse() %> : DCIObjetoDominio, <%= classe.getNomeParaClasse() %>AgregadoI , <%= classe.getNomeParaClasse() %>DerivadaI
+	{
+	
+		string JSon	{
+			get;
+			set;
+		}
+	<%
+		Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+		while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();
+		%>
+		<%= atributo.getTipo() %> <%= atributo.getNomePropriedade() %> 
+    	{
+        	get;
+        	set;
+    	}
+		<% 
+		}
+	%>
+	
+		// No futuro (09/01/2013) podemos passar para uma outra interface -> WS
+		string toWS();
+		
+	}
+}

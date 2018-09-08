@@ -1,0 +1,50 @@
+<%@ jet package="jet.csdn35.mvc" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="EditView" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+@model <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>
+
+@using (Html.BeginForm("CriaNovoRetornaLista", "<%= classe.getNomeParaClasse() %>", FormMethod.Post, new { id = "<%= classe.getNomeParaClasse() %>Form" }))
+{
+	<input type="hidden" name="<%= classe.getChaveW().getNomePropriedade() %>" value="@Model.<%= classe.getChaveW().getNomePropriedade() %>" />
+	<%
+	Iterator<RelacionamentoWrapper> it3 = classe.obtemListaComChaveEstrangeira().iterator();
+	while (it3.hasNext()) {
+		RelacionamentoWrapper corrente = it3.next();
+	%>
+	<input type="hidden" name="<%= corrente.getNomePropriedade() %>" value="@Model.<%= corrente.getNomePropriedade() %>" />
+	<%
+	}
+	%>
+    <fieldset>
+        <legend><%= classe.getNomeParaClasse() %></legend>
+		<%
+		Iterator<AtributoWrapper> it2 = classe.getListaCamposEdicao().iterator();
+       	while (it2.hasNext()) {
+       		AtributoWrapper corrente = it2.next();
+		%>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.<%= corrente.getNomePropriedade() %>)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.<%= corrente.getNomePropriedade() %>)
+            @Html.ValidationMessageFor(model => model.<%= corrente.getNomePropriedade() %>)
+        </div>
+		<%
+		}
+		%>
+    </fieldset>
+}
+<script type="text/javascript">
+    $(function () {
+        $("#<%= classe.getNomeParaClasse() %>Form").validate({
+            rules: {
+                Descricao: { required: true }
+            }
+        });
+    });
+</script>

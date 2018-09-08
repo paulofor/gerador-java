@@ -1,0 +1,17 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* br.com.probid.gerador.execucao.wrappers.* " 
+class="Dao" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNomePacoteModel() %>.dao;
+
+import <%= conf.getNomePacoteModel() %>.dao.base.daoBase<%= classe.getNomeBasico() %>;
+
+public class dao<%= classe.getNomeBasico() %> extends daoBase<%= classe.getNomeBasico() %> {
+
+    
+}
+

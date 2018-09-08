@@ -1,0 +1,98 @@
+<%
+/**
+ * Copyright (c) 2005 Joel Cheuoua & Contributors
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Merlin project nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+%>
+<%@ jet package="com.metys.merlin.generation.gef.compiledtemplates.editor" imports="com.metys.merlin.generation.gef.genmodel.* org.eclipse.emf.codegen.ecore.genmodel.*" class="ActionBarContributor" %>
+<%GenEditor genEditor = (GenEditor) argument; GenModel genModel = genEditor.getGenGEFModel().getGenModel();%>
+<%@ include file="../Header.jetinc"%>
+package <%=genEditor.getPackageName()%>;
+
+import org.eclipse.gef.ui.actions.RedoRetargetAction;
+import org.eclipse.gef.ui.actions.UndoRetargetAction;
+import org.eclipse.gef.ui.actions.DeleteRetargetAction;
+import org.eclipse.gef.ui.actions.ZoomComboContributionItem;
+import org.eclipse.gef.ui.actions.ZoomInRetargetAction;
+import org.eclipse.gef.ui.actions.ZoomOutRetargetAction;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.gef.editparts.ZoomManager;
+<%genModel.markImportLocation(stringBuffer);%>
+/**
+ * The <%=genEditor.getName()%> GEF editor action bar contributor.
+ * <!-- begin-user-doc -->
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public class <%=genEditor.getName()%>ActionBarContributor extends <%=genModel.getImportedName("org.eclipse.gef.ui.actions.ActionBarContributor")%> {
+	
+	/**
+   * @see org.eclipse.gef.ui.actions.ActionBarContributor#buildActions()
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected void buildActions() {
+    addRetargetAction(new UndoRetargetAction());
+    addRetargetAction(new RedoRetargetAction());
+    addRetargetAction(new DeleteRetargetAction());
+    
+    addRetargetAction(new ZoomInRetargetAction());
+    addRetargetAction(new ZoomOutRetargetAction());
+  }
+
+  /**
+   * @see EditorActionBarContributor#contributeToToolBar(IToolBarManager)
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated   
+	 */
+  public void contributeToToolBar(IToolBarManager manager) {
+    manager.add(getAction(ActionFactory.UNDO.getId()));
+    manager.add(getAction(ActionFactory.REDO.getId()));
+    
+    manager.add(new Separator()); 
+    String[] zoomStrings = new String[] { ZoomManager.FIT_ALL, 
+                        ZoomManager.FIT_HEIGHT, 
+                        ZoomManager.FIT_WIDTH };
+    manager.add(new ZoomComboContributionItem(getPage(), zoomStrings));    
+  }
+  
+  /**
+   * @see org.eclipse.gef.ui.actions.ActionBarContributor#declareGlobalActionKeys()
+   * @generated
+   */
+  protected void declareGlobalActionKeys() {
+    // TODO : Implement this method to declare global action handler
+    // do not forget to remove the @generated javadoc or add NOT
+  }
+}
+<%genModel.emitSortedImports();%>

@@ -1,0 +1,436 @@
+<%@ jet package="jet.android.modelo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="Vo" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.modelo.vo;
+
+import android.view.View;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import br.com.digicom.log.DCLog;
+import br.com.digicom.modelo.ObjetoSinc;
+import br.com.digicom.util.ConversorJson;
+import br.com.digicom.activity.DigicomContexto;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.modelo.agregado.<%= classe.getNomeParaClasse() %>Agregado;
+import <%= conf.getNamespace() %>.modelo.derivada.impl.<%= classe.getNomeParaClasse() %>Derivada;
+import <%= conf.getNamespace() %>.modelo.display.impl.<%= classe.getNomeParaClasse() %>Display;
+
+public class <%= classe.getNomeParaClasse() %>Vo implements <%= classe.getNomeParaClasse() %> , ObjetoSinc{ 
+  
+  
+  	public long getIdObj()
+    {
+       return <%= classe.getChaveW().getNomeVariavel() %>;
+    }
+  
+  
+  	private DigicomContexto _contexto = null;
+    public DigicomContexto getContexto() {
+    	if (_contexto==null) 
+    		throw new RuntimeException("DigicomContexto não inicializado");
+    	return _contexto;
+    }
+  	public void setContexto(DigicomContexto ctx) {
+  		_contexto = ctx;
+  	}
+  	
+  
+  	public <%= classe.getNomeParaClasse() %>Vo() {
+  	}
+   	// -----  Inicio JSON -----
+  	private String JsonAtributosOld() {
+		return 
+		<%
+		Iterator<AtributoTotalI> iteradorAtt = classe.getListaAtributoTotal().iterator();
+		boolean primeiro1 = true;
+		while (iteradorAtt.hasNext()) {
+		AtributoTotalI atributoJson = iteradorAtt.next();
+		%><%= (primeiro1?"\"":"+ \",") %> \"<%= atributoJson.getNomePropriedade() %>\" : \"" + <%= atributoJson.getNomeVariavel() %> + "\" "
+		<%
+		primeiro1 = false;
+		}
+		%>
+	;
+	}
+	private JSONObject JSonAtributos() throws JSONException{
+		JSONObject json = new JSONObject();
+		//try {
+		<%
+		Iterator<AtributoTotalI> iteradorAtt1 = classe.getListaAtributoTotal().iterator();
+		while (iteradorAtt1.hasNext()) {
+		AtributoTotalI atributoJson = iteradorAtt1.next();
+		%>	json.put("<%= atributoJson.getNomePropriedade() %>",<%= atributoJson.getNomeVariavel() %>);
+		<%
+		}
+		%>
+		//} catch (JSONException e) {
+		//	DCLog.e("JSONTag", this, e);
+		//}
+		return json;
+	}
+
+	public JSONObject JSon() throws JSONException{
+		JSONObject json = JSonAtributos();
+		//try {
+	<%
+		Iterator<RelacionamentoWrapper> iteradorN2 = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iteradorN2.hasNext()) {
+		RelacionamentoWrapper relac = iteradorN2.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>	JSONArray lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = JSonLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		if (lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>!=null) {
+			json.put("Lista<%= classeOposta.getNomeParaClasse() %>Vo_<%= relac.getNomeRelacionamento() %>",lista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>);
+		} 
+	<%
+		}
+	%>
+		//} catch (JSONException e) {
+		//	DCLog.e("JSONTag", this, e);
+		//}
+		return json;
+	}
+
+
+	// SemChaveEstrangeira
+	<%
+		Iterator<RelacionamentoWrapper> iteradorN1 = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iteradorN1.hasNext()) {
+		RelacionamentoWrapper relac = iteradorN1.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+	%>
+	private JSONArray JSonLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() throws JSONException{
+		if (getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()==null) return null;
+		JSONArray lista = new JSONArray();
+		for (<%= classeOposta.getNomeParaClasse() %> item:this.getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()) {
+			lista.put(((ObjetoSinc)item).JSonSinc());
+			//lista.put(item.JSon());
+		}
+		return lista;
+	}
+	<%
+		}
+	%>
+  	// -----  Final JSon -----------
+ 
+ 
+ 	public String debug() {
+		return 
+		<%
+		Iterator<AtributoTotalI> iteradorAtt2 = classe.getListaAtributoTotal().iterator();
+		primeiro1 = true;
+		while (iteradorAtt2.hasNext()) {
+		AtributoTotalI atributoJson = iteradorAtt2.next();
+		%><%= (primeiro1?"":"+ ") %> " <%= atributoJson.getNomePropriedade() %>=" + get<%= atributoJson.getNomePropriedade() %>() 
+		<%
+		primeiro1 = false;
+		}
+		%>
+	;
+	}
+ 
+ 
+ 	// ---------  Metodos DCIObjeto ----------------
+ 	
+ 	public long getId() {
+ 		return <%= classe.getChaveW().getNomeVariavel() %>;
+ 	}
+ 	public String getNomeClasse() {
+ 		return "<%= classe.getNomeParaClasse() %>";
+ 	}
+ 	// ---------------------------------------------
+ 
+ 
+    // ----- INICIO DISPLAY -----------------
+	private <%= classe.getNomeParaClasse() %>Display display = null;
+	private <%= classe.getNomeParaClasse() %>Display getDisplay() {
+		if (display==null) {
+			display = new <%= classe.getNomeParaClasse() %>Display(this);
+		}
+		return display;
+	}
+	@Override
+	public View getItemListaView() {
+		return display.getItemListaView();
+	}
+	@Override
+	public String getItemListaTexto() {
+		return display.getItemListaTexto();;
+	}
+	// ----- FINAL DISPLAY -----------------
+ 
+    // ----- INICIO AGREGADO -----------------
+	private <%= classe.getNomeParaClasse() %>Agregado agregado = null;
+	private <%= classe.getNomeParaClasse() %>Agregado getAgregado() {
+		if (agregado==null) {
+			agregado = new <%= classe.getNomeParaClasse() %>Agregado(this);
+		}
+		return agregado;
+	}
+	// ----- FINAL AGREGADO -----------------
+	
+	// ----- INICIO DERIVADA -----------------
+	private <%= classe.getNomeParaClasse() %>Derivada derivada = null;
+	private <%= classe.getNomeParaClasse() %>Derivada getDerivada() {
+		if (derivada==null) {
+			derivada = new <%= classe.getNomeParaClasse() %>Derivada(this);
+		}
+		return derivada;
+	}
+	public String getTituloTela()
+	{
+		return getDerivada().getTituloTela(); 
+	} 
+	<%
+	ProcValorWrapper procValor = new ProcValorWrapperAndroid();
+	Iterator<ProcValor> iterador2 = classe.getListaProcValor().iterator();
+	while (iterador2.hasNext()) {
+		procValor.setProcValor(iterador2.next());
+	%>
+	public <%= procValor.getTipo() %> get<%= procValor.getNomePropriedade() %>()
+	{
+		return getDerivada().get<%= procValor.getNomePropriedade() %>(); 
+	} 
+	public void set<%= procValor.getNomePropriedade() %>(<%= procValor.getTipo() %> value)
+	{
+		getDerivada().set<%= procValor.getNomePropriedade() %>(value); 
+	} 
+	<% 
+	}
+	%>
+	
+	// ----- FINAL DERIVADA -----------------
+	
+	
+	
+ 
+  
+  
+  	// ------ AGREGADOS 2-------------------
+  	// ComChaveEstrangeira
+  	<%
+		Iterator<RelacionamentoWrapper> iterador01 = classe.obtemListaComChaveEstrangeira().iterator();
+		while (iterador01.hasNext()) {
+		RelacionamentoWrapper relac = iterador01.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+			return getAgregado().get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		}
+		public void set<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item) {
+			getAgregado().set<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(item);
+		}
+		<% if (classeOposta.getId()!=classe.getId()) { %>
+		public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item) {
+			getAgregado().addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(item);
+		}
+		public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+			return getAgregado().getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		}
+		<% } %>
+		<%
+		}
+	%>
+	
+	// SemChaveEstrangeira
+	<%
+		Iterator<RelacionamentoWrapper> iteradorN = classe.obtemListaSemChaveEstrangeira().iterator();
+		while (iteradorN.hasNext()) {
+		RelacionamentoWrapper relac = iteradorN.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		public <%= classeOposta.getNomeParaClasse() %> getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+			return getAgregado().getCorrente<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		}
+		public void addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item) {
+			getAgregado().addLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(item);
+		}
+		public List<<%= classeOposta.getNomeParaClasse() %>> getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+			return getAgregado().getLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		}
+		public void setLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(List<<%= classeOposta.getNomeParaClasse() %>> lista) {
+			getAgregado().setLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(lista);
+		}
+		public void criaVaziaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+			getAgregado().criaVaziaLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		}
+		public boolean existeLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+			return getAgregado().existeLista<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		}
+ 		<%
+		}
+	%>
+	
+	// UmPraUm
+	<%
+		Iterator<RelacionamentoWrapper> iterador1x1 = classe.obtemListaUmPraUm().iterator();
+		while (iterador1x1.hasNext()) {
+		RelacionamentoWrapper relac = iterador1x1.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		public <%= classeOposta.getNomeParaClasse() %> get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+			return getAgregado().get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>();
+		}
+		public void set<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(<%= classeOposta.getNomeParaClasse() %> item) {
+			getAgregado().set<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>(item);
+		}
+ 		<%
+		}
+	%>
+  	
+  	
+  	// ------ FINAL AGREGADOS -------------
+  
+  
+  	public <%= classe.getNomeParaClasse() %>Vo(JSONObject json) throws JSONException{
+<%
+	Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+	while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();
+%>
+		<%= atributo.getNomeVariavel() %> =  ConversorJson.get<%= atributo.getCastTipoJson() %>(json, "<%= atributo.getNomePropriedade() %>");
+<%
+	}
+%>
+  	}
+<%
+	AtributoWrapper atributoW = new AtributoWrapperAndroid();
+	AtributoEntidade ident = classe.getIdentificador();
+	if (ident!=null) {
+		atributoW.setBase(ident);
+%>
+  	public String toString() {
+  		return "" + <%= atributoW.getNomeVariavel() %>;
+  	}
+<%
+	}
+	iterador = classe.getListaAtributoTotal().iterator();
+	while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();
+	if (atributo instanceof AtributoWrapper) {	
+%>
+	private <%= atributo.getTipo() %> <%= atributo.getNomeVariavel() %>;
+	public <%= atributo.getTipo() %> get<%= atributo.getNomePropriedade() %>() {
+		return <%= atributo.getNomeVariavel() %>;
+	}
+	public void set<%= atributo.getNomePropriedade() %>(<%= atributo.getTipo() %> _valor) {
+		<%= atributo.getNomeVariavel() %> = _valor;
+	}
+<%
+	}
+	if (atributo instanceof RelacionamentoWrapper) {
+	RelacionamentoWrapper relac = (RelacionamentoWrapper) atributo;
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+%>	
+	private <%= atributo.getTipo() %> <%= atributo.getNomeVariavel() %>;
+	public <%= atributo.getTipo() %> get<%= atributo.getNomePropriedade() %>() {
+		// relacionamento
+		if (<%= atributo.getNomeVariavel() %>==0 && this.get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>()!=null) 
+			return get<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>().getId();
+		else
+			return <%= atributo.getNomeVariavel() %>;
+	}
+	public void set<%= atributo.getNomePropriedade() %>(<%= atributo.getTipo() %> _valor) {
+		<%= atributo.getNomeVariavel() %> = _valor;
+	}
+<%
+	}
+%>
+
+<%
+	if (atributo.ehDecimal()) {
+%>	
+	public String get<%= atributo.getNomePropriedade() %>Tela() {
+		return "" + <%= atributo.getNomeVariavel() %>;
+	}
+<%
+	}
+%>
+
+<%
+	if (atributo.ehData()) {
+%>
+	public String get<%= atributo.getNomePropriedade() %>DDMMAAAA() {
+		if (<%= atributo.getNomeVariavel() %>==null) return null;
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        return formato.format(<%= atributo.getNomeVariavel() %>);
+    }
+<%
+	if (!atributo.ehHora()) {
+%>
+    public void set<%= atributo.getNomePropriedade() %>DDMMAAAAComBarra(String arg) {
+    	DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date;
+		try {
+			date = formatter.parse(arg);
+			<%= atributo.getNomeVariavel() %> = new Timestamp(date.getTime());
+		} catch (ParseException e) {
+			DCLog.e(DCLog.MODELO, this, e);
+		}
+    }
+<%
+}
+%>
+
+
+
+
+<%
+	}
+	if (atributo.ehHora()) {
+%>
+	public String get<%= atributo.getNomePropriedade() %>HHMM() {
+		if (<%= atributo.getNomeVariavel() %>==null) return null;
+        SimpleDateFormat formato = new SimpleDateFormat("HH:mm");
+        return formato.format(<%= atributo.getNomeVariavel() %>);
+    }
+    public String get<%= atributo.getNomePropriedade() %>HHMMSS() {
+		if (<%= atributo.getNomeVariavel() %>==null) return null;
+        SimpleDateFormat formato = new SimpleDateFormat("HH:mm:ss");
+        return formato.format(<%= atributo.getNomeVariavel() %>);
+    }
+<%
+	}
+	}
+%>
+
+
+
+	private String operacaoSinc = null;
+	@Override
+	public String getOperacaoSinc() {
+		return operacaoSinc;
+	}
+	@Override
+	public void setOperacaoSinc(String valor) {
+		operacaoSinc = valor;
+	}
+	@Override
+	public JSONObject JSonSinc() throws JSONException {
+		JSONObject json = JSon();
+		json.put("OperacaoSinc", operacaoSinc);
+		return json;
+	}
+	
+	
+	private boolean salvaPreliminar = false;
+	@Override
+	public void setSalvaPreliminar(boolean valor) {
+		salvaPreliminar = valor;
+	}
+	@Override
+	public boolean getSalvaPreliminar() {
+		return salvaPreliminar;
+	}
+}

@@ -1,0 +1,81 @@
+<%@ jet package="jet.csdn35.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="MontadorDao" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+using System.Collections;
+using br.com.digicom.lib.dao;
+using br.com.digicom.lib;
+using br.com.digicom.lib.util;
+using <%= conf.getNamespace() %>.modelo;
+//using Digicom.Seguranca;
+
+
+namespace <%= conf.getNamespace() %>.dao.montador {
+
+//  Nao consegui fazer extender classe MontadorDao para nao precisar 
+//  implementar todos os metodos de MontadorDaoI ( metodos novos )
+//  achei o caminho mais simples colocar os metodos aqui.
+
+public class <%= classe.getNomeParaClasse() %>Montador  : MontadorDaoI { 
+
+	// Alteração feito em digicomcore2 para possibilitar que nao se
+	// precisa ter um objeto por registro na lista de saida
+	// Podemos fazer com que varios registros virem uma lista dentro de
+	// um unico objeto da lista de saida.
+	public virtual bool extraiRegistroListaInterna(ResultadoLista result,ref DCIObjetoDominio objeto)
+    {
+    	objeto = ((MontadorDaoI)this).extraiRegistro(result);
+        return true;
+    }
+    public virtual bool extraiRegistroInterno(ResultadoLista result,ref DCIObjetoDominio objeto)
+    {
+    	objeto = ((MontadorDaoI)this).extraiRegistro(result);
+        return true;
+    }
+    
+	public DCIObjetoDominio extraiRegistro( ResultadoLista resultadoLista )  {
+      DCIObjetoDominio objeto;
+      objeto = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+      return extraiRegistro(resultadoLista, objeto, 0);
+	}
+
+
+	public DCIObjetoDominio extraiRegistro( ResultadoLista resultadoLista  ,  int pos )  {
+      DCIObjetoDominio objeto;
+      objeto = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+      return extraiRegistro(resultadoLista, objeto, pos );
+	}
+
+
+	public  virtual DCIObjetoDominio extraiRegistro( ResultadoLista resultadoLista  ,  DCIObjetoDominio entrada  ,  int pos )  {
+      <%= classe.getNomeParaClasse() %> objeto;
+	  objeto = (<%= classe.getNomeParaClasse() %>)entrada;
+      <%
+		Iterator<AtributoTotalI> iterador = classe.getListaAtributoTotal().iterator();
+		while (iterador.hasNext()) {
+		AtributoTotalI atributo = iterador.next();	
+		if (!atributo.ehCriptoNome()) {
+		%>  
+	  objeto.<%= atributo.getNomePropriedade() %> = resultadoLista.get<%= atributo.getTipoFuncaoMontador() %>(pos++);
+	  <% } else { %>
+	  objeto.<%= atributo.getNomePropriedade() %> = Cripto.Descriptograf(resultadoLista.get<%= atributo.getTipoFuncaoMontador() %>(pos++));
+	  <%
+	  	 } // if
+		} // while
+	%>
+	<% 	for (AtributoTotalI item : classe.getListaDerivadaDemanda()) {	%>
+	  objeto.<%= item.getNomePropriedade() %> = resultadoLista.get<%= item.getTipoFuncaoMontador() %>(pos++);
+	<%  } %>
+      return objeto;
+	}
+	public int quantidadeCampos()  {
+      return <%= "" + classe.getListaAtributoTotal().size() %> + <%= "" + classe.getListaDerivadaDemanda().size() %>;
+	}
+
+}
+}

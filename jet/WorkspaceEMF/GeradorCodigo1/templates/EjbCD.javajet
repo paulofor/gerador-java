@@ -1,0 +1,14 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* " 
+class="EjbCD" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseFuncionalidade classe = (ClasseFuncionalidade) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= classe.getPacoteEjb() %>;
+
+import javax.ejb.EJBObject;
+
+public interface <%= classe.getNomeParaClasse() %>CD extends EJBObject {
+}

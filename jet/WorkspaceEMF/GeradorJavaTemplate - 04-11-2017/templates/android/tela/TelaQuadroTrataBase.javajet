@@ -1,0 +1,306 @@
+<%@ jet package="jet.android.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="TelaQuadroTrataBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.tela.trata.base;
+
+import java.util.List;
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import android.support.v4.app.FragmentTransaction;
+import br.com.digicom.quadro.IFragment;
+
+//import android.widget.CheckBox;
+//import android.widget.TextView;
+import android.widget.EditText;
+import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
+import <%= conf.getNamespace() %>.app.R;
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.modelo.agregado.<%= classe.getNomeParaClasse() %>AgregadoI;
+import <%= conf.getNamespace() %>.servico.FabricaServico;
+import <%= conf.getNamespace() %>.servico.*;
+import <%= conf.getNamespace() %>.modelo.vo.FabricaVo;
+import <%= conf.getNamespace() %>.app.Constantes;
+import br.com.digicom.quadro.BaseDialogFragment;
+import br.com.digicom.multimidia.AudioRecurso;
+import br.com.digicom.quadro.IFragment;
+import br.com.digicom.quadro.IFragmentEdicao;
+import br.com.digicom.modelo.DCIObjetoDominio;
+import br.com.digicom.layout.ResourceObj;
+import br.com.digicom.quadro.ResultadoValidacao;
+import br.com.digicom.animacao.TrocaQuadro;
+import br.com.digicom.log.DCLog;
+
+public abstract class <%= classe.getNomeParaClasse() %>QuadroTrataBase extends BaseDialogFragment implements IFragmentEdicao {
+
+	
+	private <%= classe.getNomeParaClasse() %> item = null;
+	private boolean insercao = false;
+	private boolean alteracao = false;
+	//protected Activity activity = null;
+	
+	// Para manipular apenas os dados relacionados
+	protected <%= classe.getNomeParaClasse() %>AgregadoI getItem() {
+		return (<%= classe.getNomeParaClasse() %>AgregadoI) item;
+	}
+
+	public void logObjetoInterno() {
+		DCLog.d(DCLog.OBJETO_INTERNO, this, "item = "  + item + "(" + (item!=null?item.getClass().getSimpleName():"-") + ")");
+	}
+	
+	public void setItem(DCIObjetoDominio item) {
+		this.item = (<%= classe.getNomeParaClasse() %>) item;
+		//this.activity = activity;
+		//preencheCampos();
+	}
+	public void setInsercao() {
+		insercao = true;
+	}
+	public void setAlteracao() {
+		alteracao = true;
+	}
+	
+	@Override
+	protected final void carregaElementosTelaBase() {
+		if (item!=null && alteracao) {
+			this.transfereVoParaTela(item);
+		}
+		logObjetoInterno();
+	}
+	
+	
+	protected void setOnOk(View tela) {
+		View btn = (View) tela.findViewById(R.id.btnOkTrata<%= classe.getNomeParaClasse() %>);
+		// Verificando se existe o botão de ok na tela.
+		if (btn==null) {
+			throw new RuntimeException("R.id.btnOkTrata<%= classe.getNomeParaClasse() %> não encontrado em " + this.getRecurso().getNome());
+		}
+		btn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (!alteracao && !insercao) {
+					throw new UnsupportedOperationException("Nao foi selecionado nem alteracao nem insercao para <%= classe.getNomeParaClasse() %>QuadroTrata");
+				} else {
+					if (item==null) {
+						throw new UnsupportedOperationException("Item com valor null em <%= classe.getNomeParaClasse() %>QuadroTrataBase");
+					}
+					if (validaCamposTela().getProsseguir()) {
+						if (alteracao) {
+							alteraItem(item);
+							if (posAlteraRetornaTela(item))
+								retornaTela();
+						}
+						if (insercao) {
+							insereItem(item);
+							if (posInsereRetornaTela(item))
+								retornaTela();
+						}
+					}
+				}
+			}
+		});
+	}
+	public boolean posInsereRetornaTela(<%= classe.getNomeParaClasse() %> valor) {
+		return true;
+	}
+	public boolean posAlteraRetornaTela(<%= classe.getNomeParaClasse() %> valor) {
+		return true;
+	}
+
+	protected abstract ResultadoValidacao validaCamposTela();
+	//	throw new RuntimeException("Implementar validaCamposTela de <%= classe.getNomeParaClasse() %>QuadroTrataBase");
+	//}
+
+	@Override
+	protected EditText getUltimoCampo() {
+		return null;
+	}
+	@Override
+	public void onAlteraQuadro() {
+	}
+
+	protected final void alteraItem(<%= classe.getNomeParaClasse() %> valor) {
+		<%= classe.getNomeParaClasse() %>Servico exibicaoSrv = FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		//View saida = LayoutInflater.from(getActivity()).inflate(R.layout.trata_<%= classe.getNomeParaTabela() %>, null);
+		transfereTelaParaVo(valor);
+		//exibicaoSrv.alteraParaSincronizacao(valor);
+		exibicaoSrv.finalizaItemTela(valor, false, getContext());
+	}
+	// Passando o parametro que mesmo estando disponivel é preciso 
+	// que fique claro qual objeto deve ser tratado, colocado aqui por
+	// outro quadro
+	protected final void insereItem(<%= classe.getNomeParaClasse() %> valor) {
+		<%= classe.getNomeParaClasse() %>Servico exibicaoSrv = FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		//View saida = LayoutInflater.from(getActivity()).inflate(R.layout.trata_<%= classe.getNomeParaTabela() %>, null);
+		transfereTelaParaVo(valor);
+		//exibicaoSrv.insereParaSincronizacao(valor);
+		exibicaoSrv.finalizaItemTela(valor, true, getContext());
+	}
+	
+	protected void transfereTelaParaVo(<%= classe.getNomeParaClasse() %> vo)  {
+		throw new UnsupportedOperationException("Fazer override de transfereTelaParaVo em <%= classe.getNomeParaClasse() %>QuadroTrata ou verificar se nao esta sendo chamada via super");
+	}
+	protected void transfereVoParaTela(final <%= classe.getNomeParaClasse() %> vo)  {
+		throw new UnsupportedOperationException("Fazer override de transfereVoParaTela em " + this.getClass().getSimpleName() + " ou verificar se nao esta sendo chamada via super");
+	}
+	public String getTituloTela()  {
+		return "Alterar em " + this.getClass().getSimpleName();
+	}
+	
+	@Override
+	protected ResourceObj getLayoutTela() {
+		ResourceObj recurso = new ResourceObj(R.layout.trata_<%= classe.getNomeParaTabela() %>,"R.layout.trata_<%= classe.getNomeParaTabela() %>");
+		return recurso;
+	}
+
+
+	@Override
+	protected final void inicializaItensTelaBase() {
+		if (item==null) {
+			<%= classe.getNomeParaClasse() %>Servico servico = FabricaServico.getInstancia().get<%= classe.getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+			item = FabricaVo.cria<%= classe.getNomeParaClasse() %>();
+			item = servico.inicializaItemTela(item, getContext());
+		}
+			<%
+			if (!classe.isAssociativa()) {
+				List<RelacionamentoWrapper> lisRel1 = classe.obtemListaDependentePai();
+				for (RelacionamentoWrapper rel : lisRel1) {
+			%>
+		if (this.<%= rel.getClasseOposta().getNomeParaVariavel() %>!=null) {
+			item.set<%= rel.getClasseOposta().getNomeParaClasse() %>_<%= rel.getNomeRelacionamento() %>(<%= rel.getClasseOposta().getNomeParaVariavel() %>);
+		}
+			<%
+			}
+			}
+			%>
+	}
+
+
+	@Override
+	protected void inicializaServicos() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	
+	
+
+	@Override
+	protected final void inicializaListenersBase() {
+		setOnOk(getTela());
+	}
+
+
+	@Override
+	protected void inicioJogoTela() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	// Como passou a ser um IFragment precisa desse método. 
+	// Não sei se faz sentido. Acho que sim. Qualquer trecho de tela pode ter itercao com audio
+	@Override
+	public void audioRawConcluido(AudioRecurso audioRecurso) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	
+	
+	<%
+	if (!classe.isAssociativa()) {
+		List<RelacionamentoWrapper> lisRel = classe.obtemListaDependentePai();
+		for (RelacionamentoWrapper rel : lisRel) {
+	%>
+	// Classes dependentes para não associativas
+	private <%= rel.getClasseOposta().getNomeParaClasse() %> <%= rel.getClasseOposta().getNomeParaVariavel() %>;
+	public final void set<%= rel.getClasseOposta().getNomeParaClasse() %>(<%= rel.getClasseOposta().getNomeParaClasse() %> valor) {
+		<%= rel.getClasseOposta().getNomeParaVariavel() %> = valor;
+		<%= rel.getClasseOposta().getNomeParaVariavel() %>.setContexto(getContext());
+	}
+	protected final <%= rel.getClasseOposta().getNomeParaClasse() %> get<%= rel.getClasseOposta().getNomeParaClasse() %>() {
+		return <%= rel.getClasseOposta().getNomeParaVariavel() %>;
+	}
+	<%
+		}
+	}
+	%>
+	
+	
+	
+	
+	<%
+	List<RelacionamentoWrapper> lisRel = classe.obtemListaDependentePai();
+		for (RelacionamentoWrapper rel : lisRel) {
+	%>
+	protected Spinner getSpinner<%= rel.getClasseOposta().getNomeParaClasse() %>(int codigo, String nome) {
+		<%= rel.getClasseOposta().getNomeParaClasse() %>Servico srv = FabricaServico.getInstancia().get<%= rel.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		List<<%= rel.getClasseOposta().getNomeParaClasse() %>> listaTela = srv.getAllTela(getContext().getContext());
+		Spinner spn = this.getSpinner(codigo, nome, listaTela, this.getContext().getContext()); 
+		return spn;
+	}
+	/*
+	protected Spinner carregaSpinner<%= rel.getClasseOposta().getNomeParaClasse() %>(Spinner spn) {
+		<%= rel.getClasseOposta().getNomeParaClasse() %>Servico srv = FabricaServico.getInstancia().get<%= rel.getClasseOposta().getNomeParaClasse() %>Servico(FabricaServico.TIPO_SQLITE);
+		List<<%= rel.getClasseOposta().getNomeParaClasse() %>> listaTela = srv.getAllTela(getContext().getContext());
+		ArrayAdapter<<%= rel.getClasseOposta().getNomeParaClasse() %>> dataAdapter = new ArrayAdapter<<%= rel.getClasseOposta().getNomeParaClasse() %>>(getContext().getContext(), android.R.layout.simple_spinner_item, listaTela);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spn.setAdapter(dataAdapter);
+		return spn;
+	}
+	*/
+	<%
+		}
+	%>
+	
+	
+	@Override
+	public final void extraiBundle() {
+		this.item = (<%= classe.getNomeParaClasse() %>) this.getBundle().getObjeto(Constantes.CHAVE_<%= classe.getNomeParaConstante() %>);
+		if ((Boolean)this.getBundle().getObjeto(Constantes.CHAVE_ALTERACAO))
+			this.setAlteracao();
+		else
+			this.setInsercao();
+		<%
+		if (!classe.isAssociativa() && classe.obtemListaDependentePai().size()>0) {
+		%>
+		boolean existeItem = false;
+		<%
+			List<RelacionamentoWrapper> lisRel1 = classe.obtemListaDependentePai();
+			for (RelacionamentoWrapper rel : lisRel1) {
+		%>
+		this.<%= rel.getClasseOposta().getNomeParaVariavel() %> = (<%= rel.getClasseOposta().getNomeParaClasse() %>) this.getBundle().getObjetoPermiteNull(Constantes.CHAVE_<%= rel.getClasseOposta().getNomeParaConstante() %>);
+		existeItem = existeItem || (this.<%= rel.getClasseOposta().getNomeParaVariavel() %>!=null);
+		<%
+			}
+		%>
+		if (!existeItem) throw new RuntimeException("Sem referencia");
+		<%
+		}
+		%>
+		extraiBundleComplemento();
+	}
+	protected void extraiBundleComplemento() {
+	}
+	
+	// Se a interface IFragmentEdicao fosse implementada no nível superior poderia ficar na arquitetura.
+	@Override
+	public boolean validaDadosQuadro() {
+		throw new RuntimeException("Implementar validaDadosQuadro em " + this.getClass().getSimpleName());
+	}
+}

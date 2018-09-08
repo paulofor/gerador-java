@@ -1,0 +1,216 @@
+<%@ jet package="jet.csdn35.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="Servico" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+using System;
+
+using <%= conf.getNamespace() %>.modelo;
+using <%= conf.getNamespace() %>.servico.filtro;
+using System.Collections;
+using System.Collections.Generic;
+using br.com.digicom.lib.dao;
+
+namespace  <%= conf.getNamespace() %>.servico {
+
+public abstract class <%= classe.getNomeParaClasse() %>Servico {
+
+	private <%= classe.getNomeParaClasse() %>Filtro filtro = null;
+	public <%= classe.getNomeParaClasse() %>Filtro getFiltro() {
+		if (filtro==null) {
+			filtro = new <%= classe.getNomeParaClasse() %>Filtro();
+		}
+		return filtro;
+	}
+	
+	/*
+	<%
+	Iterator<RelacionamentoWrapper> iterador4 = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (iterador4.hasNext()) {
+	RelacionamentoWrapper relac = iterador4.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	AtributoWrapper chaveOposta = classeOposta.getChaveW();
+	%>
+	public abstract <%= classe.getNomeParaClasse() %> obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(long id);
+	public abstract <%= classe.getNomeParaClasse() %> obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(long id, DaoConexao conexao);
+ 	<%
+		}
+	%>
+	*/
+
+	<%
+	Iterator<RelacionamentoWrapper> iterador2 = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador2.hasNext()) {
+	RelacionamentoWrapper relac = iterador2.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	AtributoWrapper chaveOposta = classeOposta.getChaveW();
+	%>
+	protected bool _obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = false;
+	public void setObtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>() {
+		_obtem<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = true;
+	}
+ 	<%
+		}
+	%>
+
+	
+ 	public string listaJSonMultilinha(List<<%= classe.getNomeParaClasse() %>> listaEntrada)
+    {
+        string listaSaida = "";
+        bool primeiro = true;
+        foreach (<%= classe.getNomeParaClasse() %> item in listaEntrada)
+        {
+            if (!primeiro)
+            {
+                listaSaida += Environment.NewLine;
+            }
+            primeiro = false;
+            listaSaida += item.JSon;
+        }
+        return listaSaida;
+    }
+	
+	public string listaJSon(List<<%= classe.getNomeParaClasse() %>> listaEntrada) {
+        string listaSaida = "";
+        bool primeiro = true;
+        foreach (<%= classe.getNomeParaClasse() %> item in listaEntrada)
+        {
+            if (!primeiro)
+            {
+                listaSaida += " , ";
+            }
+            primeiro = false;
+            listaSaida += item.JSon;
+        }
+        return "{ \"Lista\" : [ " + listaSaida + " ] } ";
+	}
+
+	public abstract void recebeListaSincronizada(List<<%= classe.getNomeParaClasse() %>> lista, string tmp, string cod, int versao);
+ 	public abstract void recebeListaSincronizada(List<<%= classe.getNomeParaClasse() %>> lista, string tmp, string cod, int versao, DaoConexao conexao);
+ 	public abstract List<<%= classe.getNomeParaClasse() %>> listaSincronizada(string tmp, string cod, string app);
+ 	//public abstract List<<%= classe.getNomeParaClasse() %>> listaSincronizada(string tmp, string cod, DaoConexao conexao);
+ 	//public abstract List<<%= classe.getNomeParaClasse() %>> listaSincronizadaV2(string tmp, string cod);
+ 	//public abstract List<<%= classe.getNomeParaClasse() %>> listaSincronizadaV2(string tmp, string cod, DaoConexao conexao);
+ 	//public abstract List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuario(string tmp, string cod);
+ 	//public abstract List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuario(string tmp, string cod, DaoConexao conexao);
+ 	//public abstract List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuarioV2(string tmp, string cod);
+ 	//public abstract List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuarioV2(string tmp, string cod, DaoConexao conexao);
+ 
+ 
+ 	 
+	public abstract bool cria(List<<%= classe.getNomeParaClasse() %>> listaNovo);
+	public abstract bool cria(List<<%= classe.getNomeParaClasse() %>> listaNovo,DaoConexao conexao);
+	public abstract bool cria(<%= classe.getNomeParaClasse() %> novo);
+	public abstract bool cria(<%= classe.getNomeParaClasse() %> novo,DaoConexao conexao);
+	
+
+	public abstract List<<%= classe.getNomeParaClasse() %>> listaTotal();
+	public abstract <%= classe.getNomeParaClasse() %> obtemPorId(long id);
+	public abstract <%= classe.getNomeParaClasse() %> obtemPorId(long id,DaoConexao conexao);
+	public abstract <%= classe.getNomeParaClasse() %> obtemCompletoPorId(long id);
+	public abstract <%= classe.getNomeParaClasse() %> obtemCompletoPorId(long id,DaoConexao conexao);
+	public abstract void excluiPorId(long id);
+	public abstract void excluiPorId(long id,DaoConexao conexao);
+	
+	public abstract List<<%= classe.getNomeParaClasse() %>> listaTotal(DaoConexao conexao);
+	public abstract List<<%= classe.getNomeParaClasse() %>> listaFiltroChaves();
+	public abstract <%= classe.getNomeParaClasse() %> itemFiltroChaves();
+	public abstract List<<%= classe.getNomeParaClasse() %>> listaFiltroChaves(DaoConexao conexao);
+	public abstract <%= classe.getNomeParaClasse() %> itemFiltroChaves(DaoConexao conexao);
+	
+	public abstract bool criaLoad(<%= classe.getNomeParaClasse() %> novo);
+	public abstract bool criaLoad(<%= classe.getNomeParaClasse() %> novo, DaoConexao conexao);
+	public abstract bool atualiza(<%= classe.getNomeParaClasse() %> item);
+	public abstract bool atualiza(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao);
+	//public abstract bool atualizaCamposEdicao(<%= classe.getNomeParaClasse() %> item);
+	public abstract bool atualizaCamposEdicao(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao);
+	public abstract bool atualizaCamposEdicao(List<<%= classe.getNomeParaClasse() %>> lista);
+	public abstract bool atualizaCamposEdicao(List<<%= classe.getNomeParaClasse() %>> lista, DaoConexao conexao);
+	
+	public abstract bool criaLoad(List<<%= classe.getNomeParaClasse() %>> listaNovo);
+	public abstract bool criaLoad(List<<%= classe.getNomeParaClasse() %>> listaNovo, DaoConexao conexao);
+	
+	//public abstract void insertAll(List<<%= classe.getNomeParaClasse() %>> lista);
+	
+<%
+	Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra.hasNext()) {
+	RegraColecao regra = iteradorRegra.next();
+	if (regra.getAtivoCs()) {
+		if (regra.getRetornaColecao()) {
+%>
+
+	<%	if (regra.getRecebeColecao()) { %>
+	public abstract List<<%= classe.getNomeParaClasse() %>> <%= regra.getNome() %>(List<<%= classe.getNomeParaClasse() %>> lista);
+	public abstract List<<%= classe.getNomeParaClasse() %>> <%= regra.getNome() %>(List<<%= classe.getNomeParaClasse() %>> lista, DaoConexao conexao);
+	<% } else { %>
+	public abstract List<<%= classe.getNomeParaClasse() %>> <%= regra.getNome() %>();
+	public abstract List<<%= classe.getNomeParaClasse() %>> <%= regra.getNome() %>(DaoConexao conexao);
+	<% } %>
+	
+<% } else { %>
+<%	if (regra.getRecebeColecao()) { %>
+	public abstract <%= classe.getNomeParaClasse() %> <%= regra.getNome() %>(List<<%= classe.getNomeParaClasse() %>> lista);
+	public abstract <%= classe.getNomeParaClasse() %> <%= regra.getNome() %>(List<<%= classe.getNomeParaClasse() %>> lista, DaoConexao conexao);
+<% } else { %>
+	public abstract <%= classe.getNomeParaClasse() %> <%= regra.getNome() %>();
+	public abstract <%= classe.getNomeParaClasse() %> <%= regra.getNome() %>(DaoConexao conexao);
+<% } %>
+
+<%
+		}
+	}
+	}
+%>	
+	
+	<%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper relCorrente = iterador.next();
+	%>
+	<% if (classe.isAssociativa()) { %>
+	// ***  Para fazer atualizacoes em objetos associativos. ***
+	public abstract bool AtualizaPor<%= relCorrente.getNome() %>NN(long id, string[] ids);
+	public abstract bool AtualizaPor<%= relCorrente.getNome() %>NN(long id, string[] ids, DaoConexao conexao);
+	<% } %>
+	public abstract List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id);
+	public abstract List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id,DaoConexao conexao);
+	public abstract bool excluiPor<%= relCorrente.getNome() %>(long id);
+	public abstract bool excluiPor<%= relCorrente.getNome() %>(long id,DaoConexao conexao);
+	<%
+	}
+	%>
+	
+	
+	<%
+	// *****  Somente associativas ********
+	if (classe.isAssociativa()) {
+	%>
+
+	<%
+	List<RelacionamentoWrapper> relac = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper rel1 = relac.get(0);
+	RelacionamentoWrapper rel2 = relac.get(1);
+	%>
+	public abstract List<<%= rel1.getClasseOposta().getNomeParaClasse() %>> lista<%= rel1.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel1.getNomeRelacionamento() %>(long id<%= rel2.getClasseOposta().getNomeParaClasse() %>);
+	public abstract List<<%= rel2.getClasseOposta().getNomeParaClasse() %>> lista<%= rel2.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel2.getNomeRelacionamento() %>(long id<%= rel1.getClasseOposta().getNomeParaClasse() %>);
+	public abstract <%= classe.getNomeParaClasse() %> obtemPorCodigoDuplo(long id<%= rel1.getClasseOposta().getNomeParaClasse() %><%= rel2.getNomeRelacionamento() %>,long id<%= rel2.getClasseOposta().getNomeParaClasse() %><%= rel1.getNomeRelacionamento() %>);
+	<%
+	}
+	%>
+	
+<%	if(classe.ehUsuario() || classe.ehDispositivo()) { %>
+	// <%= classe.getNomeParaClasse() %>
+	public abstract <%= classe.getNomeParaClasse() %> ObtemPorCodigoTel(string app);
+	public abstract <%= classe.getNomeParaClasse() %> ObtemPorCodigoTel(string app, DaoConexao conexao);
+
+	public abstract <%= classe.getNomeParaClasse() %> ObtemPorCodigoImei(string app);
+	public abstract <%= classe.getNomeParaClasse() %> ObtemPorCodigoImei(string app, DaoConexao conexao);
+<%	} %>
+
+	}
+}

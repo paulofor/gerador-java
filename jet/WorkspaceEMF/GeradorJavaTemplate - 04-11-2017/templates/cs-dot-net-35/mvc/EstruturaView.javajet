@@ -1,0 +1,47 @@
+<%@ jet package="jet.csdn35.mvc" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="EstruturaView" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+@model IEnumerable<<%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>>
+@using <%= conf.getNamespace() %>.modelo;
+@{
+    ViewBag.Title = "";
+}
+<div id="<%= classe.getNomeParaClasse() %>Conteudo"></div>
+<div class="<%= classe.getNomeParaClasse() %>Cria ButtonLink">Criar Novo</div>
+<div id="<%= classe.getNomeParaClasse() %>Dialog"></div>
+<script type="text/javascript">
+    $( function() {
+        $("#<%= classe.getNomeParaClasse() %>Dialog").dialog({
+            autoOpen: false, width: 600, height: 400, modal: true,
+            buttons: {
+                "Salvar": function () {
+                    if ($("#<%= classe.getNomeParaClasse() %>Form").validate().form()) {
+                       $.post("@Url.Action("CriaEditaRetornaLista", "<%= classe.getNomeParaClasse() %>")",
+                        $("#<%= classe.getNomeParaClasse() %>Form").serialize(),
+                        function (data) {
+                            $("#<%= classe.getNomeParaClasse() %>Dialog").dialog("close");
+                            $("#<%= classe.getNomeParaClasse() %>Conteudo").html(data);
+                            Carrega<%= classe.getNomeParaClasse() %>();
+                        });
+                    }
+                },
+                "Sair": function () { $(this).dialog("close"); }
+            }
+        });
+        $(".<%= classe.getNomeParaClasse() %>Cria").click(function () {
+            $("#<%= classe.getNomeParaClasse() %>Dialog").html("")
+                .dialog("option", "title", "Cria Novo")
+                .load("@ViewData["DiretorioVirtual"]/<%= classe.getNomeParaClasse() %>/Novo", function () { $("#<%= classe.getNomeParaClasse() %>Dialog").dialog("open"); });
+        });
+        Carrega<%= classe.getNomeParaClasse() %>();
+    })
+    function Carrega<%= classe.getNomeParaClasse() %>() {
+        $("#<%= classe.getNomeParaClasse() %>Conteudo").load("@Url.Action("ListaCorrente", "<%= classe.getNomeParaClasse() %>")");
+    }
+    
+</script>

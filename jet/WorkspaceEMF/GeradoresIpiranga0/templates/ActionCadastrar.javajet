@@ -1,0 +1,91 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ActionCadastrar" %>
+<%
+%>
+<%EClass eClass = (EClass) argument;
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+ReferenceWrapper referencia = null;
+
+%>
+package <%= classe.getPacoteActionCadastrar() %>;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import <%= classe.getPacoteActionComum() %>.EditarAction;
+import <%= classe.getPacoteServiceI() %>.<%= classe.getNomeServiceI() %>;
+import <%= classe.getPacoteServiceI() %>.ServiceLocator;
+import ipiranga.pdsi.framework.modelo.negocio.service.ServiceException;
+import <%= classe.getPacoteFormBean() %>.<%= classe.getNomeFormBean() %>;
+
+<%= "/*" %>
+<%= "* Classe gerada automaticamente, nao realizar alteracoes " %>
+<%= "*/" %>
+public abstract class <%= classe.getNomeActionCadastrar() %> extends EditarAction{
+	
+	protected abstract <%= classe.getNomeModeloI() %> preparaInsercao(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, <%= classe.getNomeFormBean() %> formBean, HttpServletRequest request, ActionErrors erros) throws ServiceException;
+	protected abstract <%= classe.getNomeModeloI() %> preparaAlteracao(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, <%= classe.getNomeFormBean() %> formBean, HttpServletRequest request, ActionErrors erros) throws ServiceException;
+	protected abstract ActionErrors executaInsercao(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, <%= classe.getNomeServiceI() %> servico, <%= classe.getNomeFormBean() %> formBean, HttpServletRequest request, ActionErrors erros) throws ServiceException;
+	protected abstract ActionErrors executaAlteracao(<%= classe.getNomeModeloI() %> <%= classe.getNomeVariavel() %>, <%= classe.getNomeServiceI() %> servico, <%= classe.getNomeFormBean() %> formBean, HttpServletRequest request, ActionErrors erros) throws ServiceException;
+
+	public ActionForward execute(ActionMapping mapping, 
+			 ActionForm form, 
+			 HttpServletRequest request, 
+			 HttpServletResponse response) throws Exception {
+
+		ActionErrors errors = new ActionErrors();
+		ActionForward forward = new ActionForward();
+
+		try {
+			HttpSession session = request.getSession(true);
+			String tipoOperacao = session.getAttribute(CHAVE_TIPO_OPERACAO);
+			<%= classe.getNomeServiceI() %> servico = ServiceLocator.get<%= classe.getNomeServiceI() %>();	
+			<%= classe.getNomeFormBean() %> formBean = (<%= classe.getNomeFormBean() %>) form;
+			if (tipoOperacao.compareTo(OPERACAO_ALTERACAO)==0) {
+				preparaAlteracao(formBean, request, ActionErrors erros);
+				errors = executaAlteracao(servico,formBean, request, erros);
+			} else {
+				preparaInsercao( formBean, request, erros);
+				errors = executaInsercao( servico, formBean, request, erros);
+			}
+
+		} catch (Exception e) {
+
+			// Report the error using the appropriate name and ID.
+			e.printStackTrace();
+			errors.add("name", new ActionError("id"));
+
+		}
+
+		// If a message is required, save the specified key(s)
+		// into the request for use by the <struts:errors> tag.
+
+		if (!errors.isEmpty()) {
+			saveErrors(request, errors);
+
+			// Forward control to the appropriate 'failure' URI (change name as desired)
+			forward = mapping.findForward("erro");
+
+		} else {
+
+			// Forward control to the appropriate 'success' URI (change name as desired)
+			forward = mapping.findForward("sucesso");
+
+		}
+
+		// Finish with
+		return (forward);
+
+	}
+
+}

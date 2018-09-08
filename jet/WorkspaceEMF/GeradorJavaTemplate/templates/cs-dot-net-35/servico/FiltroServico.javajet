@@ -1,0 +1,124 @@
+<%@ jet package="jet.csdn35.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="FiltroServico" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+using System;
+using <%= conf.getNamespace() %>.modelo;
+using System.Collections;
+
+namespace <%= conf.getNamespace() %>.servico.filtro {
+
+
+
+public class <%= classe.getNomeParaClasse() %>Filtro {
+
+
+<%
+		Iterator<FiltroColecao> iteradorF = classe.getListaFiltroColecao().iterator();
+		while (iteradorF.hasNext()) {
+		FiltroColecao filtro = iteradorF.next();
+		String tipoFiltro = null;
+		if (filtro.getIdEntidadeT()==0) {
+			// Nao tem entidade é tipo primitivo
+			tipoFiltro =  ConverteTipoCs.getTipoFiltro(filtro.getTipoCampoFiltro());
+		}	
+		else { 
+			// Tem entidade vai buscar a classe
+			ClasseWrapper classeFiltro = AplicacaoWrapper.getPorId(filtro.getIdEntidadeT());
+			if (classeFiltro==null) break;
+			tipoFiltro = classeFiltro.getNomeParaClasse();
+		}
+%>
+		private <%= tipoFiltro %> _<%= filtro.getNomeCampoFiltro() %>;
+		public <%= tipoFiltro %> <%= filtro.getNomeCampoFiltro() %> {
+			get {
+				return _<%= filtro.getNomeCampoFiltro() %>;
+			}
+			set {
+				_<%= filtro.getNomeCampoFiltro() %> = value;
+			}	
+		}
+<%
+		}
+%>
+
+
+	<%
+		Iterator<RelacionamentoWrapper> itRel = classe.obtemListaComChaveEstrangeira().iterator();
+		while (itRel.hasNext()) {
+		RelacionamentoWrapper relac = itRel.next();
+		ClasseWrapper classeOposta = relac.getClasseOposta();
+		%>
+		private long _codigo<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>;
+		public long Codigo<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> {
+			get {
+				return _codigo<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %>;
+			}
+			set {
+				_codigo<%= classeOposta.getNomeParaClasse() %>_<%= relac.getNomeRelacionamento() %> = value;
+			}	
+		}
+ 		<%
+		}
+	%>
+
+
+	
+
+<%
+		Iterator<FiltroColecao> iterador = classe.getListaFiltroColecao().iterator();
+		while (iterador.hasNext()) {
+		FiltroColecao filtro = iterador.next();
+		if (filtro.getIdEntidadeT()==0) {
+%>
+		//public <%= ConverteTipoCs.getTipoFiltro(filtro.getTipoCampoFiltro()) %> <%= filtro.getNomeCampoFiltro() %>;
+<%
+		}
+		}
+%>
+
+		//public String getRequest() {
+		//	String saida = "";
+<%
+		iterador = classe.getListaFiltroColecao().iterator();
+		while (iterador.hasNext()) {
+		FiltroColecao filtro = iterador.next();
+		if (filtro.getIdEntidadeT()==0) {
+%>
+		//	if (<%= filtro.getNomeCampoFiltro() %>!=null)
+		//		saida += "&<%= filtro.getNomeCampoFiltro() %>="+<%= filtro.getNomeCampoFiltro() %>;
+<%
+		}
+		}
+%>
+		//	return saida;	
+		
+		
+<%		if(classe.ehUsuario() || classe.ehDispositivo()) { %>
+		// <%= classe.getNomeParaClasse() %>
+		private string _CodigoTel;
+		public string CodigoTel {
+			get {
+				return _CodigoTel;
+			}
+			set {
+				_CodigoTel = value;
+			}	
+		}
+		private string _CodigoImei;
+		public string CodigoImei {
+			get {
+				return _CodigoImei;
+			}
+			set {
+				_CodigoImei = value;
+			}	
+		}
+<%		} %>
+		}
+}

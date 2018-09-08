@@ -1,0 +1,79 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="AssembledVo" %>
+<%
+EClass eClass = (EClass) argument;
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+AttributeWrapper atributo = new AttributeWrapper();
+ReferenceWrapper referencia = null;
+%>
+package <%= classe.getPacoteAssembledVo() %>;
+
+import java.util.List;
+import <%= classe.getPacoteModeloVo() %>.<%= classe.getNomeModeloVo() %>;
+import <%= classe.getPacoteModeloI() %>.*;
+import <%= classe.getPacoteAssembledI() %>.<%= classe.getNomeAssembledI() %>;
+import <%= classe.getPacoteAssembler() %>.<%= classe.getNomeAssembler() %>;
+import <%= classe.getPacoteAssemblerImpl() %>.<%= classe.getNomeAssemblerImpl() %>;
+
+<%= "/*" %>
+<%= "* Classe gerada automaticamente, nao realizar alteracoes " %>
+<%= "*/" %>
+public class <%= classe.getNomeAssembledVo() %> <% if (classe.getSuperTipo()!=null) {%> extends <%= classe.getSuperTipo().getNomeAssembledVo() %> <% } %> implements <%= classe.getNomeAssembledI() %> {
+
+	private <%= classe.getNomeAssembler() %> assembler = null;
+	private <%= classe.getNomeModeloI() %> principal = null;
+<%
+Iterator iterador = classe.getReferenceWrappersUnico().iterator();
+while (iterador.hasNext()) {
+	referencia = (ReferenceWrapper) iterador.next();
+%>
+	private <%= referencia.getClasseOposta().getNomeModeloI() %> <%= referencia.getClasseOposta().getNomeVariavel() %> = null;
+<%}%>
+<%
+iterador = classe.getReferenceWrappersMultiplo().iterator();
+while (iterador.hasNext()) {
+	referencia = (ReferenceWrapper) iterador.next();
+%>
+	private List <%= referencia.getClasseOposta().getNomeVariavel() %>Lista = null;
+	
+<%}%>
+	
+	public <%= classe.getNomeAssembledVo() %>(<%= classe.getNomeModeloI() %> objeto) {
+<% if (classe.getSuperTipo()!=null) {%>super(objeto); <% } %>
+		assembler = new <%= classe.getNomeAssemblerImpl() %>();
+		principal = objeto;
+	}
+<%
+iterador = classe.getReferenceWrappersUnico().iterator();
+while (iterador.hasNext()) {
+	referencia = (ReferenceWrapper) iterador.next();
+%>
+	public <%= referencia.getClasseOposta().getNomeModeloI() %> <%= referencia.getClasseOposta().getGetter() %>() {
+		if (<%= referencia.getClasseOposta().getNomeVariavel() %>==null) {
+			assembler.<%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(principal);
+		}
+		return <%= referencia.getClasseOposta().getNomeVariavel() %>;
+	}
+	public void <%= referencia.getClasseOposta().getSetter() %>(<%= referencia.getClasseOposta().getNomeModeloI() %> <%= referencia.getClasseOposta().getNomeVariavel() %>) {
+		this.<%= referencia.getClasseOposta().getNomeVariavel() %> = <%= referencia.getClasseOposta().getNomeVariavel() %>;
+	}
+<%}%>
+
+<%
+iterador = classe.getReferenceWrappersMultiplo().iterator();
+while (iterador.hasNext()) {
+	referencia = (ReferenceWrapper) iterador.next();
+%>
+	public List <%= referencia.getClasseOposta().getGetterMultiplo() %>() {
+		if (<%= referencia.getClasseOposta().getNomeVariavel() %>Lista==null) {
+			assembler.<%= referencia.getClasseOposta().getMetodoAssemblerCarrega() %>(principal);
+		}
+		return <%= referencia.getClasseOposta().getNomeVariavel() %>Lista;
+	}
+	public void <%= referencia.getClasseOposta().getSetterMultiplo() %>(List <%= referencia.getClasseOposta().getNomeVariavel() %>Lista) {
+		this.<%= referencia.getClasseOposta().getNomeVariavel() %>Lista = <%= referencia.getClasseOposta().getNomeVariavel() %>Lista;
+	}
+<%}%>
+} 

@@ -1,0 +1,13 @@
+-ws
+swing
+-vmargs
+-Dswt.swing.lightpopups=true
+-Dswt.swing.laf=com.lipstikLF.LipstikLookAndFeel
+-Dosgi.splashPath=platform:/base/plugins/net.sourceforge.eos.splash
+-showsplash
+org.eclipse.platform
+--launcher.XXMaxPermSize
+256M
+-Dosgi.requiredJavaVersion=1.5
+-Xms40m
+-Xmx512m    

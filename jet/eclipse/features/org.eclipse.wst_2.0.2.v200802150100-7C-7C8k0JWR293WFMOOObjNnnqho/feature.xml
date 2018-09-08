@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.wst"
+      label="%featureName"
+      version="2.0.2.v200802150100-7C-7C8k0JWR293WFMOOObjNnnqho"
+      provider-name="%providerName"
+      plugin="org.eclipse.wst"
+      image="eclipse_update_120.jpg">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="license.html">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates"/>
+      <discovery label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates"/>
+   </url>
+
+   <includes
+         id="org.eclipse.wst.common_ui.feature"
+         version="2.0.2.v200802150100-7C5EH3E9RvTVnirrspVz0bmP7g8d"/>
+
+   <includes
+         id="org.eclipse.wst.server_ui.feature"
+         version="2.0.2.v200802150100-77-CX9vCXDkvWGPlAMGMi447"/>
+
+   <includes
+         id="org.eclipse.wst.server_adapters.feature"
+         version="2.0.2.v200802150100-4-0_kE77Y7TGAoAAJ"/>
+
+   <includes
+         id="org.eclipse.wst.xml_ui.feature"
+         version="2.0.2.v200802150100-7A1ECMCnbcl1bVs9uNm_Zkieb7Qe"/>
+
+   <includes
+         id="org.eclipse.wst.ws_ui.feature"
+         version="2.0.2.v200802150100-791ECIAufYO9BlarnPCFGewtZiN1"/>
+
+   <includes
+         id="org.eclipse.wst.web_ui.feature"
+         version="2.0.2.v200802150100-7A0EAlCiWfJKsCZoChvz0dMYOb"/>
+
+   <plugin
+         id="org.eclipse.wst"
+         download-size="0"
+         install-size="0"
+         version="1.0.2.v200706120315"
+         unpack="false"/>
+
+</feature>

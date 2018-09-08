@@ -1,0 +1,43 @@
+<%@ jet package="jet.android2.framework.tela" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="MainActivityBaseSemGcm" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.tela;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+
+import <%= conf.getNamespaceExtendido() %>.framework.log.DCLog;
+import <%= conf.getNamespaceExtendido() %>.framework.tela.ResourceObj;
+import <%= conf.getNamespaceExtendido() %>.template.R;
+
+
+
+public abstract class MainActivityBaseSemGcm extends AppCompatActivity {
+
+	@Override
+    protected final void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutResource());
+        inicializaToolbar();
+    }
+
+   	private void inicializaToolbar() {
+        Toolbar toolbar = (Toolbar) this.findViewById(getToolbarResource());
+        toolbar.setTitle(getTitulo());
+        setSupportActionBar(toolbar);
+    }
+
+
+    protected abstract int getLayoutResource();
+    protected abstract int getToolbarResource();
+    protected abstract String getTitulo();
+
+}

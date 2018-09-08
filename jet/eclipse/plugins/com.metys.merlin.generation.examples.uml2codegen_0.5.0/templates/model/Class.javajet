@@ -1,0 +1,95 @@
+<%@ jet package="com.metys.merlin.generation.examples.compiledtemplates.model" imports="java.util.* com.metys.merlin.generation.examples.compiledtemplates.util.UML2GenerationHelper org.eclipse.emf.codegen.util.*" class="Class" %>
+<%
+%>
+<%org.eclipse.uml2.Class uml2Class = (org.eclipse.uml2.Class) argument;org.eclipse.uml2.Package uml2Package = uml2Class.getPackage();%>
+<%@ include file="../Header.jetinc"%>
+<%ImportManager importManager=null;%>
+<%if (UML2GenerationHelper.getQualifiedName(uml2Package) != null) {%>
+<%importManager = UML2GenerationHelper.makeImportManager(UML2GenerationHelper.getQualifiedName(uml2Package));%>
+package <%=UML2GenerationHelper.getQualifiedName(uml2Package)%>;
+<%} else {%>
+<%importManager = UML2GenerationHelper.makeImportManager("");%>
+<%}%>
+<%
+StringBuffer importStringBuffer = stringBuffer;
+int importInsertionPoint = stringBuffer.length();
+importManager.addCompilationUnitImports(stringBuffer.toString());
+%>
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b><%=UML2GenerationHelper.getCapName(uml2Class)%></b></em>'.
+ * <!-- end-user-doc -->
+ *
+ * @generated
+ */
+public<%if (uml2Class.isAbstract()) {%> abstract<%}%> class <%=UML2GenerationHelper.getCapName(uml2Class)%><%=UML2GenerationHelper.getExtendsAndImplementsLitteral(uml2Class)%>
+{
+
+<%for (Iterator i=uml2Class.getAttributes().iterator(); i.hasNext();) { org.eclipse.uml2.Property property = (org.eclipse.uml2.Property)i.next();%>
+<%if (property.getType() !=null) {%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected <%=UML2GenerationHelper.getImportedFeatureType(property)%> <%=UML2GenerationHelper.uncapSafeName(property)%> = <%=UML2GenerationHelper.getDefaultValue(property)%>;
+<%}%>
+<%}%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public <%=UML2GenerationHelper.getCapName(uml2Class)%>()
+	{
+	}
+<%for (Iterator i=uml2Class.getAttributes().iterator(); i.hasNext();) { org.eclipse.uml2.Property property = (org.eclipse.uml2.Property)i.next();%>
+<%if (property.getType() !=null) {%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public <%=UML2GenerationHelper.getImportedFeatureType(property)%> <%=UML2GenerationHelper.getGetAccessor(property)%>()
+	{
+<%if (property.isMultivalued())  {%>
+		if (<%=UML2GenerationHelper.uncapSafeName(property)%> == null)
+		{
+			<%=UML2GenerationHelper.uncapSafeName(property)%> = new <%=importManager.getImportedName("java.util.ArrayList")%>();        
+		}
+<%}%>
+		return <%=UML2GenerationHelper.uncapSafeName(property)%>;
+	}
+<%if (!property.isMultivalued() && !property.isReadOnly()) {%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void set<%=UML2GenerationHelper.getAccessorName(property)%>(<%=UML2GenerationHelper.getImportedFeatureType(property)%> new<%=UML2GenerationHelper.getCapName(property)%>)
+	{
+		if (new<%=UML2GenerationHelper.getCapName(property)%> != <%=UML2GenerationHelper.uncapSafeName(property)%>)
+		{
+			this.<%=UML2GenerationHelper.uncapSafeName(property)%> = new<%=UML2GenerationHelper.getCapName(property)%>;
+		}
+	}
+<%}//if (!property.isReadOnly())%>
+<%}//if (property.getType() !=null%>
+<%}//for%>
+
+<%for (Iterator i=uml2Class.getOwnedOperations().iterator(); i.hasNext();) { org.eclipse.uml2.Operation operation = (org.eclipse.uml2.Operation)i.next();%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public <%if (operation.getType() == null) {%>void<%} else {%><%=UML2GenerationHelper.getImportedType(operation.getType())%><%}%> <%=operation.getName()%>(<%=UML2GenerationHelper.getParameters(operation)%>)
+	{
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();		
+	}
+<%}//for%>
+} //<%=UML2GenerationHelper.getCapName(uml2Class)%>
+<%importStringBuffer.insert(importInsertionPoint, importManager.computeSortedImports());%>

@@ -1,0 +1,126 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* br.com.probid.gerador.execucao.wrappers.* br.com.probid.gerador.interfaces.* " 
+class="BeanBase" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNomePacoteModel() %>.bean.base;
+
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.text.ParseException;
+
+
+public abstract class beanBase<%= classe.getNomeBasico() %>{
+
+	<%
+	RelacionamentoWrapper relW = new RelacionamentoWrapper();
+	Iterator itRel = classe.getBase().getListaRelacionamentoFonte().iterator();
+	while (itRel.hasNext()) {
+		relW.setBase((RelacionamentoI) itRel.next());
+%>
+	private beanBase<%= relW.getNomeClasseDestino() %> item<%= relW.getNomeClasseDestino() %><%= relW.getNomeRelacionamentoSufixo() %> = null;
+	public void set<%= relW.getNomeClasseDestino() %><%= relW.getNomeRelacionamentoSufixo() %>(beanBase<%= relW.getNomeClasseDestino() %> item) {
+		item<%= relW.getNomeClasseDestino() %><%= relW.getNomeRelacionamentoSufixo() %> = item;
+	}
+	public beanBase<%= relW.getNomeClasseDestino() %> get<%= relW.getNomeClasseDestino() %><%= relW.getNomeRelacionamentoSufixo() %>() {
+		return item<%= relW.getNomeClasseDestino() %><%= relW.getNomeRelacionamentoSufixo() %>;
+	}
+<%		
+	}
+	%>
+
+
+	protected beanBase<%= classe.getNomeBasico() %>() {
+	}
+	
+	public void copia(beanBase<%= classe.getNomeBasico() %> item) {
+	<%
+	AtributoWrapper atributoW = new AtributoWrapper();
+	Iterator iterador = classe.getBase().getListaAtributo().iterator();
+	while (iterador.hasNext()) {
+		atributoW.setBase((AtributoI) iterador.next());
+	%>	this.set<%= atributoW.getNomeMetodo() %>(item.get<%= atributoW.getNomeMetodo() %>());
+	<%
+	}
+	%>
+	}  
+
+<%
+	//AtributoWrapper atributoW = new AtributoWrapper();
+	iterador = classe.getBase().getListaAtributo().iterator();
+	while (iterador.hasNext()) {
+		atributoW.setBase((AtributoI) iterador.next());
+%>
+	protected <%= atributoW.getTipoJava() %> <%= atributoW.getNomeVariavel() %>;
+	public void set<%= atributoW.getNomeMetodo() %>(<%= atributoW.getTipoJava() %> valor) {
+		<%= atributoW.getNomeVariavel() %> = valor;
+	}	
+	public <%= atributoW.getTipoJava() %> get<%= atributoW.getNomeMetodo() %>() {
+		return <%= atributoW.getNomeVariavel() %>;
+	}
+	<% if (atributoW.getTipoJava()=="Timestamp") { %>
+	
+	public long get<%= atributoW.getNomeMetodo() %>Long() {
+		if (<%= atributoW.getNomeVariavel() %>==null) return 0;
+        SimpleDateFormat formato = new SimpleDateFormat("yyyyMMdd");
+        return Long.parseLong(formato.format(<%= atributoW.getNomeVariavel() %>));
+    }
+	
+	public String get<%= atributoW.getNomeMetodo() %>AAAAMMDD() {
+		if (<%= atributoW.getNomeVariavel() %>==null) return null;
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        return formato.format(<%= atributoW.getNomeVariavel() %>);
+    }
+	public String get<%= atributoW.getNomeMetodo() %>Formatada() {
+		if (<%= atributoW.getNomeVariavel() %>==null) return "-";
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return formato.format(<%= atributoW.getNomeVariavel() %>);
+    }
+    public String get<%= atributoW.getNomeMetodo() %>Str() {
+        if (<%= atributoW.getNomeVariavel() %>==null) return "-";
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        return formato.format(<%= atributoW.getNomeVariavel() %>);
+    }
+    public void set<%= atributoW.getNomeMetodo() %>Str(String data) {
+	    if (data==null) return;
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+	        java.util.Date date = (java.util.Date)formatter.parse(data);
+	        <%= atributoW.getNomeVariavel() %> = new Timestamp(date.getTime());
+	    } catch (ParseException e) {
+	    	<%= atributoW.getNomeVariavel() %> = null;
+	    }
+    }
+    
+    public void set<%= atributoW.getNomeMetodo() %>DDMMAA_HHMM(String dataHora) {
+	    if (dataHora==null) return;
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
+        try {
+	        java.util.Date date = (java.util.Date)formatter.parse(dataHora);
+	        <%= atributoW.getNomeVariavel() %> = new Timestamp(date.getTime());
+	    } catch (ParseException e) {
+	    	<%= atributoW.getNomeVariavel() %> = null;
+	    }
+    }
+    public void set<%= atributoW.getNomeMetodo() %>MMDDAA_HHMM(String dataHora) {
+	    if (dataHora==null) return;
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yy HH:mm");
+        try {
+	        java.util.Date date = (java.util.Date)formatter.parse(dataHora);
+	        <%= atributoW.getNomeVariavel() %> = new Timestamp(date.getTime());
+	    } catch (ParseException e) {
+	    	<%= atributoW.getNomeVariavel() %> = null;
+	    }
+    }
+    <% } %>	
+<%
+	}
+%>
+    
+}
+

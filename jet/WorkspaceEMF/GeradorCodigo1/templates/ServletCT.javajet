@@ -1,0 +1,76 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* " 
+class="ServletCT" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+ClasseWrapper classe = recursos.getClasse();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+
+package com.br.brasilcap.<%= conf.getGrupoParaPacote() %>.<%= conf.getModuloParaPacote() %>.<%= classe.nomePacoteServlet() %>.servlet;
+import com.br.brasilcap.arq.glb.util.view.AbstractServletCT;
+import com.br.brasilcap.arq.glb.util.standard.CatalogoGlobal;
+import com.br.brasilcap.arq.glb.util.view.FormBean;
+
+public class <%= classe.getNomeParaClasse() %>CT extends  AbstractServletCT
+{
+
+private static final String CONTENT_TYPE = "text/html; charset=iso-8859-1";
+
+public String getNomeModulo()
+{
+return CatalogoGlobal.CST_MODULO_OBRIGACAO_LEGAL;
+}
+<%
+Iterator iterador = classe.listaOperacaoServlet().iterator();
+while (iterador.hasNext()) {
+	OperacaoWrapper operacao = (OperacaoWrapper) iterador.next();
+	ClasseWrapper dtoCl = operacao.obtemTipoClassePorNome("dto");
+	ClasseWrapper jspCl = operacao.obtemTipoClassePorNome("jsp");
+	
+%>
+	/**
+     * @param fb
+     * @return
+     * @throws ViewException
+     */
+	public FormBean <%= operacao.getNome() %>(FormBean formBean)
+	{
+		formBean.setSaida("OblAutorizacaoparamCN.jsp");
+		<%= dtoCl.getNome() %> dto = new <%= dtoCl.getNome() %>();
+
+		final String CST_METODO = "<%= operacao.getNome() %>";
+        log.setDebug(CatalogoGlobal.CST_MENSAGEM_METODOINI, CST_METODO); 
+        
+        <%=operacao.getNomeEjb() %> c = null;
+        <%=operacao.getNomeEjb() %>Home home = null;
+        RowSet rs =null;
+        try {
+            String nome = getNomeModulo();
+            log.setDebug("Modulo:" + nome,CST_METODO);
+            home = (<%=operacao.getNomeEjb() %>Home)FacadeHome.getEjbHome(getNomeModulo(),
+                                                  "<%=operacao.getNomeEjb() %>Home",
+                                                 <%=operacao.getNomeEjb() %>Home.class);
+            cParametros = homeParametros.create();
+            <%= dtoCl.getNome() %> dto = new <%= dtoCl.getNome() %>(fb.getParametros());
+            //dto.setIdentificacao(fb.getParametro("identificacao"));
+            //dto.checkError();
+            
+            rs =  cParametros.listaParametros(dto,fb.getCredencial());
+            fb.setLista(rs);
+            <% if (jspCl!=null) { %>
+            fb.setSaida("<%= jspCl.getNome() %>.jsp");
+            <% } %>
+            return fb;
+        } 
+        catch (Exception e){
+            log.setFatal(e.getMessage(), CST_METODO); 
+            throw new ViewException(e);
+        }
+	}
+<%
+}
+%>
+
+
+}

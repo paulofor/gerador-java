@@ -1,0 +1,13 @@
+<%@ jet package="jet.android2.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="TelaListaUsoBase" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.template.lista;
+
+public abstract class <%= classe.getNomeParaClasse() %>ListaUsoBase {
+}

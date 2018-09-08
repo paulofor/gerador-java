@@ -1,0 +1,39 @@
+<%@ jet package="jet.android.activity" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="TelaQuadroLista" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespace() %>.tela.quadro;
+
+import <%= conf.getNamespace() %>.app.R;
+import <%= conf.getNamespace() %>.modelo.<%= classe.getNomeParaClasse() %>;
+import <%= conf.getNamespace() %>.servico.FabricaServico;
+import <%= conf.getNamespace() %>.servico.<%= classe.getNomeParaClasse() %>Servico;
+import <%= conf.getNamespace() %>.view.adapter.<%= classe.getNomeParaClasse() %>ListAdapter;
+
+import <%= conf.getNamespace() %>.tela.quadro.base.<%= classe.getNomeParaClasse() %>QuadroListaBase;
+import java.util.List;
+import br.com.digicom.animacao.TrocaQuadro;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import br.com.digicom.quadro.BaseListFragment;
+
+public class <%= classe.getNomeParaClasse() %>QuadroLista extends  <%= classe.getNomeParaClasse() %>QuadroListaBase{
+
+	@Override
+	public void extraiBundle() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;/TesteServeltAnt01/WS/META-INF/wsit-br.org.fplf.wsAtualizadorDados.xml&apos; to &apos;wsit-exemplo.ServicoTeste.xml&apos;&#x0D;&#x0A;- Original project: &apos;TesteServeltAnt01&apos;&#x0D;&#x0A;- Original element: &apos;wsit-br.org.fplf.wsAtualizadorDados.xml&apos;" description="Rename resource &apos;wsit-br.org.fplf.wsAtualizadorDados.xml&apos;" flags="7" id="org.eclipse.jdt.ui.rename.resource" input="WS/META-INF/wsit-br.org.fplf.wsAtualizadorDados.xml" name="wsit-exemplo.ServicoTeste.xml" stamp="1306887223983" version="1.0"/>
+</session>

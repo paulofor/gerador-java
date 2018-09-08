@@ -1,0 +1,15 @@
+<%@ jet package="jet.android2.framework.xml" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="StringXml" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+<resources>
+    <string name="app_name"><%= conf.getNomeAplicacao() %></string>
+
+    <string name="sync_account_type">lojadigicom.<%= conf.getNamespace() %></string>
+    <string name="content_authority">br.com.lojadigicom.<%= conf.getNamespace() %></string>
+</resources>

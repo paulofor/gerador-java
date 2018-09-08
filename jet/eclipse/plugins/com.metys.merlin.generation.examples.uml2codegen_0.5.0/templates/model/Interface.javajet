@@ -1,0 +1,57 @@
+<%@ jet package="com.metys.merlin.generation.examples.compiledtemplates.model" imports="java.util.* com.metys.merlin.generation.examples.compiledtemplates.util.UML2GenerationHelper org.eclipse.emf.codegen.util.*" class="Interface" %>
+<%
+%>
+<%org.eclipse.uml2.Interface uml2Interface = (org.eclipse.uml2.Interface) argument;org.eclipse.uml2.Package uml2Package = uml2Interface.getPackage();%>
+<%@ include file="../Header.jetinc"%>
+<%ImportManager importManager=null;%>
+<%if (UML2GenerationHelper.getQualifiedName(uml2Package) != null) {%>
+<%importManager = UML2GenerationHelper.makeImportManager(UML2GenerationHelper.getQualifiedName(uml2Package));%>
+package <%=UML2GenerationHelper.getQualifiedName(uml2Package)%>;
+<%} else {%>
+<%importManager = UML2GenerationHelper.makeImportManager("");%>
+<%}%>
+<%
+StringBuffer importStringBuffer = stringBuffer;
+int importInsertionPoint = stringBuffer.length();
+importManager.addCompilationUnitImports(stringBuffer.toString());
+%>
+
+/**
+ * <!-- begin-user-doc -->
+ * An interface of the model object '<em><b><%=UML2GenerationHelper.getCapName(uml2Interface)%></b></em>'.
+ * <!-- end-user-doc -->
+ *
+ * @generated
+ */
+public interface <%=UML2GenerationHelper.getCapName(uml2Interface)%><%=UML2GenerationHelper.getExtendsLitteral(uml2Interface)%>
+{
+
+<%for (Iterator i=uml2Interface.getAttributes().iterator(); i.hasNext();) { org.eclipse.uml2.Property property = (org.eclipse.uml2.Property)i.next();%>
+<%if (property.getType() !=null) {%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	<%=UML2GenerationHelper.getImportedFeatureType(property)%> <%=UML2GenerationHelper.getGetAccessor(property)%>();
+<%if (!property.isMultivalued() && !property.isReadOnly()) {%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	void set<%=UML2GenerationHelper.getAccessorName(property)%>(<%=UML2GenerationHelper.getImportedFeatureType(property)%> new<%=UML2GenerationHelper.getCapName(property)%>);
+<%}//if (!property.isReadOnly())%>
+<%}//if (property.getType() !=null%>
+<%}//for%>
+
+<%for (Iterator i=uml2Interface.getOwnedOperations().iterator(); i.hasNext();) { org.eclipse.uml2.Operation operation = (org.eclipse.uml2.Operation)i.next();%>
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	<%if (operation.getType() == null) {%>void<%} else {%><%=UML2GenerationHelper.getImportedType(operation.getType())%><%}%> <%=operation.getName()%>(<%=UML2GenerationHelper.getParameters(operation)%>);
+<%}//for%>
+} //<%=UML2GenerationHelper.getCapName(uml2Interface)%>
+<%importStringBuffer.insert(importInsertionPoint, importManager.computeSortedImports());%>

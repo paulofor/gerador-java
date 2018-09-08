@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 1 elements(s) to &apos;servico&apos;&#x0D;&#x0A;- Original project: &apos;GeradorJavaTemplate&apos;&#x0D;&#x0A;- Destination element: &apos;servico&apos;&#x0D;&#x0A;- Original element: &apos;Servico.javajet&apos;" description="Copy file" element1="templates/android/servico/Servico.javajet" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" log="templates/android/servico/Servico.javajet&#x09;true&#x09;true&#x09;FiltroServico.javajet" policy="org.eclipse.jdt.ui.copyResources" stamp="1320329722750" target="/GeradorJavaTemplate/templates/android/servico" units="0" version="1.0"/>
+</session>

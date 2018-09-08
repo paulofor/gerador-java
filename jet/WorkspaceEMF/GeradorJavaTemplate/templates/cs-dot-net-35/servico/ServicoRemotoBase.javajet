@@ -1,0 +1,319 @@
+<%@ jet package="jet.csdn35.servico" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="ServicoRemotoBase" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using br.com.digicom.lib.dao;
+using <%= conf.getNamespace() %>.modelo;
+
+
+namespace <%= conf.getNamespace() %>.servico.remoto.basico {
+
+
+public abstract class <%= classe.getNomeParaClasse() %>ServicoRemotoBase :  <%= classe.getNomeParaClasse() %>Servico {
+
+	//private ArrayList<<%= classe.getNomeParaClasse() %>> listaSaida = null;
+	
+	private static string URL_GET_POSTS_RECENT = 
+		"http://www.lojadigicom.com.br/<%= conf.getNamespace() %>/page/<%= classe.getNomeParaClasse() %>Page.aspx";
+	//private JSONObject json;
+	
+	/*
+	<%
+	Iterator<RelacionamentoWrapper> iterador4 = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (iterador4.hasNext()) {
+	RelacionamentoWrapper relac = iterador4.next();
+	ClasseWrapper classeOposta = relac.getClasseOposta();
+	AtributoWrapper chaveOposta = classeOposta.getChaveW();
+	%>
+	public override <%= classe.getNomeParaClasse() %> obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(long id) {
+		throw new NotImplementedException();
+	}
+	public override <%= classe.getNomeParaClasse() %> obtemPor<%= classeOposta.getNomeParaClasse() %><%= relac.getNomeRelacionamento() %>(long id, DaoConexao conexao){
+		throw new NotImplementedException();
+	}
+ 	<%
+		}
+	%>
+	*/
+<%
+	Iterator<RegraColecao> iteradorRegra = classe.getListaRegraColecao().iterator();
+	while (iteradorRegra.hasNext()) {
+	RegraColecao regra = iteradorRegra.next();
+	if (regra.getAtivoCs()) {
+		String tipoRetorno = null;
+		String param = null;
+		String paramConn = null;
+		if (regra.getRetornaColecao()) tipoRetorno = "List<" + classe.getNomeParaClasse() + ">";
+		else tipoRetorno = classe.getNomeParaClasse();
+		if (regra.getRecebeColecao()) { 
+			param = "List<" + classe.getNomeParaClasse() + "> lista";
+			paramConn = "List<" + classe.getNomeParaClasse() + "> lista, DaoConexao conexao";
+		} else {
+			param = "";
+			paramConn = "DaoConexao conexao";
+		}
+%>
+	// Precisa ser colocado por ter passado a assinatura desse metodo
+	// como abstract na classe mais generica.argument ( Para ser usada em outros serviços )
+	public override <%= tipoRetorno %> <%= regra.getNome() %>(<%= paramConn %>){
+		throw new NotImplementedException();
+	}
+	public override <%= tipoRetorno %> <%= regra.getNome() %>(<%= param %>){
+		throw new NotImplementedException();
+	}
+<%
+	}
+	}
+%>
+
+	public override void recebeListaSincronizada(List<<%= classe.getNomeParaClasse() %>> lista, string tmp, string cod, int versao) {
+		throw new NotImplementedException();
+	}
+ 	public override void recebeListaSincronizada(List<<%= classe.getNomeParaClasse() %>> lista, string tmp, string cod,int versao, DaoConexao conexao) {
+ 		throw new NotImplementedException();
+ 	}
+ 	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizada(string tmp,string cod, string app) {
+		throw new NotImplementedException();
+	}
+	/*
+ 	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizada(string tmp, string cod, DaoConexao conexao) {
+ 		throw new NotImplementedException();
+ 	}
+ 	
+ 	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizadaV2(string tmp, string cod, DaoConexao conexao) {
+ 		throw new NotImplementedException();
+ 	}
+ 	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuario(string tmp, string cod) {
+		throw new NotImplementedException();
+	}
+ 	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuario(string tmp, string cod, DaoConexao conexao) {
+ 		throw new NotImplementedException();
+ 	}	
+ 	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuarioV2(string tmp, string cod) {
+		throw new NotImplementedException();
+	}
+ 	public override List<<%= classe.getNomeParaClasse() %>> listaSincronizadaUsuarioV2(string tmp, string cod, DaoConexao conexao) {
+ 		throw new NotImplementedException();
+ 	}
+	*/
+	public override  bool atualiza(<%= classe.getNomeParaClasse() %> item) {
+		throw new NotImplementedException();
+	}
+	public override  bool atualiza(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	
+	/*
+	public override  bool atualizaCamposEdicao(<%= classe.getNomeParaClasse() %> item) {
+		throw new NotImplementedException();
+	}
+	*/
+	public override  bool atualizaCamposEdicao(<%= classe.getNomeParaClasse() %> item, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+
+	public override  bool atualizaCamposEdicao(List<<%= classe.getNomeParaClasse() %>> lista) {
+		throw new NotImplementedException();
+	}
+	
+	public override  bool atualizaCamposEdicao(List<<%= classe.getNomeParaClasse() %>> lista, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+
+	public override  bool criaLoad(<%= classe.getNomeParaClasse() %> novo) {
+		throw new NotImplementedException();
+	}
+	public override  bool criaLoad(<%= classe.getNomeParaClasse() %> novo, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	public override  bool criaLoad(List<<%= classe.getNomeParaClasse() %>> listaNovo) {
+		throw new NotImplementedException();
+	}
+	public override  bool criaLoad(List<<%= classe.getNomeParaClasse() %>> listaNovo, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	public override  bool cria(<%= classe.getNomeParaClasse() %> novo) {
+		throw new NotImplementedException();
+	}
+	public override  bool cria(<%= classe.getNomeParaClasse() %> novo, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	public override  bool cria(List<<%= classe.getNomeParaClasse() %>> listaNovo) {
+		throw new NotImplementedException();
+	}
+	public override  bool cria(List<<%= classe.getNomeParaClasse() %>> listaNovo, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+
+	public override  List<<%= classe.getNomeParaClasse() %>> listaFiltroChaves() {
+		throw new NotImplementedException();
+	}
+	public override  List<<%= classe.getNomeParaClasse() %>> listaFiltroChaves(DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	public override  <%= classe.getNomeParaClasse() %> itemFiltroChaves() {
+		throw new NotImplementedException();
+	}
+	public override  <%= classe.getNomeParaClasse() %> itemFiltroChaves(DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+
+	public override  List<<%= classe.getNomeParaClasse() %>> listaTotal() {
+		throw new NotImplementedException();
+	}
+	public override  <%= classe.getNomeParaClasse() %> obtemPorId(long id) {
+		throw new NotImplementedException();
+	}
+	public override  <%= classe.getNomeParaClasse() %> obtemCompletoPorId(long id) {
+		throw new NotImplementedException();
+	}
+	public override  void excluiPorId(long id) {
+		throw new NotImplementedException();
+	}
+	public override  List<<%= classe.getNomeParaClasse() %>> listaTotal(DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	public override  <%= classe.getNomeParaClasse() %> obtemPorId(long id, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	public override  <%= classe.getNomeParaClasse() %> obtemCompletoPorId(long id, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	public override  void excluiPorId(long id, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	/*
+	private List<<%= classe.getNomeParaClasse() %>> processaResultado(String resultado) {
+		int inicio = resultado.indexOf('{');
+		resultado = resultado.substring(inicio);
+		List<<%= classe.getNomeParaClasse() %>> listaSaida = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+		
+		try {
+			json = new JSONObject(resultado);
+			JSONArray lista = json.getJSONArray("<%= classe.getNomeParaClasse() %>");
+			int tam = lista.length();
+			JSONObject item = null;
+			String nome = null;
+			for (int i=0;i<lista.length();i++) {
+				item = (JSONObject) lista.get(i);
+				listaSaida.add(new <%= classe.getNomeParaClasse() %>(item));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaSaida;	
+	}
+
+	
+	public void insertAll(List<<%= classe.getNomeParaClasse() %>> lista) {
+	}
+	
+	public List<<%= classe.getNomeParaClasse() %>> getAll(Context contexto) {
+
+		
+		String resultado = HTTPRequestHelper.getHttpResponse(URL_GET_POSTS_RECENT + "?op=ListaCorrente");
+		int inicio = resultado.indexOf('{');
+		resultado = resultado.substring(inicio);
+		listaSaida = new ArrayList<<%= classe.getNomeParaClasse() %>>();
+		
+		try {
+			json = new JSONObject(resultado);
+			JSONArray lista = json.getJSONArray("<%= classe.getNomeParaClasse() %>");
+			int tam = lista.length();
+			JSONObject item = null;
+			String nome = null;
+			for (int i=0;i<lista.length();i++) {
+				item = (JSONObject) lista.get(i);
+				listaSaida.add(new <%= classe.getNomeParaClasse() %>(item));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listaSaida;
+		
+		
+	}
+	*/
+	
+	<%
+	Iterator<RelacionamentoWrapper> iterador = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper relCorrente = iterador.next();
+	%>
+	
+	<% if (classe.isAssociativa()) { %>
+	// Para fazer atualizacoes em objetos associativos.
+	public override bool AtualizaPor<%= relCorrente.getNome() %>NN(long id, string[] ids) {
+		throw new NotImplementedException();
+	}
+	public override bool AtualizaPor<%= relCorrente.getNome() %>NN(long id, string[] ids, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	
+	<% } %>
+	
+	public override List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id) {
+		throw new NotImplementedException();
+	}
+	public override List<<%= classe.getNomeParaClasse() %>> getPor<%= relCorrente.getNome() %>(long id, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	public override bool excluiPor<%= relCorrente.getNome() %>(long id) {
+		throw new NotImplementedException();
+	}
+	public override bool excluiPor<%= relCorrente.getNome() %>(long id, DaoConexao conexao) {
+		throw new NotImplementedException();
+	}
+	<%
+	}
+	%>
+	
+	<%
+	// *****  Somente associativas ********
+	if (classe.isAssociativa()) {
+	List<RelacionamentoWrapper> relac = classe.obtemListaComChaveEstrangeira();
+	RelacionamentoWrapper rel1 = relac.get(0);
+	RelacionamentoWrapper rel2 = relac.get(1);
+	%>
+	public override List<<%= rel1.getClasseOposta().getNomeParaClasse() %>> lista<%= rel1.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel1.getNomeRelacionamento() %>(long id<%= rel2.getClasseOposta().getNomeParaClasse() %>){
+		throw new NotImplementedException();
+	}
+	public override List<<%= rel2.getClasseOposta().getNomeParaClasse() %>> lista<%= rel2.getClasseOposta().getNomeParaClasse() %>NaoAssociada_<%= rel2.getNomeRelacionamento() %>(long id<%= rel1.getClasseOposta().getNomeParaClasse() %>){
+		throw new NotImplementedException();
+	}
+	public override <%= classe.getNomeParaClasse() %> obtemPorCodigoDuplo(long id<%= rel1.getClasseOposta().getNomeParaClasse() %><%= rel2.getNomeRelacionamento() %>,long id<%= rel2.getClasseOposta().getNomeParaClasse() %><%= rel1.getNomeRelacionamento() %>){
+		throw new NotImplementedException();
+	}
+	
+	<%
+	}
+	%>
+	
+<%	if(classe.ehUsuario() || classe.ehDispositivo()) { %>
+	// <%= classe.getNomeParaClasse() %>
+	public override <%= classe.getNomeParaClasse() %> ObtemPorCodigoTel(string app, DaoConexao conexao){
+		throw new NotImplementedException();
+	}
+	public override <%= classe.getNomeParaClasse() %> ObtemPorCodigoTel(string app){
+		throw new NotImplementedException();
+	}
+	public override <%= classe.getNomeParaClasse() %> ObtemPorCodigoImei(string app, DaoConexao conexao){
+		throw new NotImplementedException();
+	}
+	public override <%= classe.getNomeParaClasse() %> ObtemPorCodigoImei(string app){
+		throw new NotImplementedException();
+	}
+<%	} %>
+	
+	}
+}

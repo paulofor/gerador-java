@@ -1,0 +1,75 @@
+<%@ jet package="jet.android.data" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="FiltroContract" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+package  <%= conf.getNamespaceExtendido() %>.data.contract;
+
+import java.util.List;
+import <%= conf.getNamespaceExtendido() %>.modelo.*;
+import android.content.Context;
+import java.sql.Timestamp;
+
+
+
+public class <%= classe.getNomeParaClasse() %>Filtro {
+
+<%
+		Iterator<FiltroColecao> iteradorF = classe.getListaFiltroColecao().iterator();
+		while (iteradorF.hasNext()) {
+		FiltroColecao filtro = iteradorF.next();
+		String tipoFiltro = null;
+		if (filtro.getIdEntidadeT()==0) {
+			// Nao tem entidade é tipo primitivo
+			tipoFiltro =  ConverteTipoAndroid.getTipoFiltro(filtro.getTipoCampoFiltro());
+		}	
+		else { 
+			// Tem entidade vai buscar a classe
+			ClasseWrapper classeFiltro = AplicacaoWrapper.getPorId(filtro.getIdEntidadeT());
+			if (classeFiltro==null) break;
+			tipoFiltro = classeFiltro.getNomeParaClasse();
+		}
+%>
+		private <%= tipoFiltro %> _<%= filtro.getNomeCampoFiltro() %>;
+		public <%= tipoFiltro %> get<%= filtro.getNomeCampoFiltro() %> () {
+			return _<%= filtro.getNomeCampoFiltro() %> ;
+		}
+		public void set<%= filtro.getNomeCampoFiltro() %> (<%= tipoFiltro %> value) {
+			_<%= filtro.getNomeCampoFiltro() %>  = value;
+		}
+		public <%= tipoFiltro %> valida<%= filtro.getNomeCampoFiltro() %>() {
+			<% if ("long".equals(tipoFiltro) || "float".equals(tipoFiltro)) { %>
+			if (_<%= filtro.getNomeCampoFiltro() %> == 0) {
+				throw new RuntimeException("<%= filtro.getNomeCampoFiltro() %> eh zero");
+			}
+			<% } else { %>
+			if (_<%= filtro.getNomeCampoFiltro() %> == null) {
+				throw new RuntimeException("<%= filtro.getNomeCampoFiltro() %> eh nulo");
+			}
+			<% } %>
+			return _<%= filtro.getNomeCampoFiltro() %> ;
+		}
+<%
+		}
+%>
+
+		public String getParam() {
+			String saida = "";
+<%
+			iteradorF = classe.getListaFiltroColecao().iterator();
+			while (iteradorF.hasNext()) {
+				FiltroColecao filtro = iteradorF.next();
+				if (filtro.getIdEntidadeT()==0) {
+%>
+			saida += "<%= filtro.getNomeCampoFiltro() %>=" + _<%= filtro.getNomeCampoFiltro() %> + "&";
+<%
+				}
+			}
+%>
+			return saida;
+		}
+}

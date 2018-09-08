@@ -1,0 +1,54 @@
+<%@ jet package="jet.java.dao" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.java.* gerapp.modelo.* " 
+class="DaoBaseI" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespace() %>.dao.basica;
+
+
+import java.util.*;
+import br.com.digicom.lib.dao.*;
+import br.com.digicom.lib.*;
+import br.com.digicom.lib.util.*;
+
+
+import <%= conf.getNamespace() %>.modelo.*;
+import <%= conf.getNamespace() %>.dao.*;
+import <%= conf.getNamespace() %>.regracolecao.filtro.*;
+
+public interface <%= classe.getNomeParaClasse() %>DaoBaseI
+ extends DaoI { 
+	public void insereItem( <%= classe.getNomeParaClasse() %> item )  throws  DaoException;
+	public void insereItemCompleto( <%= classe.getNomeParaClasse() %> item )  throws  DaoException;
+	public boolean insereSeNaoExiste( <%= classe.getNomeParaClasse() %> item )  throws  DaoException;
+	public void insereItemLoad( <%= classe.getNomeParaClasse() %> item )  throws  DaoException;
+	public void alteraItem( <%= classe.getNomeParaClasse() %> item )  throws  DaoException;
+	public void excluiItem( <%= classe.getNomeParaClasse() %> item )  throws  DaoException;
+	public <%= classe.getNomeParaClasse() %> obtemPorChave( long item )  throws  DaoException;
+	public List ListaFiltro( <%= classe.getNomeParaClasse() %>Filtro filtro )  throws  DaoException;
+	public List ListaFiltroSimples( <%= classe.getNomeParaClasse() %>Filtro filtro )  throws  DaoException;
+	public List ListaCorrente()  throws  DaoException;
+	public List ListaCorrenteAgrupada()  throws  DaoException;
+
+	//public List ListaPorLojaVirtualReferenteA( long idItem )  throws  DaoException;
+	//public List ListaPorNaturezaProdutoReferenteA( long idItem )  throws  DaoException;
+	//LojaNatureza obtemPorRel(long idLojaVirtualRa, long idNaturezaProdutoRa) throws DaoException;
+
+	// Tratamento de objetos que possuem FK nesse objeto para objetos associativos
+	<%
+	Iterator<RelacionamentoWrapper> iteradorRel2 = classe.obtemListaComChaveEstrangeiraComUsuario().iterator();
+	while (iteradorRel2.hasNext()) {
+		RelacionamentoWrapper relCorrente2 = iteradorRel2.next();
+		
+	%>
+	public List ListaPor<%= relCorrente2.getClasseOposta().getNomeParaClasse() %><%= relCorrente2.getNomeRelacionamento() %>(long id) throws DaoException;
+	<%
+	}
+	%>
+
+}
+
+

@@ -1,0 +1,55 @@
+<?xml version = "1.0" encoding = "iso-8859-1"?>
+<ejb-jar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd" version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee">
+<enterprise-beans>
+<session>
+<description>Session Bean ( Stateless )</description>
+<display-name>ConsultaobrigacaolegalCN</display-name>
+<ejb-name>ConsultaobrigacaolegalCN</ejb-name>
+<home>com.br.brasilcap.cap.obl.consultaobrigacaolegal.ejbsession.ConsultaobrigacaolegalCNHome</home>
+<remote>com.br.brasilcap.cap.obl.consultaobrigacaolegal.ejbsession.ConsultaobrigacaolegalCN</remote>
+<ejb-class>com.br.brasilcap.cap.obl.consultaobrigacaolegal.ejbsession.ConsultaobrigacaolegalCNBean</ejb-class>
+<session-type>Stateless</session-type>
+<transaction-type>Container</transaction-type>
+<!--
+<resource-ref>
+<res-type>jdbc/oracObl</res-type>
+<res-type>javax.sql.DataSource</res-type>
+<res-auth>Container</res-auth>
+</resource-ref>
+-->
+</session>
+<session>
+<description>Session Bean ( Stateless )</description>
+<display-name>ConsultaobrigacaolegalCD</display-name>
+<ejb-name>ConsultaobrigacaolegalCD</ejb-name>
+<home>com.br.brasilcap.cap.obl.consultaobrigacaolegal.ejbsession.ConsultaobrigacaolegalCDHome</home>
+<remote>com.br.brasilcap.cap.obl.consultaobrigacaolegal.ejbsession.ConsultaobrigacaolegalCD</remote>
+<ejb-class>com.br.brasilcap.cap.obl.consultaobrigacaolegal.ejbsession.ConsultaobrigacaolegalCDBean</ejb-class>
+<session-type>Stateless</session-type>
+<transaction-type>Container</transaction-type>
+<!--
+<resource-ref>
+<res-type>jdbc/oracObl</res-type>
+<res-type>javax.sql.DataSource</res-type>
+<res-auth>Container</res-auth>
+</resource-ref>
+-->
+</session>
+</enterprise-beans>
+<assembly-descriptor>
+<container-transaction>
+<method>
+<ejb-name>ConsultaobrigacaolegalCN</ejb-name>
+<method-name>*</method-name>
+</method>
+<trans-attribute>NotSupported</trans-attribute>
+</container-transaction>
+<container-transaction>
+<method>
+<ejb-name>ConsultaobrigacaolegalCD</ejb-name>
+<method-name>*</method-name>
+</method>
+<trans-attribute>Required</trans-attribute>
+</container-transaction>
+</assembly-descriptor>
+</ejb-jar>

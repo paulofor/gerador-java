@@ -1,0 +1,26 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* br.com.probid.gerador.execucao.wrappers.*" 
+class="FabricaBean" %>
+<%
+RecursosClasse recursos = (RecursosClasse) argument;  
+List listaClasse = recursos.getListaClasseW();
+ConfiguracaoWrapper conf = recursos.getConfiguracao();
+%>
+
+package <%= conf.getNomePacoteModel() %>.bean.base;
+
+import <%= conf.getNomePacoteModel() %>.bean.*;
+
+public class FabricaBean {
+	<%
+	Iterator iterador = listaClasse.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper classe = (ClasseWrapper) iterador.next(); %>
+		
+	public static bean<%= classe.getNomeBasico() %> criaBean<%= classe.getNomeBasico() %>() {
+		return new bean<%= classe.getNomeBasico() %>();
+	}
+	
+	<%}%>
+	
+}

@@ -1,0 +1,103 @@
+<%@ jet package="jet.android2.tela" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DetalheBaseActivity" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package <%= conf.getNamespaceExtendido() %>.tela.base.activity;
+
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
+import android.content.SharedPreferences;
+
+import <%= conf.getNamespaceExtendido() %>.data.contract.<%= classe.getNomeParaClasse() %>Contract;
+import <%= conf.getNamespaceExtendido() %>.framework.dao.MontadorDaoI;
+import <%= conf.getNamespaceExtendido() %>.framework.data.DCCursorLoader;
+import <%= conf.getNamespaceExtendido() %>.modelo.<%= classe.getNomeParaClasse() %>;
+
+
+public abstract class <%= classe.getNomeParaClasse() %>DetalheBaseActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int DETAIL_LOADER = 0;
+    private long id<%= classe.getNomeParaClasse() %> = 0;
+    
+    protected Toolbar toolbar = null;
+
+    @Override
+    protected final void onCreate(Bundle savedInstanceState) {
+    	preparaTransicao();
+	    SharedPreferences pref = getPreferences(0);
+ 		Bundle extra = getIntent().getExtras();
+   		try {
+            this.id<%= classe.getNomeParaClasse() %> = extra.getInt(Constantes.<%= classe.getNomeParaConstante() %>_ID);
+        } catch (Exception e) {
+            id<%= classe.getNomeParaClasse() %> = pref.getLong(this.getClass().getSimpleName(), 0);
+        }
+  
+        if (id<%= classe.getNomeParaClasse() %>==0) {
+            throw new RuntimeException("Nao recebeu o Id<%= classe.getNomeParaClasse() %>");
+        }
+
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putLong(this.getClass().getSimpleName(), id<%= classe.getNomeParaClasse() %>);
+        edt.commit();
+
+        super.onCreate(savedInstanceState);
+        setContentView(getIdLayout());
+        this.getSupportLoaderManager().initLoader(DETAIL_LOADER, null, this);
+
+        toolbar = (Toolbar) findViewById(getIdToolbar());
+        setSupportActionBar(toolbar);
+
+        complementaOnCreate(id<%= classe.getNomeParaClasse() %>);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true); Por causa da animação
+    }
+
+ 	protected void preparaTransicao() {
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri uri = <%= classe.getNomeParaClasse() %>Contract.build<%= classe.getNomeParaClasse() %>Uri(id<%= classe.getNomeParaClasse() %>);
+        uri = completaUri(uri);
+        return new DCCursorLoader(this,uri,null,null,null,null);
+    }
+    protected Uri completaUri(Uri uri) {
+        return uri;
+    }
+    
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        data.moveToFirst();
+        String nome = data.getString(getConstColunaNomeTitulo());
+        ActionBar actionBar = this.getSupportActionBar();
+        actionBar.setTitle(nome);
+        
+        MontadorDaoI montadorDaoI = <%= classe.getNomeParaClasse() %>Contract.getMontador();
+        <%= classe.getNomeParaClasse() %> item = (<%= classe.getNomeParaClasse() %>) montadorDaoI.getItem(data);
+        onLoadObject(item);
+    }
+	protected abstract void onLoadObject(<%= classe.getNomeParaClasse() %> item);
+
+	protected abstract int getConstColunaNomeTitulo();
+
+    protected abstract void complementaOnCreate(long id<%= classe.getNomeParaClasse() %>);
+
+    protected abstract int getIdLayout();
+
+    protected abstract int getIdToolbar();
+}

@@ -1,0 +1,138 @@
+<%@ jet package="jet.android.data" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.android.* gerapp.modelo.* " 
+class="DBHelperAplicacao" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+List<ClasseWrapper> classes = recursos.getListaClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+package  <%= conf.getNamespaceExtendido() %>.data.helper;
+
+import android.content.Context;
+import android.database.DatabaseErrorHandler;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.database.sqlite.SQLiteOpenHelper;
+import <%= conf.getNamespaceExtendido() %>.framework.log.DCLog;
+import <%= conf.getNamespaceExtendido() %>.data.DatabaseConst;
+import <%= conf.getNamespaceExtendido() %>.framework.fcm.DCSincronizador;
+
+public class AplicacaoDbHelper extends SQLiteOpenHelper{
+
+	/*
+	private static final int DATABASE_VERSION = 1;
+	public static String DATABASE_NAME = "<%= conf.getNamespace() %>.db";
+	*/
+	//public static String DATABASE_NAME = "/mnt/extSdCard/digidata/<%= conf.getNamespace() %>.db";
+
+	private static DatabaseConst databaseConst = null;
+	private static DCSincronizador sincronizador = null;
+
+	public static void setSincronizador(DCSincronizador valor) {
+		sincronizador = valor;
+	}
+
+	public static void setDatabaseConst(DatabaseConst dbConst) {
+		databaseConst = dbConst;
+	}
+
+	public static String getNomeBanco() {
+		return databaseConst.getName();
+	}
+	
+	public AplicacaoDbHelper(Context context) {
+		//super(context, DATABASE_NAME , null, DATABASE_VERSION);
+		super(context,databaseConst.getName(),null,databaseConst.getVersion());
+	}
+	
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		DCLog.d(DCLog.DATABASE_ADM,this,"Create database em " + databaseConst.getName());
+	
+		String CREATE_SQL = null;
+	<%
+	Iterator<ClasseWrapper> iterador = classes.iterator();
+	while (iterador.hasNext()) {
+		ClasseWrapper corrente = iterador.next();
+	%>
+		CREATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlCreate();
+		db.execSQL(CREATE_SQL);
+		CREATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlCreateSinc();
+		db.execSQL(CREATE_SQL);
+	<%
+	}
+	%>
+	}
+	
+	
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		DCLog.d(DCLog.DATABASE_ADM,this,"Upgrade database em " + databaseConst.getName());
+		String UPDATE_SQL = null;
+	<%
+	for (ClasseWrapper corrente : classes) {
+	%>
+		//UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.onUpgrade(oldVersion,newVersion);
+		//db.execSQL(UPDATE_SQL);
+		//UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.onUpgradeSinc(oldVersion,newVersion);
+		//db.execSQL(UPDATE_SQL);
+		UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlDrop();
+		db.execSQL(UPDATE_SQL);
+		UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlCreate();
+		db.execSQL(UPDATE_SQL);
+		UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlDropSinc();
+		db.execSQL(UPDATE_SQL);
+		UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlCreateSinc();
+		db.execSQL(UPDATE_SQL);
+	<%
+	}
+	%>
+	
+		//sincronizador.sincronizacaoUpgradeBd();
+		/*Fica dando erro:                                                                                    java.lang.IllegalStateException: getDatabase called recursively
+                           at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:203)
+                           at android.database.sqlite.SQLiteOpenHelper.getReadableDatabase(SQLiteOpenHelper.java:187)
+                           at br.com.lojadigicom.coletorprecocliente.data.provider.OportunidadeDiaProvider.querySinc(OportunidadeDiaProvider.java:264)
+                           at br.com.lojadigicom.coletorprecocliente.data.provider.OportunidadeDiaProvider.query(OportunidadeDiaProvider.java:123)
+                           at br.com.lojadigicom.coletorprecocliente.data.provider.AplicacaoProvider.query(AplicacaoProvider.java:146)
+                           at android.content.ContentProvider.query(ContentProvider.java:1017)
+                           at android.content.ContentProvider$Transport.query(ContentProvider.java:238)
+                           at android.content.ContentResolver.query(ContentResolver.java:491)
+                           at android.content.ContentResolver.query(ContentResolver.java:434)
+                           at br.com.lojadigicom.coletorprecocliente.remoto.OportunidadeDiaSincronismo.sincroniza(OportunidadeDiaSincronismo.java:90)
+                           at br.com.lojadigicom.coletorprecocliente.sync.Sincronizador.sincronizacaoUpgradeBd(Sincronizador.java:113)
+                           at br.com.lojadigicom.coletorprecocliente.data.helper.AplicacaoDbHelper.onUpgrade(AplicacaoDbHelper.java:272)
+                           at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:256)
+                           at android.database.sqlite.SQLiteOpenHelper.getReadableDatabase(SQLiteOpenHelper.java:187)
+                           at br.com.lojadigicom.coletorprecocliente.data.provider.ProdutoClienteProvider.queryRaw(ProdutoClienteProvider.java:338)
+                           at br.com.lojadigicom.coletorprecocliente.data.provider.ProdutoClienteProvider.query(ProdutoClienteProvider.java:207)
+                           at br.com.lojadigicom.coletorprecocliente.data.provider.AplicacaoProvider.query(AplicacaoProvider.java:161)
+                           at android.content.ContentProvider.query(ContentProvider.java:1017)
+                           at android.content.ContentProvider$Transport.query(ContentProvider.java:238)
+                           at android.content.ContentResolver.query(ContentResolver.java:491)
+                           at android.support.v4.content.ContentResolverCompatJellybean.query(ContentResolverCompatJellybean.java:29)
+                           at android.support.v4.content.ContentResolverCompat$ContentResolverCompatImplJB.query(ContentResolverCompat.java:57)
+                           at android.support.v4.content.ContentResolverCompat.query(ContentResolverCompat.java:125)
+                           at android.support.v4.content.CursorLoader.loadInBackground(CursorLoader.java:59)
+                           at android.support.v4.content.CursorLoader.loadInBackground(CursorLoader.java:37)
+                           at android.support.v4.content.AsyncTaskLoader.onLoadInBackground(AsyncTaskLoader.java:299)
+                           at android.support.v4.content.AsyncTaskLoader$LoadTask.doInBackground(AsyncTaskLoader.java:57)
+                           at android.support.v4.content.AsyncTaskLoader$LoadTask.doInBackground(AsyncTaskLoader.java:45)
+                           at android.support.v4.content.ModernAsyncTask$2.call(ModernAsyncTask.java:138)
+                           at java.util.concurrent.FutureTask.run(FutureTask.java:237)
+                           at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1113)
+                           at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:588)
+                           at java.lang.Thread.run(Thread.java:818) */
+<%
+	for (ClasseWrapper corrente : classes) {
+	%>
+		//SQlite nao permite isso ?
+		//UPDATE_SQL = <%= corrente.getNomeParaClasse() %>DbHelper.getSqlChavesEstrangeiras();
+		//db.execSQL(UPDATE_SQL);
+	<%
+	}
+	%>
+	}
+	
+}

@@ -1,0 +1,88 @@
+<%@ jet package="compiledtemplates" 
+imports="java.util.* util.wrappers.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.*" 
+class="ActionPesquisar" %>
+<%
+%>
+<%EClass eClass = (EClass) argument;
+ClassWrapper classe = new ClassWrapper();
+classe.setClasse(eClass);
+ReferenceWrapper referencia = null;
+
+%>
+package <%= classe.getPacoteActionPesquisar() %>;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import <%= classe.getPacoteActionComum() %>.PesquisarAction;
+import <%= classe.getPacoteServiceI() %>.<%= classe.getNomeServiceI() %>;
+import <%= classe.getPacoteServiceI() %>.ServiceLocator;
+import <%= classe.getPacoteFormBean() %>.<%= classe.getNomeFormBean() %>;
+
+<%= "/*" %>
+<%= "* Classe gerada automaticamente, nao realizar alteracoes " %>
+<%= "*/" %>
+public abstract class <%= classe.getNomeActionPesquisar() %> extends PesquisarAction{
+
+	protected abstract List ListaPorFiltro(<%= classe.getNomeServiceI() %> servico, <%= classe.getNomeFormBean() %> formBean, HttpServletRequest request, HttpServletResponse response, ActionErrors errors);
+
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+	    HttpServletRequest request, HttpServletResponse response)
+	    throws Exception {
+
+		ActionErrors errors = new ActionErrors();
+		ActionForward forward = new ActionForward(); // return value
+		List resultado = null;
+		
+		try {
+			String acao = request.getParameter("acao");
+			request.setAttribute("acao", acao);
+			<%= classe.getNomeFormBean() %> formBean = (<%= classe.getNomeFormBean() %>) form;
+ 			<%= classe.getNomeServiceI() %> servico = ServiceLocator.get<%= classe.getNomeServiceI() %>();
+ 			resultado = ListaPorFiltro(servico, formBean, request, response, errors);
+  			request.setAttribute("listaPesquisa", resultado);
+	    	if (resultado != null){
+ 				request.setAttribute("listaPesquisa", resultado); 				
+ 			} else {
+ 				request.setAttribute("listaPesquisa", null); 				
+ 			}
+
+		} catch (Exception e) {
+
+		    // Report the error using the appropriate name and ID.
+			e.printStackTrace();
+		    errors.add("name", new ActionError("id"));
+
+		}
+
+		// If a message is required, save the specified key(s)
+		// into the request for use by the <struts:errors> tag.
+
+		if (!errors.isEmpty()) {
+	    	saveErrors(request, errors);
+
+		    // Forward control to the appropriate 'failure' URI (change name as desired)
+		    forward = mapping.findForward("erro");
+
+		} else {
+			if (resultado != null && resultado.size()==1) {
+				forward = mapping.findForward("sucessoItemUnico");
+			} else {
+				forward = mapping.findForward("sucesso");
+			}
+
+		}
+
+		// Finish with
+		return (forward);
+
+    }
+} 

@@ -1,0 +1,100 @@
+package br.com.digicom.ws;
+
+
+
+import gerapp.app.GeradorArquivosAndroid;
+import gerapp.app.GeradorArquivosBase;
+import gerapp.app.GeradorArquivosCs;
+import gerapp.app.GeradorArquivosCsDN35;
+import gerapp.modelo.Aplicacao;
+import gerapp.modelo.FabricaVo;
+import gerapp.regracolecao.EntidadeRegraColecao;
+import gerapp.regracolecao.FabricaRegra;
+import gerapp.regracolecao.filtro.EntidadeFiltro;
+
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+
+import br.com.digicom.lib.dao.DaoException;
+
+
+@WebService()
+@Stateless()
+public class PrincipalFacade {
+
+	
+	public List getListaEntidade(Aplicacao aplicacao) throws DaoException{
+		EntidadeRegraColecao entidadeRC = FabricaRegra.getInstancia().getEntidadeRegraColecao();
+		List listaSaida = null;
+		EntidadeFiltro filtro = entidadeRC.getFiltro();
+		filtro.setCodigoAplicacao(aplicacao.getIdAplicacao());
+		listaSaida = entidadeRC.ListaCorrente();
+		return listaSaida;
+	}
+	
+	@WebMethod(operationName = "geraTemplatesJava")
+	public void geraTemplatesJava(@WebParam(name = "idAplicacao") String idAplicacao) {
+		System.out.println("Gera Template Java/Cs2008 Id:" + idAplicacao);
+		PrincipalFacade facade = new PrincipalFacade();
+		Aplicacao aplicacao = FabricaVo.criaAplicacao();
+		aplicacao.setIdAplicacao(Long.parseLong(idAplicacao));
+		GeradorArquivosBase gerador = new GeradorArquivosCsDN35();
+		try {
+			gerador.setAplicacao(aplicacao);
+			gerador.criaArquivos();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+	} 
+	
+	@WebMethod(operationName = "geraTemplatesAndroid")
+	public void geraTemplatesAndroid(@WebParam(name = "idAplicacao") String idAplicacao) {
+		System.out.println("Gera Template Android Id:" + idAplicacao);
+		PrincipalFacade facade = new PrincipalFacade();
+		Aplicacao aplicacao = FabricaVo.criaAplicacao();
+		aplicacao.setIdAplicacao(Long.parseLong(idAplicacao));
+		GeradorArquivosBase gerador = new GeradorArquivosAndroid();
+		try {
+			gerador.setAplicacao(aplicacao);
+			gerador.criaArquivos();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	} 
+	
+	@WebMethod(operationName = "geraTemplatesCs")
+	public void geraTemplatesCs(@WebParam(name = "idAplicacao") String idAplicacao) {
+		System.out.println("Gera Template Cs Id:" + idAplicacao);
+		PrincipalFacade facade = new PrincipalFacade();
+		Aplicacao aplicacao = FabricaVo.criaAplicacao();
+		aplicacao.setIdAplicacao(Long.parseLong(idAplicacao));
+		GeradorArquivosBase gerador = new GeradorArquivosCs();
+		try {
+			gerador.setAplicacao(aplicacao);
+			gerador.criaArquivos();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	} 
+	
+	@WebMethod(operationName = "geraTemplatesFlex")
+	public void geraTemplatesFlex(@WebParam(name = "idAplicacao") String idAplicacao) {
+		System.out.println("Gera Template Java Id:" + idAplicacao);
+	} 
+	
+	
+	@WebMethod(operationName = "geraCoreCsDN35")
+	public void geraCoreCsDN35(@WebParam(name = "idAplicacao") String idAplicacao) {
+		System.out.println("geraCoreCsDN35 Id:" + idAplicacao);
+	} 
+	@WebMethod(operationName = "geraCoreJava")
+	public void geraCoreJava(@WebParam(name = "idAplicacao") String idAplicacao) {
+		System.out.println("geraCoreJava Id:" + idAplicacao);
+	} 
+}
