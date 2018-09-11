@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <libraryInfos>
+<libraryInfo home="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse" version="1.8.0_40">
+<bootpath>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\resources.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\rt.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\sunrsasign.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\jsse.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\jce.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\charsets.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\jfr.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\ext"/>
+<entry path="C:\windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
 <libraryInfo home="C:\JDK\jdk1.6.0_30" version="1.6.0_30">
 <bootpath>
 <entry path="C:\JDK\jdk1.6.0_30\jre\lib\resources.jar"/>
@@ -17,23 +36,6 @@
 </extensionDirs>
 <endorsedDirs>
 <entry path="C:\JDK\jdk1.6.0_30\jre\lib\endorsed"/>
-</endorsedDirs>
-</libraryInfo>
-<libraryInfo home="C:\Program Files\Java\jre1.5.0_22" version="1.5.0_22">
-<bootpath>
-<entry path="C:\Program Files\Java\jre1.5.0_22\lib\rt.jar"/>
-<entry path="C:\Program Files\Java\jre1.5.0_22\lib\i18n.jar"/>
-<entry path="C:\Program Files\Java\jre1.5.0_22\lib\sunrsasign.jar"/>
-<entry path="C:\Program Files\Java\jre1.5.0_22\lib\jsse.jar"/>
-<entry path="C:\Program Files\Java\jre1.5.0_22\lib\jce.jar"/>
-<entry path="C:\Program Files\Java\jre1.5.0_22\lib\charsets.jar"/>
-<entry path="C:\Program Files\Java\jre1.5.0_22\classes"/>
-</bootpath>
-<extensionDirs>
-<entry path="C:\Program Files\Java\jre1.5.0_22\lib\ext"/>
-</extensionDirs>
-<endorsedDirs>
-<entry path="C:\Program Files\Java\jre1.5.0_22\lib\endorsed"/>
 </endorsedDirs>
 </libraryInfo>
 <libraryInfo home="C:\jdk1.6.0_21" version="1.6.0_21">
@@ -73,49 +75,7 @@
 <entry path="C:\Program Files\Java\jre7\lib\endorsed"/>
 </endorsedDirs>
 </libraryInfo>
-<libraryInfo home="C:\Arquivos de programas\Java\jre6" version="1.6.0_11">
-<bootpath>
-<entry path="C:\Arquivos de programas\Java\jre6\lib\resources.jar"/>
-<entry path="C:\Arquivos de programas\Java\jre6\lib\rt.jar"/>
-<entry path="C:\Arquivos de programas\Java\jre6\lib\sunrsasign.jar"/>
-<entry path="C:\Arquivos de programas\Java\jre6\lib\jsse.jar"/>
-<entry path="C:\Arquivos de programas\Java\jre6\lib\jce.jar"/>
-<entry path="C:\Arquivos de programas\Java\jre6\lib\charsets.jar"/>
-<entry path="C:\Arquivos de programas\Java\jre6\classes"/>
-</bootpath>
-<extensionDirs>
-<entry path="C:\Arquivos de programas\Java\jre6\lib\ext"/>
-<entry path="C:\WINDOWS\Sun\Java\lib\ext"/>
-</extensionDirs>
-<endorsedDirs>
-<entry path="C:\Arquivos de programas\Java\jre6\lib\endorsed"/>
-</endorsedDirs>
-</libraryInfo>
 <libraryInfo home="C:\Arquivos de programas\IBM\SDP70\jdk" version="1.5.0">
-<bootpath>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\vm.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\core.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\charsets.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\graphics.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\security.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmpkcs.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmorb.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmcfw.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmorbapi.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjcefw.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjgssprovider.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjsseprovider2.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjaaslm.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjaasactivelm.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmcertpathprovider.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\server.jar"/>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\xml.jar"/>
-</bootpath>
-<extensionDirs>
-<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ext"/>
-</extensionDirs>
-</libraryInfo>
-<libraryInfo home="C:\Arquivos de programas\IBM\SDP70\jdk\jre" version="1.5.0">
 <bootpath>
 <entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\vm.jar"/>
 <entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\core.jar"/>
@@ -157,6 +117,103 @@
 <endorsedDirs>
 <entry path="C:\JDK\6_30\jre\lib\endorsed"/>
 </endorsedDirs>
+</libraryInfo>
+<libraryInfo home="C:\Program Files\Java\jre1.5.0_22" version="1.5.0_22">
+<bootpath>
+<entry path="C:\Program Files\Java\jre1.5.0_22\lib\rt.jar"/>
+<entry path="C:\Program Files\Java\jre1.5.0_22\lib\i18n.jar"/>
+<entry path="C:\Program Files\Java\jre1.5.0_22\lib\sunrsasign.jar"/>
+<entry path="C:\Program Files\Java\jre1.5.0_22\lib\jsse.jar"/>
+<entry path="C:\Program Files\Java\jre1.5.0_22\lib\jce.jar"/>
+<entry path="C:\Program Files\Java\jre1.5.0_22\lib\charsets.jar"/>
+<entry path="C:\Program Files\Java\jre1.5.0_22\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="C:\Program Files\Java\jre1.5.0_22\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="C:\Program Files\Java\jre1.5.0_22\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre" version="1.8.0_77">
+<bootpath>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\resources.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\rt.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\sunrsasign.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\jsse.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\jce.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\charsets.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\jfr.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\ext"/>
+<entry path="C:\windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="C:\Arquivos de programas\Java\jre6" version="1.6.0_11">
+<bootpath>
+<entry path="C:\Arquivos de programas\Java\jre6\lib\resources.jar"/>
+<entry path="C:\Arquivos de programas\Java\jre6\lib\rt.jar"/>
+<entry path="C:\Arquivos de programas\Java\jre6\lib\sunrsasign.jar"/>
+<entry path="C:\Arquivos de programas\Java\jre6\lib\jsse.jar"/>
+<entry path="C:\Arquivos de programas\Java\jre6\lib\jce.jar"/>
+<entry path="C:\Arquivos de programas\Java\jre6\lib\charsets.jar"/>
+<entry path="C:\Arquivos de programas\Java\jre6\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="C:\Arquivos de programas\Java\jre6\lib\ext"/>
+<entry path="C:\WINDOWS\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="C:\Arquivos de programas\Java\jre6\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre" version="1.8.0_40">
+<bootpath>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\resources.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\rt.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\sunrsasign.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\jsse.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\jce.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\charsets.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\jfr.jar"/>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\ext"/>
+<entry path="C:\windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="C:\Arquivos de programas\IBM\SDP70\jdk\jre" version="1.5.0">
+<bootpath>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\vm.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\core.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\charsets.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\graphics.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\security.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmpkcs.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmorb.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmcfw.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmorbapi.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjcefw.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjgssprovider.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjsseprovider2.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjaaslm.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmjaasactivelm.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ibmcertpathprovider.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\server.jar"/>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\xml.jar"/>
+</bootpath>
+<extensionDirs>
+<entry path="C:\Arquivos de programas\IBM\SDP70\jdk\jre\lib\ext"/>
+</extensionDirs>
 </libraryInfo>
 <libraryInfo home="C:\JDK" version="1.7.0_45">
 <bootpath>
