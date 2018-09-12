@@ -14,7 +14,7 @@
     <property name="jar.dir"     value="dist"/>
     <property name="lib.dir"     value="lib" />
     <property name="ws.dir"      value="WS" />
-	<property name="deploy.jboss"      value="E:/jboss-4.2.3.GA/server/default/deploy" />
+	<property name="deploy.jboss"      value="../../../jboss" />
 	  
 	<target name="clean">
 		<delete dir="${build.dir}"/>
@@ -23,7 +23,7 @@
 
 	<target name="compile">
 			<javac srcdir="${src.dir}" destdir="${build.dir}"
-				classpath="C:/jboss-5.0.1.GA/client/jboss-javaee.jar;D:/GeradorJava/jet/WorkspaceEMF/GeradorJavaTemplate/lib/daolib.jar">
+				classpath="../../../jboss/jboss-javaee.jar;./lib/daolib.jar">
 			</javac>
 	</target>
 	<target name="libs">
