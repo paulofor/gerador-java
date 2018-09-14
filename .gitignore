@@ -1,1 +1,7 @@
-jet/eclipse/configuration/*
+./jet/eclipse/configuration/org.eclipse.equinox.app/.manager/*
+./jet/eclipse/configuration/org.eclipse.core.runtime/.manager/*
+./jet/eclipse/configuration/org.eclipse.osgi/.manager/*
+./jet/eclipse/configuration/org.eclipse.ui.intro.universal/.manager/*
+./jet/eclipse/configurationorg.eclipse.update/.manager/*
+
+./jet/eclipse/configuration/org.eclipse.osgi/*
