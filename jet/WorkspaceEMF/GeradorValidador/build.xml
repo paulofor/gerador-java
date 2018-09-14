@@ -1,0 +1,48 @@
+
+
+	<project name="GerJTemplate" basedir="." default="principal" >
+
+	<target name="principal" depends="clean,compile,libs,ws,jar, deploy"/>
+		
+	<!-- URL: http://192.168.1.14:8080/GerJTemplate/PrincipalFacade?wsdl -->
+	<!-- WS no JBoss: http://192.168.1.14:8080/jbossws/services -->
+	
+	<!-- propriedades do projeto com os nomes dos diretórios -->  
+	  
+	<property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="jar.dir"     value="dist"/>
+    <property name="lib.dir"     value="lib" />
+    <property name="ws.dir"      value="WS" />
+	<property name="deploy.jboss"      value="../../../jboss" />
+	  
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<mkdir dir="${build.dir}"/>
+	</target>
+
+	<target name="compile">
+			<javac srcdir="${src.dir}" destdir="${build.dir}"
+				classpath="../../../jboss/jboss-javaee.jar;./lib/daolib.jar">
+			</javac>
+	</target>
+	<target name="libs">
+		<copy todir="${build.dir}">
+			<fileset dir="${lib.dir}" />
+	    </copy>
+	</target>
+	<target name="ws">
+		<copy todir="${build.dir}">
+			<fileset dir="${ws.dir}" />
+		</copy>
+	</target>
+	<target name="jar" >
+		<mkdir dir="${jar.dir}"/>
+	    <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${build.dir}">
+	    </jar>
+	</target>
+	<target name="deploy">
+		<copyfile src="${jar.dir}/${ant.project.name}.jar" dest="${deploy.jboss}/${ant.project.name}.jar"/>
+	</target>
+	  
+</project>

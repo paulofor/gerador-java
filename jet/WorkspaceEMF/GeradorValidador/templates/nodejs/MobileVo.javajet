@@ -1,0 +1,32 @@
+<%@ jet package="jet.cs.vo" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.cs.* gerapp.modelo.* " 
+class="MobileVo" %>
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapper classe = (ClasseWrapper) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+using System;
+
+using <%= conf.getNamespace() %>.modelo.vo;
+using <%= conf.getNamespace() %>.modelo.mobile;
+
+namespace <%= conf.getNamespace() %>.modelo.mobilevo
+{
+
+	public class <%= classe.getNomeParaClasse() %>MobileVo : <%= classe.getNomeParaClasse() %>Vo, MobileDecoratorI
+	{
+		// Mobile
+		private MobileDecoratorI decorator = null;
+		
+		public <%= classe.getNomeParaClasse() %>MobileVo() : base()
+		{
+			decorator = new <%= classe.getNomeParaClasse() %>Decorator(this);
+		}
+		public string Json 
+		{
+			get { return decorator.Json; }
+		}
+		
+	}
+}
