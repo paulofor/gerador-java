@@ -17,10 +17,10 @@
 		<section name="HISTORY6">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="insert" key="textPattern"/>
+			<item value="Respostsa Atributos" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.javajet"/>
+				<item value="*.java"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -28,10 +28,10 @@
 		<section name="HISTORY7">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="finalizaItemTela" key="textPattern"/>
+			<item value="" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.javajet"/>
+				<item value="*.java"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -39,7 +39,7 @@
 		<section name="HISTORY10">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="getUnicoDependenteLista" key="textPattern"/>
+			<item value="TelaWebWrapper" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.java"/>
@@ -50,7 +50,7 @@
 		<section name="HISTORY4">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="preencheLista" key="textPattern"/>
+			<item value="aguardando atributo" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.java"/>
@@ -61,7 +61,7 @@
 		<section name="HISTORY5">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="inseriu" key="textPattern"/>
+			<item value="setTelaComponenteWebs" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.java"/>
@@ -71,8 +71,8 @@
 		</section>
 		<section name="HISTORY11">
 			<item value="true" key="ignoreCase"/>
-			<item value="1" key="scope"/>
-			<item value="Tipo" key="textPattern"/>
+			<item value="0" key="scope"/>
+			<item value="ClasseWrapper" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.java"/>
@@ -83,10 +83,10 @@
 		<section name="HISTORY8">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="wrappper" key="textPattern"/>
+			<item value="aguardando" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.javajet"/>
+				<item value="*.java"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -94,7 +94,7 @@
 		<section name="HISTORY9">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="SINCRONIZACAO_MOBILE2SERVER" key="textPattern"/>
+			<item value="ID:" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.java"/>
@@ -105,7 +105,7 @@
 		<section name="HISTORY2">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="cont++" key="textPattern"/>
+			<item value="Url:" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.java"/>
@@ -116,7 +116,7 @@
 		<section name="HISTORY3">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="c++" key="textPattern"/>
+			<item value="aguardando tela" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.java"/>
@@ -127,10 +127,10 @@
 		<section name="HISTORY0">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="isAssociativa" key="textPattern"/>
+			<item value="Geracao de arquivos concluida" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.javajet"/>
+				<item value="*"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -138,10 +138,10 @@
 		<section name="HISTORY1">
 			<item value="true" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="formatoUpdateInsert" key="textPattern"/>
+			<item value="ServicoModule" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.java"/>
+				<item value="*"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -172,7 +172,7 @@
 		<item value="507" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="445" key="DIALOG_HEIGHT"/>
-		<item value="270" key="DIALOG_Y_ORIGIN"/>
+		<item value="243" key="DIALOG_Y_ORIGIN"/>
 		<item value="345" key="DIALOG_X_ORIGIN"/>
 	</section>
 </section>

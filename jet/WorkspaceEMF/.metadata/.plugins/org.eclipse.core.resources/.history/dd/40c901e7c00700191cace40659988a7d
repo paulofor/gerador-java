@@ -1,0 +1,5 @@
+package jet.wrappers.base.node;
+
+public class TelaAppWrapper {
+
+}

@@ -1,0 +1,148 @@
+package jet.angular.loopback;
+
+import java.util.*;
+import gerapp.app.*;
+import jet.wrappers.base.*;
+import jet.wrappers.angular.*;
+import gerapp.modelo.*;
+
+public class LoopbackModel
+{
+  protected static String nl;
+  public static synchronized LoopbackModel create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    LoopbackModel result = new LoopbackModel();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = "";
+  protected final String TEXT_2 = NL + "/* tslint:disable */" + NL + "import {" + NL + " " + NL + "} from '../index';" + NL + "" + NL + "declare var Object: any;" + NL + "export interface ";
+  protected final String TEXT_3 = "Interface {";
+  protected final String TEXT_4 = NL + "  \"";
+  protected final String TEXT_5 = "\"";
+  protected final String TEXT_6 = ": ";
+  protected final String TEXT_7 = ";";
+  protected final String TEXT_8 = NL;
+  protected final String TEXT_9 = NL + "\t\"";
+  protected final String TEXT_10 = "\":";
+  protected final String TEXT_11 = NL + "}" + NL + "" + NL + "export class ";
+  protected final String TEXT_12 = " implements ";
+  protected final String TEXT_13 = "Interface {";
+  protected final String TEXT_14 = NL + "  \"";
+  protected final String TEXT_15 = "\"";
+  protected final String TEXT_16 = ": ";
+  protected final String TEXT_17 = ";";
+  protected final String TEXT_18 = NL + "  constructor(data?: ";
+  protected final String TEXT_19 = "Interface) {" + NL + "    Object.assign(this, data);" + NL + "  }" + NL + "  /**" + NL + "   * The name of the model represented by this $resource," + NL + "   * i.e. `GanhoDorCanvasMySql`." + NL + "   */" + NL + "  public static getModelName() {" + NL + "    return \"";
+  protected final String TEXT_20 = "\";" + NL + "  }" + NL + "  /**" + NL + "  * @method factory" + NL + "  * @author Paulo " + NL + "  * @license MIT" + NL + "  * This method creates an instance of ";
+  protected final String TEXT_21 = " for dynamic purposes." + NL + "  **/" + NL + "  public static factory(data: ";
+  protected final String TEXT_22 = "Interface): ";
+  protected final String TEXT_23 = "{" + NL + "    return new ";
+  protected final String TEXT_24 = "(data);" + NL + "  }" + NL + "  /**" + NL + "  * @method getModelDefinition" + NL + "  * @author Paulo" + NL + "  * @license MIT" + NL + "  * This method returns an object that represents some of the model" + NL + "  * definitions." + NL + "  **/" + NL + "  public static getModelDefinition() {" + NL + "    return {" + NL + "      name: '";
+  protected final String TEXT_25 = "'," + NL + "      plural: '";
+  protected final String TEXT_26 = "s'," + NL + "      path: '";
+  protected final String TEXT_27 = "s'," + NL + "      idName: 'id'," + NL + "      properties: {" + NL + "\t\t";
+  protected final String TEXT_28 = NL + "        \"";
+  protected final String TEXT_29 = "\" : {" + NL + "        \tname : \"";
+  protected final String TEXT_30 = "\"," + NL + "        \ttype : \"";
+  protected final String TEXT_31 = "\"" + NL + "        },";
+  protected final String TEXT_32 = NL + "      }," + NL + "      relations: {" + NL + "      }" + NL + "    }" + NL + "  }" + NL + "}";
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(TEXT_1);
+    
+Recursos recursos = (Recursos) argument;  
+ClasseWrapperAngular classe = (ClasseWrapperAngular) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_3);
+    
+	Iterator<AtributoWrapper> iterador = classe.getListaAtributoEntidadeW().iterator();
+	while (iterador.hasNext()) {
+		AtributoWrapper atributo = iterador.next();
+
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append( atributo.getNomeVariavel() );
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append( (atributo.ehObrigatorio()?"":"?") );
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append( atributo.getTipo() );
+    stringBuffer.append(TEXT_7);
+    
+	}
+
+    stringBuffer.append(TEXT_8);
+    
+	Iterator<RelacionamentoWrapper> iteradorRel = classe.obtemListaComChaveEstrangeiraSemUsuario().iterator();
+	while (iterador.hasNext()) {
+		RelacionamentoWrapper rel = iteradorRel.next();
+
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append( rel.getNomeVariavel() );
+    stringBuffer.append(TEXT_10);
+    
+	}
+
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_13);
+    
+	iterador = classe.getListaAtributoEntidadeW().iterator();
+	while (iterador.hasNext()) {
+		AtributoWrapper atributo = iterador.next();
+
+    stringBuffer.append(TEXT_14);
+    stringBuffer.append( atributo.getNomeVariavel() );
+    stringBuffer.append(TEXT_15);
+    stringBuffer.append( (atributo.ehObrigatorio()?"":"?") );
+    stringBuffer.append(TEXT_16);
+    stringBuffer.append( atributo.getTipo() );
+    stringBuffer.append(TEXT_17);
+    
+	}
+
+    stringBuffer.append(TEXT_18);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_19);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_20);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_22);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_23);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_24);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_25);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_26);
+    stringBuffer.append( classe.getNomeParaClasse() );
+    stringBuffer.append(TEXT_27);
+    
+		iterador = classe.getListaAtributoEntidadeW().iterator();
+		while (iterador.hasNext()) {
+			AtributoWrapper atributo = iterador.next();
+		
+    stringBuffer.append(TEXT_28);
+    stringBuffer.append( atributo.getNomeVariavel() );
+    stringBuffer.append(TEXT_29);
+    stringBuffer.append( atributo.getNomeVariavel() );
+    stringBuffer.append(TEXT_30);
+    stringBuffer.append( atributo.getTipo() );
+    stringBuffer.append(TEXT_31);
+     } 
+    stringBuffer.append(TEXT_32);
+    return stringBuffer.toString();
+  }
+}

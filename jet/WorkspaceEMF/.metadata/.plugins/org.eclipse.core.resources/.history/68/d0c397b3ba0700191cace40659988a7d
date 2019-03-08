@@ -1,0 +1,5 @@
+package gerapp.app;
+
+public class GeradorIonic3 extends GeradorArquivosLoopback{
+
+}

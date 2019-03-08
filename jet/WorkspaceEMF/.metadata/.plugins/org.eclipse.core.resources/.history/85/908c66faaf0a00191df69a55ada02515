@@ -1,0 +1,23 @@
+<%@ jet package="jet.ionic3.page.detalhe" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.base.node.* jet.wrappers.angular.* gerapp.modelo.* gerapp.modelo.node.*" 
+class="DetalhePageHtml" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+TelaAppWrapper tela = (TelaAppWrapper) recursos.getItemCorrente();
+Configuracao conf = recursos.getConfiguracao();
+%>
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Titulo</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+
+
+</ion-content>

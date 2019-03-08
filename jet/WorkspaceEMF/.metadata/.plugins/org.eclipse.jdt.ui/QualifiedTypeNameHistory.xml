@@ -17,4 +17,21 @@
 <fullyQualifiedTypeName name="jet.android2.framework.dao.MontadorDaoI"/>
 <fullyQualifiedTypeName name="jet.android2.sincronismo.DataSourceRemoto"/>
 <fullyQualifiedTypeName name="jet.android2.res.BuildGradle"/>
+<fullyQualifiedTypeName name="jet.wrappers.angular.ClasseWrapperAngular"/>
+<fullyQualifiedTypeName name="jet.angular.ComponenteLista"/>
+<fullyQualifiedTypeName name="loopback.remoting.adapters.Adapter"/>
+<fullyQualifiedTypeName name="com.ning.http.client.Response"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.lang.reflect.Method"/>
+<fullyQualifiedTypeName name="java.nio.file.Path"/>
+<fullyQualifiedTypeName name="java.nio.charset.StandardCharsets"/>
+<fullyQualifiedTypeName name="java.nio.charset.Charset"/>
+<fullyQualifiedTypeName name="jet.angular.componente.tela.ComponenteSpecTela"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="gerapp.modelo.node.ItemComponente"/>
+<fullyQualifiedTypeName name="java.util.Iterator"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="jet.ionic3.page.PageModuleTs"/>
+<fullyQualifiedTypeName name="jet.angular.projeto.ItemDados"/>
+<fullyQualifiedTypeName name="jet.ionic3.page.detalhe.DetalhePageTs"/>
 </qualifiedTypeNameHistroy>

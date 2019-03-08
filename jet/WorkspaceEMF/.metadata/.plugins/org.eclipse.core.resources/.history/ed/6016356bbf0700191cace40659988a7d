@@ -1,0 +1,5 @@
+package loopback.cliente.repositorio;
+
+public class TelaAppRepositorio {
+
+}

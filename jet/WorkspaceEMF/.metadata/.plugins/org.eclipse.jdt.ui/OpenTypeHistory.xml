@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<typeInfoHistroy/>
+<typeInfoHistroy>
+<typeInfo handle="=GeradorValidadorHipotese/src&lt;jet.wrappers.base{ClasseWrapper.java[ClasseWrapper" modifiers="1025" timestamp="1539301016284"/>
+<typeInfo handle="=GeradorValidadorHipotese/src&lt;jet.wrappers.angular{ClasseWrapperAngular.java[ClasseWrapperAngular" modifiers="1" timestamp="1543115320957"/>
+<typeInfo handle="=GeradorValidadorHipotese/src&lt;jet.wrappers.base.node{TelaWebWrapper.java[TelaWebWrapper" modifiers="1" timestamp="1544484860442"/>
+<typeInfo handle="=GeradorValidadorHipotese/src&lt;gerapp.app{GeradorArquivosLoopback.java[GeradorArquivosLoopback" modifiers="1025" timestamp="1545826617142"/>
+<typeInfo handle="=GeradorValidadorHipotese/src&lt;gerapp.modelo.node{ModuloComponente.java[ModuloComponente" modifiers="1" timestamp="1545682073788"/>
+<typeInfo handle="=GeradorValidadorHipotese/src&lt;jet.wrappers.base.node{TelaAppWrapper.java[TelaAppWrapper" modifiers="1" timestamp="1545930876101"/>
+<typeInfo handle="=GeradorValidadorHipotese/src&lt;jet.wrappers.base{AtributoTotalI.java[AtributoTotalI" modifiers="513" timestamp="1539301016284"/>
+</typeInfoHistroy>

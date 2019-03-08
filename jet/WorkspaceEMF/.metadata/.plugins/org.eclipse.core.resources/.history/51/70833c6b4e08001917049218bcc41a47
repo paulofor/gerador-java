@@ -1,0 +1,3 @@
+<%@ jet package="jet.ionic3.page" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.angular.* gerapp.modelo.* gerapp.modelo.node.*" 
+class="PageModuleTs" %>

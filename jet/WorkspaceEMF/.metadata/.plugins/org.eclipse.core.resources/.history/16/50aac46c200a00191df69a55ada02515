@@ -1,0 +1,139 @@
+<%@ jet package="jet.angular.loopback" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.angular.* gerapp.modelo.* " 
+class="LoopbackModel" %>
+
+<%
+Recursos recursos = (Recursos) argument;  
+ClasseWrapperAngular classe = (ClasseWrapperAngular) recursos.getClasse();
+Configuracao conf = recursos.getConfiguracao();
+%>
+/* tslint:disable */
+import {
+<%
+	Iterator<RelacionamentoWrapper> iteradorRel = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel.hasNext()) {
+		RelacionamentoWrapper rel = iteradorRel.next();
+%>
+	<%= rel.getTipoAngular() %>,
+<%
+}
+%>
+<%
+	iteradorRel = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (iteradorRel.hasNext()) {
+		RelacionamentoWrapper rel = iteradorRel.next();
+%>
+	<%= rel.getTipoAngular() %>,
+<%
+}
+%>
+} from '../index';
+
+declare var Object: any;
+export interface <%= classe.getNomeParaClasse() %>Interface {
+<%
+	Iterator<AtributoWrapper> iterador = classe.getListaAtributoEntidadeW().iterator();
+	while (iterador.hasNext()) {
+		AtributoWrapper atributo = iterador.next();
+%>
+  "<%= atributo.getNomeVariavel() %>"<%= (atributo.ehObrigatorio()?"":"?") %>: <%= atributo.getTipo() %>;
+<%
+	}
+%>
+<%
+	iteradorRel = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel.hasNext()) {
+		RelacionamentoWrapper rel = iteradorRel.next();
+%>
+	"<%= rel.getVariavelAngular() %>"?: <%= rel.getTipoAngular() %>;
+<%
+	}
+%>
+<%
+	iteradorRel = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (iteradorRel.hasNext()) {
+		RelacionamentoWrapper rel = iteradorRel.next();
+%>
+	"lista<%= rel.getTipoAngular() %>"?: <%= rel.getTipoAngular() %>[];
+<%
+	}
+%>
+}
+
+export class <%= classe.getNomeParaClasse() %> implements <%= classe.getNomeParaClasse() %>Interface {
+<%
+	iterador = classe.getListaAtributoEntidadeW().iterator();
+	while (iterador.hasNext()) {
+		AtributoWrapper atributo = iterador.next();
+%>
+	"<%= atributo.getNomeVariavel() %>"<%= (atributo.ehObrigatorio()?"":"?") %>: <%= atributo.getTipo() %>;
+<%
+	}
+%>
+<%
+	iteradorRel = classe.obtemListaComChaveEstrangeira().iterator();
+	while (iteradorRel.hasNext()) {
+		RelacionamentoWrapper rel = iteradorRel.next();
+%>
+	"<%= rel.getVariavelAngular() %>"?: <%= rel.getTipoAngular() %>;
+<%
+	}
+%>
+<%
+	iteradorRel = classe.obtemListaSemChaveEstrangeira().iterator();
+	while (iteradorRel.hasNext()) {
+		RelacionamentoWrapper rel = iteradorRel.next();
+%>
+	"lista<%= rel.getTipoAngular() %>s"?: <%= rel.getTipoAngular() %>[];
+<%
+	}
+%>
+  constructor(data?: <%= classe.getNomeParaClasse() %>Interface) {
+    Object.assign(this, data);
+  }
+  /**
+   * The name of the model represented by this $resource,
+   * i.e. `GanhoDorCanvasMySql`.
+   */
+  public static getModelName() {
+    return "<%= classe.getNomeParaClasse() %>";
+  }
+  /**
+  * @method factory
+  * @author Gerador Java 
+  * @license MIT
+  * This method creates an instance of <%= classe.getNomeParaClasse() %> for dynamic purposes.
+  **/
+  public static factory(data: <%= classe.getNomeParaClasse() %>Interface): <%= classe.getNomeParaClasse() %>{
+    return new <%= classe.getNomeParaClasse() %>(data);
+  }
+  /**
+  * @method getModelDefinition
+  * @author Gerador Java
+  * @license MIT
+  * This method returns an object that represents some of the model
+  * definitions.
+  **/
+  public static getModelDefinition() {
+    return {
+      name: '<%= classe.getNomeParaClasse() %>',
+      plural: '<%= classe.getNomeParaClasse() %>s',
+      path: '<%= classe.getNomeParaClasse() %>s',
+      idName: 'id',
+      properties: {
+		<%
+		iterador = classe.getListaAtributoEntidadeW().iterator();
+		while (iterador.hasNext()) {
+			AtributoWrapper atributo = iterador.next();
+		%>
+        "<%= atributo.getNomeVariavel() %>" : {
+        	name : "<%= atributo.getNomeVariavel() %>",
+        	type : "<%= atributo.getTipo() %>"
+        },
+        <% } %>
+      },
+      relations: {
+      }
+    }
+  }
+}

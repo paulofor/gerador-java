@@ -1,0 +1,78 @@
+package gerapp.app;
+
+import gerapp.modelo.Entidade;
+import gerapp.modelo.node.ItemComponente;
+
+import java.io.IOException;
+import java.util.List;
+
+import jet.ionic3.page.ListaPageTs;
+import jet.ionic3.page.PageModuleTs;
+import jet.wrappers.angular.ClasseWrapperAngular;
+import jet.wrappers.base.ClasseWrapper;
+import jet.wrappers.base.node.TelaAppWrapper;
+
+public class GeradorIonic3 extends GeradorArquivosLoopback{
+
+	
+	private String PATH = "../../../../ProdutosNode/";
+	protected Configuracao configuracao = null;
+	protected ClasseWrapper entidade = null;
+
+	private String getDiretorioAngular(Recursos recurso) {
+		return PATH + recurso.getConfiguracao().getNamespace() + "/template-super/src/";
+	}
+	
+	
+	@Override
+	public void criaArquivoUnico(Recursos recurso) throws IOException {
+		List<ItemComponente> listaTela = recurso.getListaTelaApp();
+		for (ItemComponente tela : listaTela) {
+			carregaEntidade((TelaAppWrapper) tela,recurso);
+			recurso.setItemCorrente(tela);
+			criaTelaApp(recurso, (TelaAppWrapper) tela);
+		}
+	}
+	
+	private void criaTelaApp(Recursos recurso, TelaAppWrapper tela) throws IOException {
+		String pathDestino = getDiretorioAngular(recurso) + "/pages/" + tela.getPathArquivo() + "/" ;
+		this.criaCaminhoSeNaoExiste(pathDestino);
+		this.limpaCaminho(pathDestino);
+		
+		String nomeArquivo = pathDestino + tela.getPathArquivo() + ".module.ts";
+		String conteudo = PageModuleTs.create("\n").generate(recurso);
+		geraArquivoFonte(conteudo, nomeArquivo);
+		
+		if (tela.tipoLista()) {
+			nomeArquivo = pathDestino + tela.getPathArquivo() + ".ts";
+			conteudo = ListaPageTs.create("\n").generate(recurso);
+			geraArquivoFonte(conteudo, nomeArquivo);
+		}
+	}
+
+
+	@Override
+	protected ClasseWrapper criaWrapper(Entidade entidade) {
+		return new ClasseWrapperAngular(entidade);
+	}
+	
+	
+	private void carregaEntidade(TelaAppWrapper tela, Recursos recursos) {
+		if (tela.getIdEntidade()!=0) {
+			ClasseWrapper entidade = obtemEntidadePorId(tela.getIdEntidade(),recursos);
+			tela.setClasseWrapper(entidade);
+		}
+	}
+	
+	private ClasseWrapper obtemEntidadePorId(long id, Recursos recurso) {
+		ClasseWrapper saida = null;
+		List<ClasseWrapper> listaClasse = recurso.getListaClasse();
+		for (ClasseWrapper classe : listaClasse) {
+			if (classe.getId() == id) {
+				saida = classe;
+			}
+		}
+		return saida;
+	}
+	
+}

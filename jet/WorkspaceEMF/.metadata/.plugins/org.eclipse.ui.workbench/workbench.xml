@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="52" version="2.0">
+<workbench progressCount="19" version="2.0">
 <workbenchAdvisor/>
 <window height="728" maximized="true" width="1024" x="-12" y="17">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
 </perspectiveBar>
-<coolbarLayout locked="0">
+<coolbarLayout locked="1">
 <coolItem id="group.file" itemType="typeGroupMarker"/>
-<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="132" y="22"/>
+<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="130" y="22"/>
 <coolItem id="additions" itemType="typeGroupMarker"/>
 <coolItem id="group.nav" itemType="typeGroupMarker"/>
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.wst.css.core.csssource.source" itemType="typePlaceholder" x="-1" y="-1"/>
+<coolItem id="org.eclipse.wst.html.core.htmlsource.source" itemType="typePlaceholder" x="-1" y="-1"/>
+<coolItem id="org.eclipse.jdt.ui.ClassFileEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart" itemType="typePlaceholder" x="115" y="22"/>
 <coolItem id="org.eclipse.ant.ui.internal.editor.AntEditor" itemType="typePlaceholder" x="-1" y="-1"/>
-<coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="org.eclipse.jdt.ui.CompilationUnitEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
-<coolItem id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="UserSeparator" itemType="typeSeparator"/>
-<coolItem id="org.eclipse.jdt.ui.JavaElementCreationActionSet" itemType="typeToolBarContribution" x="100" y="22"/>
-<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="65" y="22"/>
-<coolItem id="org.eclipse.jst.j2ee.J2eeMainActionSet" itemType="typeToolBarContribution" x="65" y="1365"/>
-<coolItem id="org.eclipse.jst.j2ee.J2eeMainActionSet2" itemType="typeToolBarContribution" x="41" y="1365"/>
-<coolItem id="org.eclipse.jst.j2ee.J2eeMainActionSet3" itemType="typeToolBarContribution" x="41" y="1365"/>
-<coolItem id="org.eclipse.jst.j2ee.J2eeMainActionSet4" itemType="typeToolBarContribution" x="41" y="1365"/>
-<coolItem id="com_sysdeo_eclipse_tomcat_actionSet" itemType="typeToolBarContribution" x="89" y="22"/>
-<coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="122" y="22"/>
-<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="89" y="22"/>
-<coolItem id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet" itemType="typeToolBarContribution" x="41" y="22"/>
-<coolItem id="org.eclipse.wst.ws.explorer.explorer" itemType="typeToolBarContribution" x="41" y="22"/>
-<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="181" y="22"/>
+<coolItem id="org.eclipse.jdt.ui.JavaElementCreationActionSet" itemType="typeToolBarContribution" x="99" y="22"/>
+<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="61" y="22"/>
+<coolItem id="org.eclipse.jst.j2ee.J2eeMainActionSet" itemType="typeToolBarContribution" x="61" y="22"/>
+<coolItem id="org.eclipse.jst.j2ee.J2eeMainActionSet2" itemType="typeToolBarContribution" x="38" y="22"/>
+<coolItem id="org.eclipse.jst.j2ee.J2eeMainActionSet3" itemType="typeToolBarContribution" x="38" y="22"/>
+<coolItem id="org.eclipse.jst.j2ee.J2eeMainActionSet4" itemType="typeToolBarContribution" x="38" y="22"/>
+<coolItem id="com_sysdeo_eclipse_tomcat_actionSet" itemType="typeToolBarContribution" x="84" y="22"/>
+<coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="129" y="22"/>
+<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="84" y="22"/>
+<coolItem id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet" itemType="typeToolBarContribution" x="38" y="22"/>
+<coolItem id="org.eclipse.wst.ws.explorer.explorer" itemType="typeToolBarContribution" x="38" y="22"/>
+<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="190" y="22"/>
 </coolbarLayout>
 <page aggregateWorkingSetId="Aggregate for window 1536624569994" focus="true" label="Workspace - Java">
 <editors>
@@ -41,40 +44,28 @@
 <presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
 <part id="0"/>
 <part id="1"/>
-<part id="2"/>
-<part id="3"/>
-<part id="4"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="RegraColecaoAdaptador.javajet" partName="RegraColecaoAdaptador.javajet" path="Z:/home/usuario/aplicacoes/java/gerador-java/jet/WorkspaceEMF/GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet" title="RegraColecaoAdaptador.javajet" tooltip="GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet"/>
+<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="GeradorIonic3.java" partName="GeradorIonic3.java" path="E:/JavaApp/gerador-java/jet/WorkspaceEMF/GeradorValidadorHipotese/src/gerapp/app/GeradorIonic3.java" title="GeradorIonic3.java" tooltip="GeradorValidadorHipotese/src/gerapp/app/GeradorIonic3.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/GeradorValidadorHipotese/src/gerapp/app/GeradorIonic3.java"/>
+<editorState selectionHPixel="0" selectionLength="0" selectionOffset="1953"/>
 </editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="EntidadeDaoBase.java" partName="EntidadeDaoBase.java" path="Z:/home/usuario/aplicacoes/java/gerador-java/jet/WorkspaceEMF/GeradorJavaTemplate/src/gerapp/dao/basica/EntidadeDaoBase.java" title="EntidadeDaoBase.java" tooltip="GeradorJavaTemplate/src/gerapp/dao/basica/EntidadeDaoBase.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/GeradorJavaTemplate/src/gerapp/dao/basica/EntidadeDaoBase.java"/>
-<editorState selectionHPixel="0" selectionLength="12" selectionOffset="550"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="DataSourceAplicacao.java" partName="DataSourceAplicacao.java" path="Z:/home/usuario/aplicacoes/java/gerador-java/jet/WorkspaceEMF/GeradorJavaTemplate/src/gerapp/dao/basica/DataSourceAplicacao.java" title="DataSourceAplicacao.java" tooltip="GeradorJavaTemplate/src/gerapp/dao/basica/DataSourceAplicacao.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/GeradorJavaTemplate/src/gerapp/dao/basica/DataSourceAplicacao.java"/>
-<editorState selectionHPixel="0" selectionLength="0" selectionOffset="0"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="DaoAplicacao.java" partName="DaoAplicacao.java" path="Z:/home/usuario/aplicacoes/java/gerador-java/jet/WorkspaceEMF/GeradorJavaTemplate/src/gerapp/dao/basica/DaoAplicacao.java" title="DaoAplicacao.java" tooltip="GeradorJavaTemplate/src/gerapp/dao/basica/DaoAplicacao.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/GeradorJavaTemplate/src/gerapp/dao/basica/DaoAplicacao.java"/>
-<editorState selectionHPixel="0" selectionLength="0" selectionOffset="0"/>
-</editor>
-<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="EntidadeDaoExtendida.java" partName="EntidadeDaoExtendida.java" path="Z:/home/usuario/aplicacoes/java/gerador-java/jet/WorkspaceEMF/GeradorJavaTemplate/src/gerapp/dao/EntidadeDaoExtendida.java" title="EntidadeDaoExtendida.java" tooltip="GeradorJavaTemplate/src/gerapp/dao/EntidadeDaoExtendida.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/GeradorJavaTemplate/src/gerapp/dao/EntidadeDaoExtendida.java"/>
-<editorState selectionHPixel="0" selectionLength="0" selectionOffset="273"/>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="GeradorArquivosBase.java" partName="GeradorArquivosBase.java" path="E:/JavaApp/gerador-java/jet/WorkspaceEMF/GeradorValidadorHipotese/src/gerapp/app/GeradorArquivosBase.java" title="GeradorArquivosBase.java" tooltip="GeradorValidadorHipotese/src/gerapp/app/GeradorArquivosBase.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/GeradorValidadorHipotese/src/gerapp/app/GeradorArquivosBase.java"/>
+<editorState selectionHPixel="0" selectionLength="0" selectionOffset="3836"/>
 </editor>
 </editors>
 <views>
 <view id="org.eclipse.datatools.connectivity.DataSourceExplorerNavigator" partName="Data Source Explorer">
 <viewState CommonNavigator.LINKING_ENABLED="0" showCategories="true"/>
 </view>
-<view id="org.eclipse.jdt.ui.JavadocView" partName="Javadoc"/>
+<view id="org.eclipse.jdt.ui.JavadocView" partName="Javadoc">
+<viewState/>
+</view>
 <view id="org.eclipse.jdt.ui.TypeHierarchy" partName="Hierarchy">
-<viewState hidefields="false" hidelocaltypes="false" hidenonpublic="false" hidestatic="false" input="=GeradorJavaTemplate/src&lt;gerapp.app{GeradorArquivosAndroid2.java[GeradorArquivosAndroid2" isWindowWorkingSet="false" link_editors="0" mv_vertical_scroll="0" orientation="3" qualified_names="0" ratio="350" selection="=GeradorJavaTemplate/C:\/Program Files\/Java\/jre1.8.0_40\/lib\/rt.jar&lt;java.lang(Object.class[Object" showinherited="false" sortbydefiningtype="false" vertical_scroll="0" view="2" workingSetName=""/>
+<viewState hidefields="false" hidelocaltypes="false" hidenonpublic="false" hidestatic="false" isWindowWorkingSet="false" link_editors="0" mv_vertical_scroll="0" orientation="3" qualified_names="0" ratio="350" showinherited="false" sortbydefiningtype="false" vertical_scroll="0" view="2" workingSetName=""/>
 </view>
 <view id="org.eclipse.jdt.ui.PackageExplorer" partName="Package Explorer">
 <viewState group_libraries="1" isWindowWorkingSet="false" layout="2" linkWithEditor="1" rootMode="1" workingSetName="">
@@ -118,15 +109,8 @@
 </view>
 <view id="org.eclipse.search.ui.views.SearchView" partName="Search">
 <viewState isPinned="false">
-<view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
 <view IMemento.internal.id="org.eclipse.search.text.FileSearchResultPage" org.eclipse.search.lastActivation="1" org.eclipse.search.resultpage.layout="2" org.eclipse.search.resultpage.limit="1000" org.eclipse.search.resultpage.sorting="2"/>
-</viewState>
-</view>
-<view id="org.eclipse.mylyn.tasks.ui.views.tasks" partName="Task List">
-<viewState linkWithEditor="true" presentation="org.eclipse.mylyn.tasks.ui.categorized">
-<org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex>
-<sorter sortDirection="1" sortIndex="0"/>
-</org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex>
+<view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
 </viewState>
 </view>
 <view id="org.eclipse.debug.ui.VariableView" partName="Variables">
@@ -228,31 +212,22 @@
 <view id="org.eclipse.wst.common.snippets.internal.ui.SnippetsView"/>
 <view id="org.eclipse.search.ui.views.SearchView"/>
 <fastViewBars/>
-<layout>
-<mainWindow>
-<info folder="true" part="topLeft">
-<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="2">
-<page content="org.eclipse.ui.navigator.ProjectExplorer" label="Project Explorer"/>
+<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="topLeft">&#x0A;<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.navigator.ProjectExplorer" label="Project Explorer"/>
 <page content="org.eclipse.jdt.ui.TypeHierarchy" label="Hierarchy"/>
 <page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.ui.PackagesView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
-<part id="0"/>
+<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">&#x0A;<part id="0"/>
 <part id="1"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="topLeft">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="topLeft">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.30102444" ratioLeft="382" ratioRight="887" relationship="2" relative="topLeft"/>
-<info folder="true" part="bottomRight" ratio="0.5364583" ratioLeft="309" ratioRight="267" relationship="4" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
+<info part="org.eclipse.ui.editorss" ratio="0.27817178" ratioLeft="353" ratioRight="916" relationship="2" relative="topLeft"/>
+<info folder="true" part="bottomRight" ratio="0.69855595" ratioLeft="387" ratioRight="167" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
 <page content="org.eclipse.ui.views.PropertySheet" label="Properties"/>
@@ -261,26 +236,21 @@
 <page content="org.eclipse.search.ui.views.SearchView" label="Search"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
-<part id="0"/>
+<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">&#x0A;<part id="0"/>
 <part id="1"/>
-<part id="2"/>
 <part id="3"/>
+<part id="2"/>
 <part id="4"/>
 <part id="5"/>
 <part id="6"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="topRight" ratio="0.7" ratioLeft="525" ratioRight="225" relationship="2" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
+<info folder="true" part="topRight" ratio="0.7" ratioLeft="525" ratioRight="225" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@29b897" ratio="0.7484536" ratioLeft="363" ratioRight="122" relationship="4" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.wst.server.ui.ServersView" label="LabelNotFound"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@29b897" ratio="0.7484536" ratioLeft="363" ratioRight="122" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.wst.server.ui.ServersView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33"/>
 </folder>
 </info>
@@ -329,51 +299,70 @@
 <perspective_action id="org.eclipse.jdt.ui.JavaBrowsingPerspective"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
 <view id="org.eclipse.ui.views.TaskList"/>
+<view id="org.eclipse.search.ui.views.SearchView"/>
 <view id="org.eclipse.debug.ui.DebugView"/>
 <view id="org.eclipse.wst.server.ui.ServersView"/>
 <view id="org.eclipse.debug.ui.VariableView"/>
 <view id="org.eclipse.debug.ui.BreakpointView"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
 <fastViewBars/>
-<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder activePageID="org.eclipse.debug.ui.DebugView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
+<layout>
+<mainWindow>
+<info folder="true" part="org.eclipse.debug.internal.ui.NavigatorFolderView">
+<folder activePageID="org.eclipse.debug.ui.DebugView" appearance="2" expanded="2">
+<page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
 <page content="org.eclipse.wst.server.ui.ServersView" label="Servers"/>
 <page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.ui.PackageExplorer" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.ui.TypeHierarchy" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">&#x0A;<part id="0"/>
+<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
+<part id="0"/>
 <part id="1"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="954" ratioRight="318" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="954" ratioRight="318" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.debug.internal.ui.ConsoleFolderView" ratio="0.7496013" ratioLeft="470" ratioRight="157" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
+<info folder="true" part="org.eclipse.debug.internal.ui.ConsoleFolderView" ratio="0.7563177" ratioLeft="419" ratioRight="135" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">
+<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
+<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
+<page content="org.eclipse.search.ui.views.SearchView" label="Search"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.PropertySheet" label="LabelNotFound"/>
 <page content="org.eclipse.datatools.sqltools.result.resultView" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.debug.ui.DisplayView" label="LabelNotFound"/>
 <page content="org.eclipse.search.SearchResultView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">&#x0A;<part id="0"/>
+<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
+<part id="0"/>
 <part id="1"/>
+<part id="2"/>
 </presentation>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.5646552" ratioLeft="262" ratioRight="202" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView"/>
-<info folder="true" part="org.eclipse.debug.internal.ui.OutlineFolderView" ratio="0.75" ratioLeft="954" ratioRight="318" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<info part="org.eclipse.ui.editorss" ratio="0.68509614" ratioLeft="285" ratioRight="131" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView"/>
+<info folder="true" part="org.eclipse.debug.internal.ui.OutlineFolderView" ratio="0.75" ratioLeft="954" ratioRight="318" relationship="2" relative="org.eclipse.ui.editorss">
+<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
 <page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">&#x0A;<part id="0"/>
+<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
+<part id="0"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.debug.internal.ui.ToolsFolderView" ratio="0.5" ratioLeft="636" ratioRight="636" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder activePageID="org.eclipse.debug.ui.VariableView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.debug.ui.VariableView" label="Variables"/>
+<info folder="true" part="org.eclipse.debug.internal.ui.ToolsFolderView" ratio="0.38770685" ratioLeft="492" ratioRight="777" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">
+<folder activePageID="org.eclipse.debug.ui.VariableView" appearance="2" expanded="2">
+<page content="org.eclipse.debug.ui.VariableView" label="Variables"/>
 <page content="org.eclipse.debug.ui.BreakpointView" label="Breakpoints"/>
 <page content="org.eclipse.debug.ui.ExpressionView" label="LabelNotFound"/>
 <page content="org.eclipse.debug.ui.RegisterView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">&#x0A;<part id="0"/>
+<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
+<part id="0"/>
 <part id="1"/>
 </presentation>
 </folder>
@@ -446,8 +435,7 @@
 <view id="org.eclipse.jdt.ui.JavadocView"/>
 <view id="org.eclipse.jdt.ui.SourceView"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
-<view id="org.eclipse.ui.views.ContentOutline"/>
-<view id="org.eclipse.mylyn.tasks.ui.views.tasks"/>
+<view id="org.eclipse.search.ui.views.SearchView"/>
 <fastViewBars/>
 <layout>
 <mainWindow>
@@ -470,14 +458,14 @@
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.25" ratioLeft="318" ratioRight="954" relationship="2" relative="left"/>
-<info folder="true" part="bottom" ratio="0.41231343" ratioLeft="221" ratioRight="315" relationship="4" relative="org.eclipse.ui.editorss">
+<info part="org.eclipse.ui.editorss" ratio="0.31993696" ratioLeft="406" ratioRight="863" relationship="2" relative="left"/>
+<info folder="true" part="bottom" ratio="0.6732852" ratioLeft="373" ratioRight="181" relationship="4" relative="org.eclipse.ui.editorss">
 <folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.jdt.ui.JavadocView" label="Javadoc"/>
 <page content="org.eclipse.jdt.ui.SourceView" label="Declaration"/>
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
-<page content="org.eclipse.search.ui.views.SearchView" label="LabelNotFound"/>
+<page content="org.eclipse.search.ui.views.SearchView" label="Search"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
@@ -485,24 +473,96 @@
 <part id="1"/>
 <part id="2"/>
 <part id="3"/>
+<part id="4"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1c1820d" ratio="0.7494759" ratioLeft="715" ratioRight="239" relationship="2" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.mylyn.tasks.ui.views.tasks" appearance="2" expanded="2">
-<page content="org.eclipse.mylyn.tasks.ui.views.tasks" label="Task List"/>
-<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
-<part id="0"/>
-</presentation>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1c1820d" ratio="0.84268427" ratioLeft="766" ratioRight="143" relationship="2" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.mylyn.tasks.ui.views.tasks" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@83bb0f" ratio="0.5" ratioLeft="0" ratioRight="0" relationship="4" relative="org.eclipse.ui.internal.ViewStack@1c1820d">
-<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@83bb0f" ratio="0.0" ratioLeft="0" ratioRight="662" relationship="4" relative="org.eclipse.ui.internal.ViewStack@1c1820d">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
 <page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">
-<part id="0"/>
+<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33"/>
+</folder>
+</info>
+</mainWindow>
+</layout>
+</perspective>
+<perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
+<descriptor class="org.eclipse.jdt.internal.ui.JavaHierarchyPerspectiveFactory" id="org.eclipse.jdt.ui.JavaHierarchyPerspective" label="Java Type Hierarchy"/>
+<alwaysOnActionSet id="com_sysdeo_eclipse_tomcat_actionSet"/>
+<alwaysOnActionSet id="org.eclipse.jst.servlet.ui.internal.actions.ConvertToWebModuleTypeActionSet"/>
+<alwaysOnActionSet id="org.eclipse.mylyn.doc.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.mylyn.context.ui.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.mylyn.tasks.ui.navigation"/>
+<alwaysOnActionSet id="org.eclipse.mylyn.tasks.ui.tasklist.navigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.annotationNavigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
+<alwaysOnActionSet id="org.eclipse.ui.externaltools.ExternalToolsSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
+<alwaysOnActionSet id="org.eclipse.ui.WorkingSetActionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles"/>
+<alwaysOnActionSet id="org.eclipse.update.ui.softwareUpdates"/>
+<alwaysOnActionSet id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.wst.ws.explorer.explorer"/>
+<alwaysOnActionSet id="org.eclipse.debug.ui.launchActionSet"/>
+<alwaysOnActionSet id="org.eclipse.jdt.ui.JavaActionSet"/>
+<alwaysOnActionSet id="org.eclipse.jdt.ui.JavaElementCreationActionSet"/>
+<alwaysOnActionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
+<alwaysOnActionSet id="org.eclipse.jdt.debug.ui.JDTDebugActionSet"/>
+<show_view_action id="org.eclipse.jdt.ui.PackageExplorer"/>
+<show_view_action id="org.eclipse.jdt.ui.TypeHierarchy"/>
+<show_view_action id="org.eclipse.search.ui.views.SearchView"/>
+<show_view_action id="org.eclipse.ui.console.ConsoleView"/>
+<show_view_action id="org.eclipse.ui.views.ContentOutline"/>
+<show_view_action id="org.eclipse.ui.views.ProblemView"/>
+<show_view_action id="org.eclipse.ui.views.ResourceNavigator"/>
+<show_view_action id="org.eclipse.ui.views.TaskList"/>
+<show_view_action id="org.eclipse.ui.views.ProgressView"/>
+<show_view_action id="org.eclipse.ant.ui.views.AntView"/>
+<new_wizard_action id="org.eclipse.jdt.ui.wizards.JavaProjectWizard"/>
+<new_wizard_action id="org.eclipse.jdt.ui.wizards.NewPackageCreationWizard"/>
+<new_wizard_action id="org.eclipse.jdt.ui.wizards.NewClassCreationWizard"/>
+<new_wizard_action id="org.eclipse.jdt.ui.wizards.NewInterfaceCreationWizard"/>
+<new_wizard_action id="org.eclipse.jdt.ui.wizards.NewEnumCreationWizard"/>
+<new_wizard_action id="org.eclipse.jdt.ui.wizards.NewAnnotationCreationWizard"/>
+<new_wizard_action id="org.eclipse.jdt.ui.wizards.NewSourceFolderCreationWizard"/>
+<new_wizard_action id="org.eclipse.jdt.ui.wizards.NewSnippetFileCreationWizard"/>
+<new_wizard_action id="org.eclipse.ui.wizards.new.folder"/>
+<new_wizard_action id="org.eclipse.ui.wizards.new.file"/>
+<new_wizard_action id="org.eclipse.ui.editors.wizards.UntitledTextFileWizard"/>
+<view id="org.eclipse.ui.views.ContentOutline"/>
+<fastViewBars/>
+<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="left">&#x0A;<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<page content="org.eclipse.jdt.ui.TypeHierarchy" label="LabelNotFound"/>
+<page content="org.eclipse.jdt.ui.PackageExplorer" label="LabelNotFound"/>
+<page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
+<page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.internal.presentations.r33.WorkbenchPresentationFactory_33">&#x0A;<part id="0"/>
 </presentation>
+</folder>
+</info>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="954" ratioRight="318" relationship="2" relative="left">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
+<page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
+</folder>
+</info>
+<info part="org.eclipse.ui.editorss" ratio="0.25" ratioLeft="318" ratioRight="954" relationship="2" relative="left"/>
+<info folder="true" part="bottom" ratio="0.7486535" ratioLeft="417" ratioRight="140" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ProblemView" label="LabelNotFound"/>
+<page content="org.eclipse.search.ui.views.SearchView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
+<page content="org.eclipse.jdt.ui.SourceView" label="LabelNotFound"/>
+<page content="org.eclipse.jdt.ui.JavadocView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound"/>
 </folder>
 </info>
 </mainWindow>
@@ -512,95 +572,134 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/GeradorJavaTemplate/build.xml"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/GeradorJavaTemplate/build.xml"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/GeradorJavaTemplate/build.xml"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/GeradorJavaTemplate/build.xml"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/GeradorJavaTemplate/hs_err_pid10876.log"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/GeradorJavaTemplate/src/gerapp/dao/basica/EntidadeDaoBase.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/GeradorJavaTemplate/src/gerapp/dao/basica/DataSourceAplicacao.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/GeradorJavaTemplate/src/gerapp/dao/basica/DaoAplicacao.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/GeradorJavaTemplate/src/gerapp/dao/EntidadeDaoExtendida.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorValidadorHipotese/templates/angular/loopback/LoopbackModel.javajet"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/GeradorValidadorHipotese/src/jet/wrappers/base/ClasseWrapper.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/GeradorValidadorHipotese/src/gerapp/app/GeradorIonic3.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorValidadorHipotese/templates/ionic3/page/detalhe/DetalhePageTs.javajet"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorValidadorHipotese/templates/ionic3/page/lista/ListaPageTs.javajet"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/GeradorValidadorHipotese/src/jet/angular/loopback/LoopbackModel.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/GeradorValidadorHipotese/src/jet/wrappers/base/RelacionamentoWrapper.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorValidadorHipotese/templates/ionic3/page/detalhe/DetalhePageHtml.javajet"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorValidadorHipotese/templates/ionic3/page/detalhe/DetalhePageHtml.javajet"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorValidadorHipotese/templates/ionic3/page/lista/ListaPageHtml.javajet"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" path="/GeradorValidadorHipotese/templates/angular/componente/lista/ComponenteTsLista.javajet"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/GeradorValidadorHipotese/src/gerapp/app/GeradorArquivosBase.java"/>
 </editors>
-<item historyLabel="build.xml" index="0">
+<item historyLabel="LoopbackModel.javajet" index="0"/>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="8334" y="21"/>
+</item>
+<item historyLabel="LoopbackModel.javajet" index="0"/>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="8334" y="21"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="7762" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="7845" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="7923" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="7954" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="8005" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="9310" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="8005" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="8035" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="8144" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="8213" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="8253" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="7923" y="0"/>
+</item>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="8295" y="0"/>
+</item>
+<item historyLabel="LoopbackModel.java" index="5">
 <position/>
 </item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="1"/>
-<item historyLabel="build.xml" index="0">
-<position info="not_deleted" x="630" y="0"/>
-</item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="1"/>
-<item historyLabel="build.xml" index="0">
-<position info="not_deleted" x="1128" y="0"/>
-</item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="1"/>
-<item historyLabel="build.xml" index="2">
-<position info="not_deleted" x="679" y="0"/>
-</item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="1"/>
-<item historyLabel="build.xml" index="2">
-<position info="not_deleted" x="793" y="0"/>
-</item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="1"/>
-<item historyLabel="build.xml" index="2">
-<position info="not_deleted" x="793" y="0"/>
-</item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="3"/>
-<item historyLabel="build.xml" index="2">
-<position info="not_deleted" x="504" y="0"/>
-</item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="4"/>
-<item historyLabel="build.xml" index="2">
+<item historyLabel="LoopbackModel.java" index="5">
 <position/>
 </item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="4"/>
-<item historyLabel="build.xml" index="2">
-<position info="not_deleted" x="1393" y="0"/>
-</item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="4"/>
-<item historyLabel="build.xml" index="2">
-<position info="not_deleted" x="1393" y="0"/>
-</item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="4"/>
-<item historyLabel="build.xml" index="5">
+<item historyLabel="LoopbackModel.java" index="5">
 <position/>
 </item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="4"/>
-<item historyLabel="build.xml" index="5">
+<item historyLabel="LoopbackModel.javajet" index="0"/>
+<item historyLabel="ClasseWrapper.java" index="1">
+<position info="not_deleted" x="9484" y="21"/>
+</item>
+<item historyLabel="RelacionamentoWrapper.java" index="6">
+<position info="not_deleted" x="4152" y="18"/>
+</item>
+<item historyLabel="LoopbackModel.javajet" index="0"/>
+<item historyLabel="RelacionamentoWrapper.java" index="6">
+<position info="not_deleted" x="4152" y="18"/>
+</item>
+<item historyLabel="RelacionamentoWrapper.java" index="6">
+<position info="not_deleted" x="4427" y="18"/>
+</item>
+<item historyLabel="LoopbackModel.javajet" index="0"/>
+<item historyLabel="LoopbackModel.java" index="5">
 <position/>
 </item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="4"/>
-<item historyLabel="build.xml" index="5">
-<position info="not_deleted" x="489" y="0"/>
+<item historyLabel="LoopbackModel.javajet" index="0"/>
+<item historyLabel="RelacionamentoWrapper.java" index="6">
+<position info="not_deleted" x="4427" y="18"/>
 </item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="4"/>
-<item historyLabel="build.xml" index="6">
-<position info="not_deleted" x="489" y="0"/>
+<item historyLabel="RelacionamentoWrapper.java" index="6">
+<position info="not_deleted" x="4614" y="0"/>
 </item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="7"/>
-<item historyLabel="build.xml" index="6">
-<position info="not_deleted" x="428" y="1"/>
-</item>
-<item historyLabel="hs_err_pid10876.log" index="8">
+<item historyLabel="LoopbackModel.java" index="5">
 <position/>
 </item>
-<item historyLabel="RegraColecaoAdaptador.javajet" index="9"/>
-<item historyLabel="EntidadeDaoBase.java" index="10">
+<item historyLabel="LoopbackModel.javajet" index="0"/>
+<item historyLabel="DetalhePageHtml.javajet" index="7"/>
+<item historyLabel="DetalhePageTs.javajet" index="3"/>
+<item historyLabel="DetalhePageHtml.javajet" index="8"/>
+<item historyLabel="ListaPageHtml.javajet" index="9"/>
+<item historyLabel="ListaPageTs.javajet" index="4"/>
+<item historyLabel="ListaPageHtml.javajet" index="9"/>
+<item historyLabel="ListaPageTs.javajet" index="4"/>
+<item historyLabel="DetalhePageTs.javajet" index="3"/>
+<item historyLabel="ListaPageTs.javajet" index="4"/>
+<item historyLabel="GeradorIonic3.java" index="2">
 <position/>
 </item>
-<item historyLabel="DataSourceAplicacao.java" index="11">
-<position/>
+<item historyLabel="ComponenteTsLista.javajet" index="10"/>
+<item historyLabel="GeradorIonic3.java" index="2">
+<position info="not_deleted" x="3322" y="0"/>
 </item>
-<item historyLabel="DaoAplicacao.java" index="12">
-<position/>
+<item historyLabel="GeradorIonic3.java" index="2">
+<position info="not_deleted" x="3212" y="0"/>
 </item>
-<item active="true" historyLabel="EntidadeDaoExtendida.java" index="13">
-<position/>
+<item historyLabel="GeradorIonic3.java" index="2">
+<position info="not_deleted" x="3202" y="0"/>
+</item>
+<item historyLabel="GeradorArquivosBase.java" index="11">
+<position info="not_deleted" x="3577" y="0"/>
+</item>
+<item historyLabel="GeradorArquivosBase.java" index="11">
+<position info="not_deleted" x="3836" y="0"/>
+</item>
+<item active="true" historyLabel="GeradorIonic3.java" index="2">
+<position info="not_deleted" x="3202" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -608,6 +707,9 @@
 <workbenchWindowAdvisor/>
 <actionBarAdvisor/>
 <trimLayout>
+<trimArea IMemento.internal.id="16384">
+<trimItem IMemento.internal.id="left"/>
+</trimArea>
 <trimArea IMemento.internal.id="128">
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
 </trimArea>
@@ -615,54 +717,55 @@
 <trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
 <trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
+<trimItem IMemento.internal.id="bottom"/>
 </trimArea>
 </trimLayout>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="EntidadeDaoExtendida.java" tooltip="GeradorJavaTemplate/src/gerapp/dao/EntidadeDaoExtendida.java">
-<persistable path="/GeradorJavaTemplate/src/gerapp/dao/EntidadeDaoExtendida.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="GeradorArquivosBase.java" tooltip="GeradorValidadorHipotese/src/gerapp/app/GeradorArquivosBase.java">
+<persistable path="/GeradorValidadorHipotese/src/gerapp/app/GeradorArquivosBase.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="DaoAplicacao.java" tooltip="GeradorJavaTemplate/src/gerapp/dao/basica/DaoAplicacao.java">
-<persistable path="/GeradorJavaTemplate/src/gerapp/dao/basica/DaoAplicacao.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="ComponenteTsLista.javajet" tooltip="GeradorValidadorHipotese/templates/angular/componente/lista/ComponenteTsLista.javajet">
+<persistable path="/GeradorValidadorHipotese/templates/angular/componente/lista/ComponenteTsLista.javajet"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="DataSourceAplicacao.java" tooltip="GeradorJavaTemplate/src/gerapp/dao/basica/DataSourceAplicacao.java">
-<persistable path="/GeradorJavaTemplate/src/gerapp/dao/basica/DataSourceAplicacao.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="GeradorIonic3.java" tooltip="GeradorValidadorHipotese/src/gerapp/app/GeradorIonic3.java">
+<persistable path="/GeradorValidadorHipotese/src/gerapp/app/GeradorIonic3.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="EntidadeDaoBase.java" tooltip="GeradorJavaTemplate/src/gerapp/dao/basica/EntidadeDaoBase.java">
-<persistable path="/GeradorJavaTemplate/src/gerapp/dao/basica/EntidadeDaoBase.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="ListaPageTs.javajet" tooltip="GeradorValidadorHipotese/templates/ionic3/page/lista/ListaPageTs.javajet">
+<persistable path="/GeradorValidadorHipotese/templates/ionic3/page/lista/ListaPageTs.javajet"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="hs_err_pid10876.log" tooltip="GeradorJavaTemplate/hs_err_pid10876.log">
-<persistable path="/GeradorJavaTemplate/hs_err_pid10876.log"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="ListaPageHtml.javajet" tooltip="GeradorValidadorHipotese/templates/ionic3/page/lista/ListaPageHtml.javajet">
+<persistable path="/GeradorValidadorHipotese/templates/ionic3/page/lista/ListaPageHtml.javajet"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="RegraColecaoAdaptador.javajet" tooltip="GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet">
-<persistable path="/GeradorJavaTemplate/templates/java/webparse/RegraColecaoAdaptador.javajet"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="DetalhePageHtml.javajet" tooltip="GeradorValidadorHipotese/templates/ionic3/page/detalhe/DetalhePageHtml.javajet">
+<persistable path="/GeradorValidadorHipotese/templates/ionic3/page/detalhe/DetalhePageHtml.javajet"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="build.xml" tooltip="GeradorJavaTemplate/build.xml">
-<persistable path="/GeradorJavaTemplate/build.xml"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="DetalhePageTs.javajet" tooltip="GeradorValidadorHipotese/templates/ionic3/page/detalhe/DetalhePageTs.javajet">
+<persistable path="/GeradorValidadorHipotese/templates/ionic3/page/detalhe/DetalhePageTs.javajet"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart" name="web.xml" tooltip="GeradorJavaTemplate/WebContent/WEB-INF/web.xml">
-<persistable path="/GeradorJavaTemplate/WebContent/WEB-INF/web.xml"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="RelacionamentoWrapper.java" tooltip="GeradorValidadorHipotese/src/jet/wrappers/base/RelacionamentoWrapper.java">
+<persistable path="/GeradorValidadorHipotese/src/jet/wrappers/base/RelacionamentoWrapper.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="ConstantesBilling.javajet" tooltip="GeradorJavaTemplate/templates/android2/framework/tela/ConstantesBilling.javajet">
-<persistable path="/GeradorJavaTemplate/templates/android2/framework/tela/ConstantesBilling.javajet"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LoopbackModel.java" tooltip="GeradorValidadorHipotese/src/jet/angular/loopback/LoopbackModel.java">
+<persistable path="/GeradorValidadorHipotese/src/jet/angular/loopback/LoopbackModel.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="SplashActivityBase.javajet" tooltip="GeradorJavaTemplate/templates/android2/framework/tela/SplashActivityBase.javajet">
-<persistable path="/GeradorJavaTemplate/templates/android2/framework/tela/SplashActivityBase.javajet"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ClasseWrapper.java" tooltip="GeradorValidadorHipotese/src/jet/wrappers/base/ClasseWrapper.java">
+<persistable path="/GeradorValidadorHipotese/src/jet/wrappers/base/ClasseWrapper.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="GeradorArquivosAndroid2.java" tooltip="GeradorJavaTemplate/src/gerapp/app/GeradorArquivosAndroid2.java">
-<persistable path="/GeradorJavaTemplate/src/gerapp/app/GeradorArquivosAndroid2.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="LoopbackModel.javajet" tooltip="GeradorValidadorHipotese/templates/angular/loopback/LoopbackModel.javajet">
+<persistable path="/GeradorValidadorHipotese/templates/angular/loopback/LoopbackModel.javajet"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="ServicoLocalBase.javajet" tooltip="GeradorJavaTemplate/templates/cs-dot-net-35/servico/ServicoLocalBase.javajet">
-<persistable path="/GeradorJavaTemplate/templates/cs-dot-net-35/servico/ServicoLocalBase.javajet"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="AtributoWrapper.java" tooltip="GeradorValidadorHipotese/src/jet/wrappers/base/AtributoWrapper.java">
+<persistable path="/GeradorValidadorHipotese/src/jet/wrappers/base/AtributoWrapper.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="DaoBase.javajet" tooltip="GeradorJavaTemplate/templates/cs-dot-net-35/dao/DaoBase.javajet">
-<persistable path="/GeradorJavaTemplate/templates/cs-dot-net-35/dao/DaoBase.javajet"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="AtributoTotalI.java" tooltip="GeradorValidadorHipotese/src/jet/wrappers/base/AtributoTotalI.java">
+<persistable path="/GeradorValidadorHipotese/src/jet/wrappers/base/AtributoTotalI.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="DaoBase.javajet" tooltip="GeradorJavaTemplate/templates/java/dao/DaoBase.javajet">
-<persistable path="/GeradorJavaTemplate/templates/java/dao/DaoBase.javajet"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="AtributoEntidade.java" tooltip="GeradorValidadorHipotese/src/gerapp/modelo/AtributoEntidade.java">
+<persistable path="/GeradorValidadorHipotese/src/gerapp/modelo/AtributoEntidade.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.metys.merlin.generation.templates.presentation.JETTextEditorID" name="ServicoJsonBase.javajet" tooltip="GeradorJavaTemplate/templates/android/servico/ServicoJsonBase.javajet">
-<persistable path="/GeradorJavaTemplate/templates/android/servico/ServicoJsonBase.javajet"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ClasseWrapperAngular.java" tooltip="GeradorValidadorHipotese/src/jet/wrappers/angular/ClasseWrapperAngular.java">
+<persistable path="/GeradorValidadorHipotese/src/jet/wrappers/angular/ClasseWrapperAngular.java"/>
 </file>
 </mruList>
 </workbench>

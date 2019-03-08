@@ -1,0 +1,74 @@
+package jet.wrappers.base.node;
+
+import gerapp.modelo.node.ItemComponente;
+import gerapp.padrao.node.ConversorNome;
+import jet.wrappers.base.ClasseWrapper;
+import loopback.cliente.modelo.TelaAppRest;
+
+public class TelaAppWrapper implements ItemComponente{
+
+	
+	private TelaAppRest principal = null;
+	
+	private ClasseWrapper entidade = null;
+	
+	
+	public boolean tipoLista() {
+		return ("LISTA".equals(this.principal.getTipo()));
+	}
+	
+	public long getIdEntidade() {
+		return (principal.getEntidadeId()!=null?principal.getEntidadeId():0);
+	}
+	public void setClasseWrapper(ClasseWrapper entidade) {
+		this.entidade = entidade;
+	}
+	
+	public TelaAppWrapper(TelaAppRest principal) {
+		this.principal = principal;
+	}
+	
+	
+	@Override
+	public String getNomeControle() {
+		return "nome-controle";
+	}
+
+	@Override
+	public String getPathArquivo() {
+		if (this.entidade!=null) {
+			return ConversorNome.getNomePathIonicPage(getNomeBase());
+		} else {
+			return "sem-nome";
+		}
+	}
+
+	private String getNomeBase() {
+		if (this.entidade!=null) {
+			return entidade.getNomeParaClasse();
+		} else {
+			return "SemNome";
+		}
+	}
+	
+	public String getNomePage() {
+		return getNomeBase() + "Page";
+	}
+	public String getNomeModule() {
+		return getNomePage() + "Module";
+	}
+	
+	
+	@Override
+	public String getArquivo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getNome() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

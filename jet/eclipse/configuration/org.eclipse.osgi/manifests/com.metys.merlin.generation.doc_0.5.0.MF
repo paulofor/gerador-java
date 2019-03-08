@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Generated-from: 1536869091767;type=2
+Generated-from: 1539299844469;type=2
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.metys.merlin.generation.doc; singleton:=true

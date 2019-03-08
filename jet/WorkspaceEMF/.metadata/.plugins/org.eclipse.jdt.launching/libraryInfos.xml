@@ -173,6 +173,25 @@
 <entry path="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\endorsed"/>
 </endorsedDirs>
 </libraryInfo>
+<libraryInfo home="E:\JavaApp\gerador-java\jet\eclipse\jre\jre" version="1.8.0_77">
+<bootpath>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\resources.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\rt.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\sunrsasign.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\jsse.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\jce.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\charsets.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\jfr.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\ext"/>
+<entry path="C:\Windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
 <libraryInfo home="C:\Arquivos de programas\Java\jre6" version="1.6.0_11">
 <bootpath>
 <entry path="C:\Arquivos de programas\Java\jre6\lib\resources.jar"/>
@@ -208,6 +227,25 @@
 </extensionDirs>
 <endorsedDirs>
 <entry path="C:\Aplicacoes\java\gerador-java\jet\eclipse\jre\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="E:\JavaApp\gerador-java\jet\eclipse\jre" version="1.8.0_77">
+<bootpath>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\resources.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\rt.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\sunrsasign.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\jsse.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\jce.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\charsets.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\jfr.jar"/>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\ext"/>
+<entry path="C:\Windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="E:\JavaApp\gerador-java\jet\eclipse\jre\jre\lib\endorsed"/>
 </endorsedDirs>
 </libraryInfo>
 <libraryInfo home="Z:\home\usuario\aplicacoes\java\gerador-java\jet\eclipse\jre" version="1.8.0_40">

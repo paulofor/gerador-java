@@ -1,0 +1,24 @@
+<%@ jet package="jet.ionic3" 
+imports="java.util.* gerapp.app.* jet.wrappers.base.* jet.wrappers.angular.* gerapp.modelo.* gerapp.modelo.node.*" 
+class="PageModuleTs" %>
+
+
+import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { IonicPageModule } from 'ionic-angular';
+
+import { ItemCreatePage } from './item-create';
+
+@NgModule({
+  declarations: [
+    ItemCreatePage,
+  ],
+  imports: [
+    IonicPageModule.forChild(ItemCreatePage),
+    TranslateModule.forChild()
+  ],
+  exports: [
+    ItemCreatePage
+  ]
+})
+export class ItemCreatePageModule { }

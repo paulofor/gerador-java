@@ -1,0 +1,12 @@
+package loopback.cliente.repositorio;
+
+import loopback.android.ModelRepository;
+import loopback.cliente.modelo.TelaAppRest;
+import loopback.cliente.modelo.TelaWebRest;
+
+public class TelaAppRepositorio extends ModelRepository<TelaAppRest>{
+
+	public TelaAppRepositorio() {
+		super("TelaApp", TelaAppRest.class);
+	}
+}

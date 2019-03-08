@@ -1,0 +1,5 @@
+package loopback.cliente.modelo;
+
+public class TelaAppRest {
+
+}
